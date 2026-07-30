@@ -1,0 +1,3277 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>压力性损伤皮肤监护｜交互原型 V1.29（Braden语音后弹出评分版）</title>
+<style>
+:root{
+  --teal:#079ca3;
+  --teal-dark:#087f87;
+  --teal-deep:#056e77;
+  --cyan:#20c4c4;
+  --cyan-soft:#dff8f7;
+  --blue:#168ecf;
+  --orange:#ff9d24;
+  --green:#36b978;
+  --red:#e05258;
+  --ink:#24434a;
+  --muted:#6c858b;
+  --white:#fff;
+  --panel:rgba(255,255,255,.96);
+  --glass:rgba(255,255,255,.88);
+  --shadow:0 10px 26px rgba(0,76,84,.22);
+  --top-h:48px;
+  --bottom-h:74px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;background:#0a7f86;color:var(--ink)}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+/* ---------- module home ---------- */
+.module-home{
+  position:relative;width:100vw;height:100vh;min-width:1180px;min-height:680px;
+  color:#fff;overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(255,255,255,.20),transparent 36%),
+    linear-gradient(180deg,#078e98 0%,#139da5 42%,#2db9bc 100%);
+}
+.module-home:before{
+  content:"";position:absolute;inset:0;opacity:.33;
+  background:
+   linear-gradient(125deg,transparent 0 45%,rgba(255,255,255,.12) 45.5% 46%,transparent 46.5%) 0 0/220px 150px,
+   linear-gradient(55deg,transparent 0 45%,rgba(255,255,255,.09) 45.5% 46%,transparent 46.5%) 0 0/220px 150px;
+}
+.module-home:after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:30%;
+  background:
+    radial-gradient(circle,rgba(255,255,255,.46) 0 2px,transparent 3px) 0 0/22px 18px;
+  mask-image:linear-gradient(180deg,transparent,#000 46%);
+  opacity:.48;
+}
+.home-top{
+  position:absolute;left:0;top:0;right:0;height:42px;z-index:5;
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+  padding:0 16px;background:rgba(0,116,124,.45);
+  border-bottom:1px solid rgba(255,255,255,.18)
+}
+.home-title{grid-column:2;font-size:17px;font-weight:800;letter-spacing:2px}
+.home-actions{grid-column:3;justify-self:end;display:flex;gap:2px}
+.small-top-btn{
+  width:48px;height:42px;border:0;color:#fff;background:transparent;font-size:11px;
+  display:grid;place-items:center;align-content:center;gap:1px
+}
+.small-top-btn span:first-child{font-size:17px}
+.small-top-btn:hover{background:rgba(255,255,255,.12)}
+.module-grid{
+  position:absolute;left:50%;top:49%;transform:translate(-50%,-50%);
+  z-index:3;display:flex;gap:48px
+}
+.module-card{
+  position:relative;width:220px;height:292px;border:0;border-radius:18px;
+  padding:22px 20px 18px;color:var(--teal);
+  background:linear-gradient(180deg,#f8ffff,#edfdfd);
+  box-shadow:0 12px 0 rgba(255,255,255,.74),0 18px 28px rgba(0,69,76,.24);
+}
+.module-card:before{
+  content:"";position:absolute;left:50%;top:-1px;transform:translateX(-50%);
+  width:56px;height:8px;border-radius:0 0 12px 12px;background:#0c8f98;
+  box-shadow:0 2px 0 rgba(255,255,255,.85) inset;
+}
+.module-card:hover{transform:translateY(-4px)}
+.module-icon{
+  width:92px;height:92px;margin:18px auto 18px;border-radius:50%;
+  display:grid;place-items:center;color:#fff;font-size:48px;
+  background:linear-gradient(145deg,#28d0c8,#08a9aa);
+  box-shadow:0 10px 18px rgba(12,162,164,.23)
+}
+.module-name{font-size:25px;font-weight:900;letter-spacing:2px}
+.module-enter{
+  position:absolute;left:50%;bottom:24px;transform:translateX(-50%);
+  min-width:130px;height:38px;border-radius:20px;border:1px solid #5fd1d0;
+  color:#29a7ab;background:#fff;font-size:15px
+}
+.home-dots{position:absolute;left:50%;bottom:86px;transform:translateX(-50%);display:flex;gap:12px;z-index:3}
+.home-dots i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.72)}
+.home-dots i:first-child{background:#fff}
+
+
+/* ---------- knowledge preparation: pure browse ---------- */
+.knowledge-screen{
+  position:relative;width:100vw;height:100vh;min-width:1180px;min-height:680px;overflow:hidden;
+  background:
+    radial-gradient(circle at 82% 8%,rgba(255,255,255,.96),transparent 28%),
+    linear-gradient(145deg,#edf9f9 0%,#faffff 50%,#e2f2f2 100%);
+  color:#29484d;
+}
+.knowledge-topbar{
+  position:absolute;left:0;right:0;top:0;height:56px;z-index:10;
+  display:grid;grid-template-columns:260px 1fr 270px;align-items:center;
+  color:#fff;background:linear-gradient(180deg,#0aa4aa,#087f88);
+  box-shadow:0 3px 10px rgba(0,78,84,.22)
+}
+.knowledge-brand{
+  padding-left:20px;font-weight:900;font-size:15px;letter-spacing:1px
+}
+.knowledge-title-group{text-align:center}
+.knowledge-title-group strong{display:block;font-size:19px;letter-spacing:2px}
+.knowledge-title-group span{display:block;margin-top:2px;font-size:11px;opacity:.86}
+.knowledge-top-actions{
+  height:100%;display:flex;align-items:center;justify-content:flex-end
+}
+.knowledge-top-btn{
+  width:58px;height:56px;border:0;border-left:1px solid rgba(255,255,255,.2);
+  color:#fff;background:transparent;display:grid;place-items:center;align-content:center;
+  gap:1px;font-size:10px
+}
+.knowledge-top-btn b{font-size:19px;font-weight:500}
+.knowledge-top-btn:hover{background:rgba(255,255,255,.13)}
+.knowledge-sidebar{
+  position:absolute;left:0;top:56px;bottom:0;width:238px;padding:18px 12px;
+  background:linear-gradient(180deg,rgba(255,255,255,.97),rgba(238,249,249,.95));
+  border-right:1px solid #cfe4e4;box-shadow:4px 0 16px rgba(0,90,96,.08)
+}
+.knowledge-sidebar-head{
+  height:44px;padding:0 12px;border-radius:7px;color:#fff;
+  background:linear-gradient(90deg,#0aa7ad,#08848d);
+  display:flex;align-items:center;gap:9px;font-size:16px;font-weight:900
+}
+.knowledge-nav{display:grid;gap:9px;margin-top:15px}
+.knowledge-nav-btn{
+  position:relative;min-height:58px;border:1px solid #d3e6e6;border-radius:7px;
+  background:#fff;color:#4b696e;padding:8px 14px 8px 48px;text-align:left;
+  font-size:13px;font-weight:900;line-height:1.35
+}
+.knowledge-nav-btn:before{
+  content:attr(data-index);position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  width:27px;height:27px;border-radius:50%;display:grid;place-items:center;
+  color:#fff;background:#8abfc2;font-size:12px
+}
+.knowledge-nav-btn.active{
+  color:#087f86;border-color:#0aa7ad;background:linear-gradient(90deg,#e9fbfa,#fff);
+  box-shadow:inset 5px 0 0 #0aa7ad
+}
+.knowledge-nav-btn.active:before{background:#0aa7ad}
+.knowledge-sidebar-note{
+  position:absolute;left:12px;right:12px;bottom:16px;padding:10px;
+  border-radius:6px;color:#517276;background:#e8f7f7;border:1px solid #cae6e6;
+  font-size:11px;line-height:1.6
+}
+.knowledge-main{
+  position:absolute;left:238px;right:0;top:56px;bottom:0;padding:16px 20px 18px
+}
+.knowledge-page-head{
+  height:64px;padding:0 18px;border-radius:8px 8px 0 0;background:#fff;
+  display:flex;align-items:center;justify-content:space-between;
+  border:1px solid #d6e7e7;border-bottom:0
+}
+.knowledge-page-head h2{margin:0;color:#087f87;font-size:22px}
+.knowledge-page-head p{margin:5px 0 0;color:#70878b;font-size:12px}
+.knowledge-browse-chip{
+  min-width:104px;height:32px;border-radius:16px;padding:0 13px;
+  display:flex;align-items:center;justify-content:center;
+  color:#087f87;background:#e9f9f8;border:1px solid #bfe2e1;
+  font-size:12px;font-weight:900
+}
+.knowledge-scroll{
+  height:calc(100% - 64px);overflow:auto;padding:18px;
+  background:rgba(255,255,255,.96);border:1px solid #d6e7e7;border-radius:0 0 8px 8px;
+  scroll-behavior:smooth
+}
+.knowledge-scroll::-webkit-scrollbar{width:8px}
+.knowledge-scroll::-webkit-scrollbar-thumb{background:#a9d2d3;border-radius:5px}
+.knowledge-section-title{
+  margin:0 0 12px;padding-left:11px;border-left:5px solid #0aa7ad;
+  color:#167f86;font-size:18px
+}
+.knowledge-lead{
+  margin-bottom:16px;padding:12px 14px;border-radius:7px;
+  color:#416267;background:#eff9f9;border:1px solid #d4eaea;
+  font-size:13px;line-height:1.75
+}
+.knowledge-warning{
+  padding:11px 13px;border-radius:7px;color:#7a5a28;background:#fff8e9;
+  border:1px solid #f1d7a7;font-size:12px;line-height:1.65
+}
+.goal-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.goal-card{
+  min-height:76px;padding:11px;border-radius:7px;background:#fff;
+  border:1px solid #d7e8e8;display:grid;grid-template-columns:31px 1fr;gap:8px;
+  color:#3e5c61;font-size:12.5px;line-height:1.55
+}
+.goal-card b{
+  width:27px;height:27px;border-radius:50%;display:grid;place-items:center;
+  color:#fff;background:#0aa7ad
+}
+.concept-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin-top:15px}
+.concept-card{
+  padding:11px;border-radius:7px;background:linear-gradient(180deg,#f8ffff,#edf9f9);
+  border:1px solid #d2e7e7;min-height:112px
+}
+.concept-card h4{margin:0 0 7px;color:#087f87;font-size:14px}
+.concept-card p{margin:0;color:#526c71;font-size:11.5px;line-height:1.65}
+.knowledge-card-grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px
+}
+.knowledge-card{
+  min-height:154px;padding:13px;border-radius:8px;background:#fff;
+  border:1px solid #d6e7e7;box-shadow:0 5px 14px rgba(0,82,88,.05)
+}
+.knowledge-card h3{margin:0 0 7px;color:#087f87;font-size:15px}
+.knowledge-card p{margin:0;color:#577176;font-size:11.8px;line-height:1.65}
+.knowledge-card .tag{
+  display:inline-block;margin-top:9px;padding:4px 8px;border-radius:12px;
+  color:#087f87;background:#eaf9f8;font-size:10.5px;font-weight:900
+}
+.stage-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.stage-card{
+  min-height:248px;border:1px solid #d6e6e6;border-radius:8px;background:#fff;overflow:hidden;
+  color:#425e63;box-shadow:0 5px 14px rgba(0,82,88,.06)
+}
+.stage-visual{
+  height:104px;position:relative;display:grid;place-items:center;
+  background:linear-gradient(145deg,#e9f9f8,#d9eded)
+}
+.stage-skin{
+  width:120px;height:55px;border-radius:28px;background:#e8b092;position:relative;
+  box-shadow:inset 0 -10px 0 rgba(173,85,67,.13)
+}
+.stage-skin:after{
+  content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:46px;height:25px;border-radius:50%;background:var(--lesion,#c75c58);opacity:.9
+}
+.stage-card:nth-child(2) .stage-skin:after{border-radius:12px;background:#dc8270;box-shadow:inset 0 0 0 6px #f7c3ab}
+.stage-card:nth-child(3) .stage-skin:after{width:42px;height:32px;border-radius:12px;background:#a85f45;box-shadow:inset 0 0 0 8px #d9a07c}
+.stage-card:nth-child(4) .stage-skin:after{width:46px;height:37px;border-radius:10px;background:#784635;box-shadow:inset 0 0 0 7px #be8569}
+.stage-card:nth-child(5) .stage-skin:after{width:52px;height:31px;border-radius:8px;background:#514034}
+.stage-card:nth-child(6) .stage-skin:after{width:54px;height:30px;border-radius:50%;background:#74385c}
+.stage-content{padding:12px}
+.stage-content h3{margin:0 0 6px;color:#087f87;font-size:15px}
+.stage-content p{margin:4px 0;color:#597176;font-size:11.3px;line-height:1.55}
+.stage-content b{color:#3e6267}
+.risk-layout{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+.static-table{width:100%;border-collapse:collapse;font-size:12px}
+.static-table th,.static-table td{padding:8px 9px;border:1px solid #d8e7e7;text-align:left;vertical-align:top}
+.static-table th{background:#eaf8f8;color:#087f87}
+.static-table td strong{color:#087f87}
+.risk-result-card{
+  padding:16px;border-radius:8px;background:linear-gradient(145deg,#e9fafa,#fff);
+  border:1px solid #cde5e5
+}
+.risk-example-score{text-align:center;color:#087f87;font-size:42px;font-weight:900}
+.risk-example-level{text-align:center;color:#ff9623;font-size:20px;font-weight:900}
+.group-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.group-card{
+  padding:13px;border-radius:8px;background:#fff;border:1px solid #d4e6e6;
+  box-shadow:0 5px 14px rgba(0,79,85,.05)
+}
+.group-card h3{margin:0 0 9px;color:#087f87;font-size:16px}
+.group-card ul{margin:0;padding-left:20px;color:#526f74;font-size:12px;line-height:1.7}
+.measure-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+.measure-card{
+  min-height:186px;border-radius:8px;border:1px solid #d3e5e5;background:#fff;padding:12px;
+  box-shadow:0 5px 14px rgba(0,79,85,.05)
+}
+.measure-icon{
+  width:50px;height:50px;border-radius:50%;display:grid;place-items:center;
+  color:#fff;background:linear-gradient(145deg,#28c3c3,#078e98);font-size:23px;margin-bottom:9px
+}
+.measure-card h3{margin:0 0 6px;color:#087f87;font-size:14px}
+.measure-card p{margin:0;color:#5c7479;font-size:11.5px;line-height:1.58}
+.common-taboo{
+  margin-top:14px;padding:12px 14px;border-radius:7px;color:#923d43;background:#fff0f1;
+  border:1px solid #efc0c4;font-size:12px;line-height:1.7
+}
+@media(max-width:1280px){
+  .knowledge-sidebar{width:210px}
+  .knowledge-main{left:210px}
+  .concept-grid{grid-template-columns:repeat(3,1fr)}
+  .knowledge-card-grid,.stage-grid{grid-template-columns:repeat(2,1fr)}
+  .risk-layout,.group-grid{grid-template-columns:1fr}
+  .measure-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+
+/* ---------- after-class quiz ---------- */
+.quiz-screen{
+  position:relative;width:100vw;height:100vh;min-width:1180px;min-height:680px;overflow:hidden;
+  color:#29484d;
+  background:
+    radial-gradient(circle at 82% 10%,rgba(255,255,255,.96),transparent 30%),
+    linear-gradient(145deg,#eaf8f8 0%,#faffff 48%,#dceeee 100%)
+}
+.quiz-topbar{
+  position:absolute;left:0;right:0;top:0;height:56px;z-index:10;
+  display:grid;grid-template-columns:260px 1fr 330px;align-items:center;
+  color:#fff;background:linear-gradient(180deg,#0aa4aa,#087f88);
+  box-shadow:0 3px 10px rgba(0,78,84,.22)
+}
+.quiz-brand{padding-left:20px;font-weight:900;font-size:15px;letter-spacing:1px}
+.quiz-title{text-align:center}
+.quiz-title strong{display:block;font-size:19px;letter-spacing:2px}
+.quiz-title span{display:block;margin-top:2px;font-size:11px;opacity:.86}
+.quiz-top-actions{height:100%;display:flex;justify-content:flex-end;align-items:center}
+.quiz-top-count{
+  min-width:92px;height:32px;padding:0 13px;border:1px solid rgba(255,255,255,.58);
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900
+}
+.quiz-top-btn{
+  width:58px;height:56px;border:0;border-left:1px solid rgba(255,255,255,.2);
+  color:#fff;background:transparent;display:grid;place-items:center;align-content:center;
+  gap:1px;font-size:10px
+}
+.quiz-top-btn b{font-size:19px;font-weight:500}
+.quiz-top-btn:hover{background:rgba(255,255,255,.13)}
+.quiz-sidebar{
+  position:absolute;left:0;top:56px;bottom:0;width:230px;padding:18px 13px;
+  background:linear-gradient(180deg,rgba(255,255,255,.97),rgba(238,249,249,.95));
+  border-right:1px solid #cfe4e4;box-shadow:4px 0 16px rgba(0,90,96,.08)
+}
+.quiz-sidebar-head{
+  height:44px;padding:0 12px;border-radius:7px;color:#fff;
+  background:linear-gradient(90deg,#0aa7ad,#08848d);
+  display:flex;align-items:center;gap:9px;font-size:16px;font-weight:900
+}
+.quiz-number-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:15px
+}
+.quiz-number{
+  position:relative;height:42px;border:1px solid #cfe2e2;border-radius:6px;
+  background:#fff;color:#557176;font-weight:900
+}
+.quiz-number:hover{border-color:#0aa7ad}
+.quiz-number.active{color:#fff;background:#ff9b25;border-color:#ff9b25}
+.quiz-number.answered:not(.active){color:#fff;background:#34b978;border-color:#34b978}
+.quiz-number.answered:after{
+  content:"✓";position:absolute;right:3px;top:1px;font-size:9px
+}
+.quiz-sidebar-note{
+  margin-top:16px;padding:11px;border-radius:7px;background:#eaf8f8;
+  border:1px solid #cfe5e5;color:#557176;font-size:11px;line-height:1.65
+}
+.quiz-sidebar-legend{display:grid;gap:8px;margin-top:14px;color:#5f787c;font-size:11px}
+.quiz-legend-row{display:flex;align-items:center;gap:8px}
+.quiz-dot{width:15px;height:15px;border-radius:4px;background:#fff;border:1px solid #cfe2e2}
+.quiz-dot.current{background:#ff9b25;border-color:#ff9b25}
+.quiz-dot.done{background:#34b978;border-color:#34b978}
+.quiz-main{
+  position:absolute;left:230px;right:0;top:56px;bottom:0;padding:18px 22px 20px
+}
+.quiz-card{
+  width:min(920px,calc(100% - 34px));height:100%;margin:0 auto;
+  display:grid;grid-template-rows:auto 1fr auto;border-radius:10px;background:#fff;
+  border:1px solid #d5e6e6;box-shadow:0 12px 28px rgba(0,76,83,.12);overflow:hidden
+}
+.quiz-card-head{
+  min-height:70px;padding:13px 18px;background:linear-gradient(90deg,#effafa,#fff);
+  border-bottom:1px solid #d9e8e8;display:flex;align-items:center;justify-content:space-between
+}
+.quiz-card-head h2{margin:0;color:#087f87;font-size:19px}
+.quiz-card-head p{margin:5px 0 0;color:#71878b;font-size:11.5px}
+.quiz-type-chip{
+  min-width:76px;height:29px;border-radius:15px;padding:0 11px;
+  display:flex;align-items:center;justify-content:center;color:#087f87;
+  background:#e6f8f7;border:1px solid #bce0df;font-size:11px;font-weight:900
+}
+.quiz-body{padding:22px;overflow:auto}
+.quiz-question-number{color:#ff9623;font-size:13px;font-weight:900;margin-bottom:9px}
+.quiz-question-text{color:#314f54;font-size:19px;font-weight:900;line-height:1.65;margin-bottom:18px}
+.quiz-option-list{display:grid;gap:10px}
+.quiz-option{
+  min-height:52px;border:1px solid #cfe0e0;border-radius:7px;background:#fff;
+  display:grid;grid-template-columns:34px 1fr;align-items:center;
+  padding:7px 12px;color:#48646a;text-align:left;font-size:14px
+}
+.quiz-option:hover:not(:disabled){border-color:#0aa7ad;background:#f3fbfb}
+.quiz-option.selected{border-color:#0aa7ad;background:#eafafa;box-shadow:inset 5px 0 0 #0aa7ad}
+.quiz-option.correct{
+  color:#18764f;border-color:#34b978;background:#effbf4;box-shadow:inset 5px 0 0 #34b978
+}
+.quiz-option.wrong{
+  color:#9a3f46;border-color:#df6f77;background:#fff1f2;box-shadow:inset 5px 0 0 #df6f77
+}
+.quiz-letter{
+  width:27px;height:27px;border-radius:50%;display:grid;place-items:center;
+  color:#fff;background:#8abfc2;font-size:12px;font-weight:900
+}
+.quiz-option.selected .quiz-letter{background:#0aa7ad}
+.quiz-option.correct .quiz-letter{background:#34b978}
+.quiz-option.wrong .quiz-letter{background:#df6f77}
+.quiz-feedback{
+  margin-top:17px;padding:14px;border-radius:8px;border:1px solid #d2e5e5;background:#f8ffff
+}
+.quiz-feedback.correct-feedback{border-color:#a8dbc0;background:#f1fbf5}
+.quiz-feedback.wrong-feedback{border-color:#efc5c8;background:#fff5f5}
+.quiz-feedback-title{font-size:15px;font-weight:900;margin-bottom:7px}
+.quiz-feedback.correct-feedback .quiz-feedback-title{color:#23845d}
+.quiz-feedback.wrong-feedback .quiz-feedback-title{color:#a4454b}
+.quiz-answer-line{color:#365b60;font-size:13px;line-height:1.7}
+.quiz-explanation{
+  margin-top:8px;padding-top:8px;border-top:1px dashed #cadede;
+  color:#587176;font-size:12px;line-height:1.7
+}
+.quiz-footer{
+  min-height:72px;padding:12px 18px;border-top:1px solid #d9e8e8;
+  display:flex;align-items:center;justify-content:space-between;background:#f8fcfc
+}
+.quiz-nav-btn{
+  min-width:92px;height:37px;border:1px solid #bcdada;border-radius:5px;
+  color:#487176;background:#fff;font-weight:900
+}
+.quiz-nav-btn:hover:not(:disabled){color:#087f87;border-color:#0aa7ad}
+.quiz-nav-btn:disabled{opacity:.4;cursor:not-allowed}
+.quiz-confirm-btn{
+  min-width:122px;height:38px;border:0;border-radius:5px;color:#fff;
+  background:linear-gradient(#ffb13f,#ff9120);font-weight:900
+}
+.quiz-confirm-btn:disabled{background:#d6dede;color:#9babad;cursor:not-allowed}
+.quiz-complete-box{
+  margin-top:20px;padding:18px;border-radius:9px;background:linear-gradient(145deg,#effafa,#fff);
+  border:1px solid #cbe5e4;text-align:center
+}
+.quiz-complete-icon{
+  width:58px;height:58px;margin:0 auto 10px;border-radius:50%;display:grid;place-items:center;
+  color:#fff;background:#34b978;font-size:28px
+}
+.quiz-complete-box h3{margin:0 0 6px;color:#087f87}
+.quiz-complete-box p{margin:0;color:#647b80;font-size:12px;line-height:1.7}
+.quiz-complete-actions{display:flex;justify-content:center;gap:10px;margin-top:13px}
+@media(max-width:1280px){
+  .quiz-sidebar{width:205px}
+  .quiz-main{left:205px}
+}
+
+/* ---------- simulation shell ---------- */
+.sim{
+  position:relative;width:100vw;height:100vh;min-width:1180px;min-height:680px;overflow:hidden;
+  background:#dfe9ea;
+}
+.scene{
+  position:absolute;inset:0;
+  background-color:#dfe9ea;
+  background-image:
+    linear-gradient(rgba(3,54,60,.04),rgba(3,54,60,.04)),
+    var(--scene-bg, none);
+  background-size:cover;
+  background-position:center center;
+  background-repeat:no-repeat;
+  transition:background-image .22s ease, background-position .22s ease;
+}
+.scene:before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,88,94,.07) 0%,transparent 20%,transparent 74%,rgba(5,72,78,.13) 100%);
+}
+.scene-placeholder{
+  position:absolute;left:50%;top:47%;transform:translate(-50%,-50%);
+  color:rgba(24,111,118,.32);text-align:center;pointer-events:none
+}
+.scene-placeholder .big{font-size:38px;font-weight:900;letter-spacing:8px}
+.scene-placeholder .small{margin-top:12px;font-size:16px;letter-spacing:2px}
+.scene-placeholder.has-background{display:none}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:absolute;left:0;top:0;right:0;height:var(--top-h);z-index:20;
+  display:grid;grid-template-columns:190px 1fr 430px;align-items:center;
+  color:#fff;background:linear-gradient(180deg,rgba(6,150,158,.95),rgba(5,126,134,.95));
+  box-shadow:0 2px 8px rgba(0,66,72,.22)
+}
+.top-left-tag{
+  padding-left:12px;font-size:13px;font-weight:800;opacity:.92
+}
+.top-title{text-align:center;font-size:18px;font-weight:900;letter-spacing:2px}
+.top-actions{height:100%;display:flex;justify-content:flex-end;align-items:center}
+.timer{
+  height:32px;min-width:88px;margin-right:4px;padding:0 9px;border:1px solid rgba(255,255,255,.7);
+  display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:900
+}
+.top-btn{
+  width:47px;height:48px;border:0;border-left:1px solid rgba(255,255,255,.22);
+  color:#fff;background:transparent;display:grid;place-items:center;align-content:center;
+  gap:0;font-size:10px
+}
+.top-btn b{font-size:17px;font-weight:500}
+.top-btn:hover{background:rgba(255,255,255,.13)}
+.task-strip{
+  position:absolute;left:50%;top:64px;transform:translateX(-50%);z-index:16;
+  width:min(680px,58vw);height:29px;padding:0 20px;
+  color:#fff;background:linear-gradient(90deg,transparent,rgba(0,132,139,.82) 10%,rgba(0,132,139,.82) 90%,transparent);
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;
+}
+
+/* ---------- side / floating panels ---------- */
+.right-panel{
+  position:absolute;right:12px;top:91px;width:330px;max-height:calc(100vh - 190px);
+  z-index:18;background:var(--panel);border:1px solid rgba(0,137,145,.23);
+  border-radius:4px;box-shadow:var(--shadow);overflow:hidden;
+}
+.panel-head{
+  height:34px;padding:0 12px;color:#fff;background:linear-gradient(90deg,#0aa7ad,#0698a2);
+  display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:900
+}
+.panel-body{padding:12px;display:grid;gap:10px;overflow:auto;max-height:calc(100vh - 235px)}
+.panel-title{font-size:14px;font-weight:900;color:#157f86}
+.panel-note{font-size:13px;line-height:1.6;color:#506a70}
+.check-list{display:grid;gap:9px}
+.check-item{
+  min-height:34px;display:grid;grid-template-columns:22px 1fr 22px;align-items:center;
+  color:#40585e;font-size:13px
+}
+.check-item input{width:16px;height:16px;accent-color:#08a9aa}
+.check-item .pin{color:#9ab1b5}
+.option-list{display:grid;gap:8px}
+.option-btn{
+  min-height:36px;border:1px solid #c8dddd;border-radius:4px;background:#fff;color:#40585e;
+  text-align:left;padding:7px 10px;font-size:13px
+}
+.option-btn.active{border-color:#0aa7ad;background:#e7fbfa;color:#087d84;box-shadow:inset 4px 0 0 #0aa7ad}
+.orange-btn{
+  min-width:82px;height:32px;border:0;border-radius:4px;color:#fff;background:linear-gradient(#ffb13e,#ff9220);
+  font-weight:900;font-size:13px
+}
+.orange-btn:disabled{background:#e2d4c7;color:#fff;cursor:not-allowed}
+.panel-actions{display:flex;justify-content:center;gap:10px;padding-top:4px}
+.item-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.item-card{
+  height:77px;border:1px solid #d5e3e4;border-radius:4px;background:#fff;
+  display:grid;grid-template-rows:1fr 23px;place-items:center;color:#536c72;font-size:12px
+}
+.item-card.active{border-color:#0aa7ad;box-shadow:0 0 0 2px rgba(10,167,173,.16)}
+.item-thumb{
+  width:44px;height:34px;border-radius:5px;background:linear-gradient(145deg,#dff9f8,#7ed7d4);
+  display:grid;place-items:center;color:#087f87;font-size:22px;font-weight:900
+}
+
+
+
+/* ---------- nurse outfit selector ---------- */
+.right-panel.outfit-panel{width:390px}
+.outfit-intro{padding:9px 10px;border-radius:7px;background:#eefafa;color:#416a70;font-size:12px;line-height:1.55}
+.outfit-category{display:grid;gap:6px}
+.outfit-category-title{display:flex;align-items:center;justify-content:space-between;color:#24777d;font-size:12px;font-weight:900}
+.outfit-category-title span:last-child{color:#97aeb2;font-size:10px}
+.outfit-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.outfit-card{min-height:66px;padding:6px;border:1px solid #cee1e2;border-radius:7px;background:#fff;color:#4f696e;display:grid;grid-template-columns:38px 1fr;align-items:center;gap:7px;text-align:left}
+.outfit-card:hover{border-color:#68c9c9;background:#f7ffff}
+.outfit-card.selected{color:#087e85;border-color:#0aa7ad;background:#e9fbfa;box-shadow:inset 3px 0 0 #0aa7ad}
+.outfit-card.error{color:#a74449;border-color:#df6d74;background:#fff2f3;box-shadow:inset 3px 0 0 #d9545d}
+.outfit-icon{width:34px;height:34px;border-radius:8px;background:linear-gradient(145deg,#e8fbfa,#9ddfdd);display:grid;place-items:center;font-size:21px}
+.outfit-name{font-size:12px;font-weight:900}
+.outfit-feedback{padding:8px 10px;border-radius:7px;border:1px solid #efb1b5;color:#a33f46;background:#fff3f4;font-size:11px;line-height:1.6}
+.outfit-ready{padding:7px 9px;border-radius:7px;color:#087e85;background:#eaf9f3;font-size:11px;font-weight:800}
+.nurse-outfit-preview{position:absolute;left:50%;bottom:104px;transform:translateX(-50%);z-index:13;min-width:420px;max-width:55vw;padding:8px 12px;border:1px solid rgba(255,255,255,.62);border-radius:20px;background:rgba(0,101,108,.76);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;color:#fff;box-shadow:0 8px 22px rgba(0,50,56,.22)}
+.nurse-outfit-preview.hidden{display:none}
+.nurse-outfit-preview b{font-size:11px;margin-right:2px}
+.nurse-outfit-chip{padding:3px 8px;border-radius:12px;background:rgba(255,255,255,.16);font-size:10px;white-space:nowrap}
+
+/* ---------- body site navigation panel ---------- */
+.site-list{display:grid;gap:2px}
+.site-row{
+  width:100%;min-height:52px;border:0;border-bottom:1px solid #eef3f3;background:#fff;
+  display:grid;grid-template-columns:36px 1fr 42px;align-items:center;
+  padding:0 4px;color:#4d595d;text-align:left;font-size:18px
+}
+.site-row:hover{background:#f4fbfb}
+.site-row.active{
+  background:linear-gradient(90deg,#eefcfb,#fff);
+  box-shadow:inset 4px 0 0 #0aa7ad
+}
+.site-status{
+  width:25px;height:25px;border:1px solid #3a989d;border-radius:1px;
+  display:grid;place-items:center;color:transparent;background:#fff;font-size:18px;font-weight:900
+}
+.site-row.done .site-status{
+  color:#fff;border-color:#ffae3b;background:linear-gradient(145deg,#ffbd4d,#ff9b28)
+}
+.site-name{padding-left:3px;white-space:nowrap}
+.site-locate{
+  width:36px;height:40px;border:0;background:transparent;color:#cbd4d6;
+  display:grid;place-items:center;font-size:28px;line-height:1
+}
+.site-row.active .site-locate{color:#11a5aa}
+.site-panel-help{
+  padding:8px 9px;border-radius:4px;color:#587176;background:#eff8f8;
+  font-size:12px;line-height:1.55
+}
+.site-current{
+  display:flex;align-items:center;justify-content:space-between;padding:8px 10px;
+  border:1px solid #cde5e5;background:#f8ffff;color:#3c686d;font-size:13px
+}
+.site-current b{color:#078d94}
+
+
+/* ---------- task navigation panel ---------- */
+.nav-task-list{display:grid;gap:2px}
+.nav-task-row{
+  width:100%;min-height:50px;border:0;border-bottom:1px solid #edf3f3;background:#fff;
+  display:grid;grid-template-columns:36px 1fr 42px;align-items:center;
+  padding:0 4px;color:#4d595d;text-align:left;font-size:16px
+}
+.nav-task-row:hover{background:#f4fbfb}
+.nav-task-row.active{
+  background:linear-gradient(90deg,#eefcfb,#fff);
+  box-shadow:inset 4px 0 0 #0aa7ad
+}
+.nav-task-status{
+  width:25px;height:25px;border:1px solid #3a989d;border-radius:1px;
+  display:grid;place-items:center;color:transparent;background:#fff;font-size:18px;font-weight:900
+}
+.nav-task-row.done .nav-task-status{
+  color:#fff;border-color:#ffae3b;background:linear-gradient(145deg,#ffbd4d,#ff9b28)
+}
+.nav-task-name{padding-left:3px;line-height:1.35}
+.nav-task-locate{
+  width:36px;height:40px;border:0;background:transparent;color:#cbd4d6;
+  display:grid;place-items:center;font-size:28px;line-height:1
+}
+.nav-task-row.active .nav-task-locate{color:#11a5aa}
+.nav-task-help{
+  padding:8px 9px;border-radius:4px;color:#587176;background:#eff8f8;
+  font-size:12px;line-height:1.55
+}
+.nav-task-current{
+  display:flex;align-items:center;justify-content:space-between;padding:8px 10px;
+  border:1px solid #cde5e5;background:#f8ffff;color:#3c686d;font-size:13px
+}
+.nav-task-current b{color:#078d94}
+
+
+
+/* ---------- identity verification ---------- */
+.right-panel.identity-panel{width:min(470px,40vw)}
+.identity-card{padding:10px;border:1px solid #d5e7e7;border-radius:7px;background:#faffff;display:grid;gap:7px}
+.identity-row{display:grid;grid-template-columns:94px 1fr;gap:8px;font-size:12px;line-height:1.5}
+.identity-row b{color:#147e85}
+.identity-checks{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.identity-check-btn.done{border-color:#39b979;background:#edf9f2;color:#23734e}
+.identity-feedback{padding:8px 10px;border-radius:7px;background:#fff2f3;border:1px solid #efb1b5;color:#a43f47;font-size:11px;line-height:1.6}
+
+/* ---------- Braden full evaluation ---------- */
+.right-panel.braden-panel{width:min(610px,48vw)}
+.braden-layout{display:grid;grid-template-columns:180px minmax(0,1fr);gap:10px;align-items:start}
+.braden-left{display:grid;gap:6px;position:sticky;top:0}
+.braden-main{display:grid;gap:8px;min-width:0}
+.braden-dim-list{display:grid;gap:5px}
+.braden-dim.locked{opacity:.48;cursor:not-allowed;background:#f1f4f4}
+.braden-dim.locked .braden-index{background:#aebbbc}
+.braden-score-option:disabled{opacity:.52;cursor:not-allowed}
+.braden-score-option.locked-score{border-color:#8bcfac;background:#edf9f2;color:#23734e}
+.braden-feedback{padding:8px 10px;border-radius:7px;border:1px solid #efb1b5;background:#fff2f3;color:#a43f47;font-size:11px;line-height:1.65}
+.braden-score-guide{padding:8px 10px;border-radius:7px;background:#f5fbfb;color:#4c676c;font-size:11px;line-height:1.55}
+.braden-score-options{display:grid;grid-template-columns:1fr;gap:6px}
+.braden-score-option{min-height:52px;line-height:1.55}
+.braden-question-card{border-left:4px solid #0aa7ad}
+.braden-answer-hint.ready{background:#edf9f2;border-color:#acd9be;color:#2d6b4a}
+.req-review-card.scoring{border-left:3px solid #7c63bd;background:#fbf9ff}
+.req-review-card.scoring summary{color:#684ca8;background:#f5f1fc}
+
+/* ---------- Braden assessment ---------- */
+.braden-intro{
+  padding:9px 10px;border-radius:4px;background:#eff9f9;color:#557176;
+  font-size:12px;line-height:1.55
+}
+.braden-progress{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 10px;border:1px solid #cfe6e6;background:#f9ffff;
+  color:#507075;font-size:12px
+}
+.braden-progress b{color:#078d94;font-size:14px}
+.braden-dim-list{display:grid;gap:4px}
+.braden-dim{
+  min-height:48px;border:1px solid #dceaea;border-radius:4px;background:#fff;
+  display:grid;grid-template-columns:30px 1fr 55px;align-items:center;
+  padding:0 8px;text-align:left;color:#465e63
+}
+.braden-dim:hover{background:#f3fbfb}
+.braden-dim.active{border-color:#0aa7ad;box-shadow:inset 4px 0 0 #0aa7ad;background:#effcfc}
+.braden-dim.done{border-color:#9bd5b7;background:#f2fcf6}
+.braden-index{
+  width:23px;height:23px;border-radius:50%;display:grid;place-items:center;
+  color:#fff;background:#0aa7ad;font-size:12px;font-weight:900
+}
+.braden-dim.done .braden-index{background:#34b978}
+.braden-dim-name{font-size:14px;font-weight:900;padding-left:5px}
+.braden-score-badge{
+  min-width:46px;height:25px;border-radius:13px;display:grid;place-items:center;
+  color:#758b8f;background:#edf4f4;font-size:12px;font-weight:900
+}
+.braden-dim.done .braden-score-badge{color:#fff;background:#34b978}
+.braden-question-card{
+  padding:10px;border:1px solid #d4e7e7;border-radius:4px;background:#fff
+}
+.braden-question-title{color:#0a858c;font-size:13px;font-weight:900;margin-bottom:5px}
+.braden-question-text{color:#415e63;font-size:13px;line-height:1.55}
+.braden-answer-hint{
+  padding:9px 10px;border-radius:4px;background:#fff8e9;border:1px solid #f4dbab;
+  color:#7b6135;font-size:12px;line-height:1.5
+}
+.braden-score-options{display:grid;gap:6px}
+.braden-score-option{
+  min-height:37px;border:1px solid #cbdede;border-radius:4px;background:#fff;
+  color:#456267;text-align:left;padding:7px 9px;font-size:12px
+}
+.braden-score-option.active{
+  border-color:#0aa7ad;background:#e9fbfa;color:#087f86;
+  box-shadow:inset 4px 0 0 #0aa7ad
+}
+.braden-summary-grid{display:grid;grid-template-columns:1fr 58px;gap:1px;background:#dce9ea;border:1px solid #dce9ea}
+.braden-summary-grid div{padding:8px 9px;background:#fff;font-size:12px}
+.braden-summary-grid .head{background:#eaf8f8;color:#147e85;font-weight:900}
+.braden-total{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 12px;background:#effafa;border:1px solid #cde6e6;color:#3f6469
+}
+.braden-total b{font-size:23px;color:#078c94}
+.risk-result-box{
+  padding:10px;border-radius:4px;background:#fff7e9;border:1px solid #f1d5a4;
+  color:#775c31;font-size:12px;line-height:1.6
+}
+.risk-basis{
+  padding:9px 10px;background:#f5fafb;border-left:4px solid #0aa7ad;
+  color:#526c71;font-size:12px;line-height:1.6
+}
+
+/* ---------- dialogue ---------- */
+.dialogue{
+  position:absolute;left:50%;bottom:80px;transform:translateX(-50%);z-index:17;
+  width:min(650px,62vw);min-height:52px;display:grid;grid-template-columns:54px 1fr 38px;align-items:end
+}
+.avatar{
+  width:49px;height:49px;border-radius:50%;border:3px solid #13afb0;background:linear-gradient(145deg,#f8ffff,#a1dedd);
+  display:grid;place-items:center;font-size:25px;box-shadow:0 5px 12px rgba(0,88,94,.2)
+}
+.speech{
+  min-height:44px;padding:9px 14px;margin-left:7px;background:rgba(255,255,255,.94);
+  border:1px solid rgba(5,154,162,.28);border-radius:5px;color:#51676c;font-size:13px;line-height:1.5;
+  box-shadow:0 6px 16px rgba(0,75,82,.14)
+}
+.speech b{color:#188088}
+.dialog-next{
+  width:28px;height:28px;margin-left:6px;border-radius:50%;border:0;color:#fff;background:#0aa7ad;font-weight:900
+}
+
+/* ---------- bottom primary + secondary navigation ---------- */
+.bottom-nav{
+  position:absolute;left:0;right:0;bottom:0;height:var(--bottom-h);z-index:21;
+  background:linear-gradient(180deg,rgba(242,250,250,.42),rgba(232,243,244,.94));
+  border-top:1px solid rgba(255,255,255,.78);
+  box-shadow:0 -3px 12px rgba(0,77,84,.10)
+}
+.current-primary{
+  position:absolute;left:16px;bottom:8px;width:142px;height:56px;border:0;border-radius:7px;
+  color:#fff;background:linear-gradient(145deg,#10adb4,#087f89);
+  display:grid;grid-template-columns:43px 1fr 18px;align-items:center;
+  padding:0 8px 0 7px;box-shadow:0 7px 14px rgba(0,75,82,.20)
+}
+.current-primary:hover{filter:brightness(1.05)}
+.primary-icon{
+  width:39px;height:39px;border-radius:50%;border:3px solid rgba(255,255,255,.78);
+  display:grid;place-items:center;font-size:19px;background:rgba(255,255,255,.10)
+}
+.primary-name{font-size:14px;font-weight:900;letter-spacing:1px;white-space:nowrap}
+.primary-arrow{font-size:15px;opacity:.9}
+.secondary-fixed{
+  position:absolute;left:175px;right:88px;bottom:7px;height:58px;
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  overflow-x:auto;overflow-y:hidden;padding:0 8px;
+  scrollbar-width:thin;scrollbar-color:#8bc7c9 transparent
+}
+.secondary-fixed::-webkit-scrollbar{height:4px}
+.secondary-fixed::-webkit-scrollbar-thumb{background:#8bc7c9;border-radius:4px}
+.secondary-step{
+  position:relative;flex:0 0 auto;min-width:82px;height:48px;border:0;background:transparent;
+  color:#316d72;display:grid;justify-items:center;align-content:center;gap:3px;
+  font-size:11px;font-weight:900
+}
+.secondary-step:after{
+  content:"";position:absolute;left:calc(100% + 1px);top:23px;width:13px;border-top:2px dotted #8dbfc1
+}
+.secondary-step:last-child:after{display:none}
+.secondary-circle{
+  width:32px;height:32px;border-radius:50%;border:3px solid rgba(255,255,255,.88);
+  display:grid;place-items:center;color:#fff;font-size:14px;
+  background:linear-gradient(145deg,#18b7bd,#0a8d98);
+  box-shadow:0 4px 8px rgba(0,81,88,.16)
+}
+.secondary-step.active .secondary-circle{background:linear-gradient(145deg,#ffbc48,#ff8f1d)}
+.secondary-step.done .secondary-circle{background:linear-gradient(145deg,#53cc8d,#24a768)}
+.secondary-step.locked{opacity:.42;cursor:not-allowed}
+.secondary-step.locked .secondary-circle{background:#78999c}
+.secondary-step .step-label{white-space:nowrap}
+.primary-pop{
+  position:absolute;left:16px;bottom:72px;z-index:25;width:172px;padding:7px;
+  border-radius:7px;background:rgba(247,253,253,.97);
+  border:1px solid rgba(0,141,149,.24);box-shadow:var(--shadow);
+  display:grid;gap:5px
+}
+.primary-pop-btn{
+  height:39px;border:1px solid #c3dddd;border-radius:5px;background:#fff;color:#416d72;
+  display:grid;grid-template-columns:34px 1fr;align-items:center;text-align:left;
+  padding:0 9px;font-size:12px;font-weight:900
+}
+.primary-pop-btn span:first-child{
+  width:25px;height:25px;border-radius:50%;display:grid;place-items:center;
+  color:#fff;background:#0aa1a9
+}
+.primary-pop-btn.active{
+  color:#fff;border-color:#ff9a22;background:linear-gradient(90deg,#ffad36,#ff9220)
+}
+.primary-pop-btn.active span:first-child{background:rgba(255,255,255,.22)}
+
+/* ---------- modals ---------- */
+.modal-mask{
+  position:absolute;inset:48px 0 74px;z-index:40;display:flex;align-items:center;justify-content:center;
+  background:rgba(14,51,55,.18)
+}
+.modal{
+  width:560px;max-height:78vh;border-radius:4px;background:#fff;overflow:hidden;
+  border:1px solid rgba(0,132,140,.25);box-shadow:0 16px 40px rgba(0,63,69,.28)
+}
+.modal.wide{width:760px}
+.modal-head{
+  height:38px;padding:0 13px;color:#fff;background:linear-gradient(90deg,#0ba7ad,#078d97);
+  display:flex;align-items:center;justify-content:space-between;font-size:15px;font-weight:900
+}
+.modal-body{padding:15px 18px;max-height:calc(78vh - 82px);overflow:auto}
+.modal-footer{padding:8px 18px 13px;display:flex;justify-content:center;gap:10px}
+.close-x{border:0;background:transparent;color:#fff;font-size:19px}
+.info-grid{
+  display:grid;grid-template-columns:80px 1fr 70px 1fr;gap:8px 10px;align-items:center;font-size:13px
+}
+.info-grid label{color:#177f86;font-weight:900}
+.info-grid div{min-height:29px;padding:5px 8px;background:#eefafa;border:1px solid #d5eeee}
+.section-line{margin:10px 0 6px;padding:5px 8px;color:#fff;background:#26aeb1;font-size:13px;font-weight:900}
+.text-block{font-size:13px;line-height:1.75;color:#3f555b}
+.record-table,.compare-table{width:100%;border-collapse:collapse;font-size:12px}
+.record-table th,.record-table td,.compare-table th,.compare-table td{
+  padding:7px 8px;border:1px solid #d6e5e6;text-align:left
+}
+.record-table th,.compare-table th{background:#eaf8f8;color:#187d83}
+.time-card{text-align:center;padding:30px 10px}
+.time-icon{font-size:52px;color:#079da5}
+.time-big{font-size:28px;font-weight:900;color:#087f87;margin:8px}
+.time-note{color:#60777c;font-size:13px}
+.trend-chip{
+  display:inline-grid;place-items:center;min-width:64px;height:25px;border-radius:13px;padding:0 10px;
+  font-weight:900;color:#fff;background:#36b978
+}
+.trend-chip.worse{background:#e88626}
+.trend-chip.danger{background:#d9505a}
+
+.compare-intro{
+  margin-bottom:10px;padding:10px 12px;border-radius:5px;
+  color:#4e6b70;background:#effafa;border:1px solid #cfe7e7;
+  font-size:12px;line-height:1.6
+}
+.objective-chip{
+  display:inline-flex;align-items:center;min-height:23px;padding:2px 8px;border-radius:12px;
+  color:#486a6f;background:#edf5f5;border:1px solid #d4e4e4;font-size:11px;font-weight:900
+}
+.objective-chip.warn{color:#a46b22;background:#fff6e7;border-color:#f0d4a1}
+.decision-block{
+  margin-top:12px;padding:12px;border:1px solid #d5e7e7;border-radius:7px;background:#faffff
+}
+.decision-block h3{margin:0 0 8px;color:#087f87;font-size:14px}
+.decision-hint{margin-bottom:10px;color:#637b80;font-size:12px;line-height:1.6}
+.compare-feedback{
+  padding:14px;border-radius:8px;border:1px solid #cfe4e4;background:#f8ffff
+}
+.compare-feedback.correct{border-color:#a9dbc1;background:#f1fbf5}
+.compare-feedback.wrong{border-color:#edc3c7;background:#fff4f5}
+.compare-feedback h3{margin:0 0 9px;font-size:17px}
+.compare-feedback.correct h3{color:#23845d}
+.compare-feedback.wrong h3{color:#a4454b}
+.compare-feedback-grid{
+  display:grid;grid-template-columns:130px 1fr;gap:1px;background:#d9e8e8;border:1px solid #d9e8e8
+}
+.compare-feedback-grid div{padding:8px 9px;background:#fff;font-size:12px;line-height:1.6}
+.compare-feedback-grid .label{color:#087f87;background:#eaf8f8;font-weight:900}
+.compare-basis{
+  margin-top:10px;padding:10px 12px;border-left:4px solid #0aa7ad;
+  color:#4d686d;background:#f1f9f9;font-size:12px;line-height:1.7
+}
+.ghost-btn{
+  min-width:104px;height:36px;border:1px solid #99cfd0;border-radius:4px;
+  color:#087f87;background:#fff;font-weight:900
+}
+
+.score-big{font-size:52px;color:#ff9722;font-weight:900;text-align:center}
+.score-list{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:12px}
+.score-cell{padding:9px 5px;background:#eef9f9;border:1px solid #d7e8e9;text-align:center;font-size:11px}
+.score-cell b{display:block;color:#118189;font-size:17px;margin-top:4px}
+
+/* ---------- task interaction decorations ---------- */
+.hotspot{
+  position:absolute;left:51%;top:51%;z-index:8;width:45px;height:45px;border-radius:50%;
+  border:3px solid rgba(255,255,255,.95);background:rgba(3,169,175,.48);box-shadow:0 0 0 9px rgba(4,171,176,.14);
+  display:grid;place-items:center;color:#fff;font-weight:900;animation:pulse 1.5s infinite
+}
+@keyframes pulse{50%{box-shadow:0 0 0 15px rgba(4,171,176,.03)}}
+.progress-hint{
+  position:absolute;left:50%;top:36%;transform:translateX(-50%);z-index:9;
+  width:260px;padding:10px 14px;border-radius:4px;background:rgba(255,255,255,.92);
+  border:1px solid rgba(6,153,161,.28);box-shadow:var(--shadow);text-align:center
+}
+.progress-hint b{display:block;color:#10828a;font-size:14px}
+.progress-line{height:6px;margin-top:8px;border-radius:4px;background:#dceaea;overflow:hidden}
+.progress-line i{display:block;width:58%;height:100%;background:linear-gradient(90deg,#16b9bb,#ff9b22)}
+
+.toast{
+  position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(14px);
+  min-width:240px;max-width:70vw;padding:10px 16px;border-radius:5px;
+  color:#fff;background:rgba(16,73,78,.94);z-index:90;text-align:center;
+  opacity:0;transition:.18s;pointer-events:none;font-size:13px
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:1280px){
+  .topbar{grid-template-columns:140px 1fr 380px}
+  .module-card{width:190px}
+  .module-grid{gap:35px}
+  .right-panel{width:300px}
+}
+
+/* ---------- requirement review panel：compact ---------- */
+.req-review-toggle{
+  position:fixed;left:16px;bottom:88px;z-index:151;
+  min-width:102px;height:36px;padding:0 14px;border:0;border-radius:18px;
+  color:#fff;background:linear-gradient(135deg,#087f87,#0baeb2);
+  box-shadow:0 8px 20px rgba(0,63,69,.24);
+  font-size:12px;font-weight:900;letter-spacing:.5px
+}
+.req-review-toggle:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.req-review-panel{
+  position:fixed;left:16px;top:82px;z-index:152;
+  width:400px;height:min(650px,calc(100vh - 174px));
+  min-width:320px;min-height:260px;
+  max-width:min(680px,calc(100vw - 20px));max-height:calc(100vh - 18px);
+  display:flex;flex-direction:column;overflow:hidden;resize:both;
+  background:rgba(255,255,255,.985);
+  border:1px solid rgba(7,156,163,.28);
+  border-radius:10px;
+  box-shadow:0 16px 42px rgba(0,52,59,.27);
+  color:#29484d
+}
+.req-review-panel.hidden{display:none!important}
+.req-review-head{
+  flex:0 0 auto;height:44px;padding:0 8px 0 13px;
+  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;
+  color:#fff;background:linear-gradient(135deg,#087f87,#0aa7ad);
+  cursor:move;user-select:none;touch-action:none
+}
+.req-review-title{
+  min-width:0;display:flex;align-items:center;gap:7px
+}
+.req-review-title::before{
+  content:"";width:4px;height:18px;border-radius:3px;background:#ffd27d;flex:0 0 auto
+}
+.req-review-title b{
+  display:block;min-width:0;font-size:14px;line-height:1.2;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+.req-review-title span{display:none}
+.req-review-actions{display:flex;gap:3px;align-items:center}
+.req-review-icon{
+  width:26px;height:26px;border:0;border-radius:6px;
+  color:#fff;background:rgba(255,255,255,.11);
+  font-size:13px;font-weight:900;display:grid;place-items:center
+}
+.req-review-icon:hover{background:rgba(255,255,255,.23)}
+.req-review-body{
+  flex:1;min-height:0;overflow:auto;padding:7px;
+  scrollbar-color:#8fc4c6 #eef7f7;scrollbar-width:thin
+}
+.req-review-scroll{
+  min-width:100%;display:grid;gap:5px;padding-bottom:2px
+}
+.req-review-body::-webkit-scrollbar{width:8px;height:8px}
+.req-review-body::-webkit-scrollbar-track{background:#eef7f7}
+.req-review-body::-webkit-scrollbar-thumb{
+  background:#8fc4c6;border:2px solid #eef7f7;border-radius:8px
+}
+.req-review-card{
+  margin:0;border:1px solid #d9e8e8;border-radius:7px;background:#fff;
+  box-shadow:none;overflow:hidden
+}
+.req-review-card[open]{border-color:#afd5d5}
+.req-review-card.primary{border-left:3px solid #0aa2a7}
+.req-review-card.resources{border-left:3px solid #2d92c2}
+.req-review-card.interaction{border-left:3px solid #e19a28}
+.req-review-card.special{border-left:3px solid #d35b62;background:#fffafa}
+
+.req-review-card.judgment{border-left:3px solid #24845d;background:#f8fffb}
+.req-review-card.judgment summary{color:#176b49;background:#edf9f2}
+.req-review-card.judgment .req-text{font-size:11.8px;line-height:1.72}
+
+.req-review-card summary{
+  list-style:none;min-height:32px;padding:6px 9px;
+  display:flex;align-items:center;gap:6px;
+  color:#315d62;background:#f7fbfb;
+  font-size:12px;font-weight:900;cursor:pointer;user-select:none
+}
+.req-review-card summary::-webkit-details-marker{display:none}
+.req-review-card summary::after{
+  content:"＋";margin-left:auto;color:#709398;font-size:14px;font-weight:700
+}
+.req-review-card[open] summary::after{content:"－"}
+.req-review-card.resources summary{color:#116f9f;background:#f2f8fc}
+.req-review-card.interaction summary{color:#9a6008;background:#fff9ed}
+.req-review-card.special summary{color:#ad3f47;background:#fff2f3}
+.req-review-card .req-text{
+  padding:8px 10px 9px;color:#405e63;font-size:11.6px;line-height:1.66;
+  white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;
+  border-top:1px solid #e5eeee
+}
+.req-review-card.interaction .req-text{font-size:11.8px;line-height:1.72}
+.req-review-card .req-text b{color:#087f87}
+
+.req-page-sections{
+  display:grid;gap:0;padding:0
+}
+.req-page-section{
+  padding:8px 10px 9px;border-top:1px dashed #dce9e9
+}
+.req-page-section:first-child{border-top:0}
+.req-page-section-title{
+  margin-bottom:4px;color:#087f87;font-size:11.5px;font-weight:900
+}
+.req-page-section-content{
+  color:#405e63;font-size:11.6px;line-height:1.68;
+  white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere
+}
+.req-review-card.page-info{border-left:3px solid #7b8fd3}
+.req-review-card.page-info summary{color:#5264a7;background:#f5f6fc}
+
+.req-token{
+  display:inline;padding:1px 4px;border-radius:3px;
+  color:#087f87;background:#e8f8f7;border:1px solid #c5e5e4;font-weight:800
+}
+.req-token.voice{color:#895908;background:#fff6dc;border-color:#efd498}
+@media(max-width:1280px){
+  .req-review-panel{left:10px;width:370px}
+  .req-review-toggle{left:10px}
+}
+
+</style>
+</head>
+<body>
+
+<section class="module-home" id="moduleHome">
+  <div class="home-top">
+    <div class="home-title">压力性损伤皮肤监护</div>
+    <div class="home-actions">
+      <button class="small-top-btn"><span>↻</span><span>重置</span></button>
+      <button class="small-top-btn"><span>⚙</span><span>设置</span></button>
+      <button class="small-top-btn"><span>⊗</span><span>退出</span></button>
+    </div>
+  </div>
+  <div class="module-grid">
+    <button class="module-card" data-module="knowledge">
+      <div class="module-icon">▯</div>
+      <div class="module-name">知识准备</div>
+      <div class="module-enter">进入学习</div>
+    </button>
+    <button class="module-card" data-module="practice">
+      <div class="module-icon">▣</div>
+      <div class="module-name">虚拟实战</div>
+      <div class="module-enter">进入学习</div>
+    </button>
+    <button class="module-card" data-module="quiz">
+      <div class="module-icon">▤</div>
+      <div class="module-name">课后练习</div>
+      <div class="module-enter">进入学习</div>
+    </button>
+  </div>
+  <div class="home-dots"><i></i><i></i><i></i><i></i></div>
+</section>
+
+
+<section class="knowledge-screen hidden" id="knowledgeScreen">
+  <header class="knowledge-topbar">
+    <div class="knowledge-brand">压力性损伤皮肤监护</div>
+    <div class="knowledge-title-group">
+      <strong>知识准备</strong>
+      <span id="knowledgeCurrentTitle">学习目标与基本概念</span>
+    </div>
+    <div class="knowledge-top-actions">
+      <button class="knowledge-top-btn" id="knowledgeSettingsBtn"><b>⚙</b><span>设置</span></button>
+      <button class="knowledge-top-btn" id="knowledgeBackBtn"><b>↩</b><span>返回</span></button>
+      <button class="knowledge-top-btn" id="knowledgeExitBtn"><b>⊗</b><span>退出</span></button>
+    </div>
+  </header>
+
+  <aside class="knowledge-sidebar">
+    <div class="knowledge-sidebar-head"><span>▤</span><span>知识栏目</span></div>
+    <nav class="knowledge-nav" id="knowledgeNav"></nav>
+    <div class="knowledge-sidebar-note">
+      本模块仅用于知识浏览。点击左侧栏目切换内容，页面不记录进度、分数、点击次数或完成状态。
+    </div>
+  </aside>
+
+  <main class="knowledge-main">
+    <div class="knowledge-page-head">
+      <div>
+        <h2 id="knowledgePageTitle">学习目标与基本概念</h2>
+        <p id="knowledgePageSubtitle">建立压力性损伤皮肤监护的统一理论基础</p>
+      </div>
+      <div class="knowledge-browse-chip">知识浏览</div>
+    </div>
+    <div class="knowledge-scroll" id="knowledgeContent"></div>
+  </main>
+</section>
+
+
+<section class="quiz-screen hidden" id="quizScreen">
+  <header class="quiz-topbar">
+    <div class="quiz-brand">压力性损伤皮肤监护</div>
+    <div class="quiz-title">
+      <strong>课后练习</strong>
+      <span>10道单项选择题｜每题作答后显示正确答案与解析</span>
+    </div>
+    <div class="quiz-top-actions">
+      <div class="quiz-top-count" id="quizTopCount">第 1 / 10 题</div>
+      <button class="quiz-top-btn" id="quizResetBtn"><b>↻</b><span>重置</span></button>
+      <button class="quiz-top-btn" id="quizBackBtn"><b>↩</b><span>返回</span></button>
+      <button class="quiz-top-btn" id="quizExitBtn"><b>⊗</b><span>退出</span></button>
+    </div>
+  </header>
+
+  <aside class="quiz-sidebar">
+    <div class="quiz-sidebar-head"><span>▤</span><span>题目导航</span></div>
+    <div class="quiz-number-grid" id="quizNumberGrid"></div>
+    <div class="quiz-sidebar-legend">
+      <div class="quiz-legend-row"><span class="quiz-dot current"></span><span>当前题目</span></div>
+      <div class="quiz-legend-row"><span class="quiz-dot done"></span><span>已作答题目</span></div>
+      <div class="quiz-legend-row"><span class="quiz-dot"></span><span>未作答题目</span></div>
+    </div>
+    <div class="quiz-sidebar-note">
+      本模块不计算总成绩。选择答案后点击“确认答案”，系统立即显示正确答案和解析。
+    </div>
+  </aside>
+
+  <main class="quiz-main">
+    <section class="quiz-card">
+      <div class="quiz-card-head">
+        <div>
+          <h2 id="quizKnowledgeTitle">压力性损伤基本知识</h2>
+          <p id="quizKnowledgeSubtitle">请选择一个最符合题意的答案</p>
+        </div>
+        <div class="quiz-type-chip">单选题</div>
+      </div>
+      <div class="quiz-body" id="quizBody"></div>
+      <div class="quiz-footer">
+        <button class="quiz-nav-btn" id="quizPrevBtn">上一题</button>
+        <button class="quiz-confirm-btn" id="quizConfirmBtn" disabled>确认答案</button>
+        <button class="quiz-nav-btn" id="quizNextBtn">下一题</button>
+      </div>
+    </section>
+  </main>
+</section>
+
+<section class="sim hidden" id="sim">
+  <div class="scene" id="scene"></div>
+  <div class="nurse-outfit-preview hidden" id="nurseOutfitPreview"></div>
+  <div class="scene-placeholder">
+    <div class="big" id="scenePlaceholderBig">三维场景底图占位</div>
+    <div class="small" id="scenePlaceholderSmall">后续按步骤替换为对应医学场景图片</div>
+  </div>
+
+  <header class="topbar">
+    <div class="top-left-tag">PRESSURE INJURY MONITORING</div>
+    <div class="top-title">压力性损伤皮肤监护</div>
+    <div class="top-actions">
+      <div class="timer">◷ <span id="timerText">00:00</span></div>
+      <button class="top-btn" id="backHomeBtn"><b>↩</b><span>返回</span></button>
+      <button class="top-btn" id="resetBtn"><b>↻</b><span>重置</span></button>
+      <button class="top-btn" id="settingsBtn"><b>⚙</b><span>设置</span></button>
+      <button class="top-btn" id="exitBtn"><b>⊗</b><span>退出</span></button>
+    </div>
+  </header>
+
+  <div class="task-strip" id="taskStrip">请查看患者病历并识别压力性损伤高危因素。</div>
+
+  <div id="hotspot" class="hotspot hidden">+</div>
+  <div id="progressHint" class="progress-hint hidden">
+    <b id="progressTitle">持续指压约3秒</b>
+    <div class="progress-line"><i></i></div>
+  </div>
+
+  <section class="right-panel hidden" id="rightPanel">
+    <div class="panel-head"><span id="rightTitle">选择题</span><button class="close-x" id="rightClose">×</button></div>
+    <div class="panel-body" id="rightBody"></div>
+  </section>
+
+  <section class="dialogue" id="dialogue">
+    <div class="avatar" id="avatar">👩‍⚕️</div>
+    <div class="speech" id="speech"><b>护士：</b>张先生，您好，我是今天负责您的护士。</div>
+    <button class="dialog-next" id="dialogNext">›</button>
+  </section>
+
+  <section class="primary-pop hidden" id="primaryPop"></section>
+
+  <footer class="bottom-nav">
+    <button class="current-primary" id="currentPrimaryBtn">
+      <span class="primary-icon" id="currentPrimaryIcon">▤</span>
+      <span class="primary-name" id="currentPrimaryName">目的案例</span>
+      <span class="primary-arrow">⌃</span>
+    </button>
+    <div class="secondary-fixed" id="secondaryFixed"></div>
+  </footer>
+
+  <section class="modal-mask hidden" id="modalMask">
+    <div class="modal" id="modalBox">
+      <div class="modal-head"><span id="modalTitle">病历信息</span><button class="close-x" id="modalClose">×</button></div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer" id="modalFooter"></div>
+    </div>
+  </section>
+</section>
+
+
+<section class="req-review-panel" id="reqReviewPanel" aria-label="页面需求说明">
+  <header class="req-review-head" id="reqReviewDragHandle">
+    <div class="req-review-title">
+      <b id="reqReviewTitle">需求说明</b>
+    </div>
+    <div class="req-review-actions">
+      <button class="req-review-icon" type="button" id="reqReviewCopy" title="复制本页需求">⧉</button>
+      <button class="req-review-icon" type="button" id="reqReviewReset" title="复位面板">⌂</button>
+      <button class="req-review-icon" type="button" id="reqReviewClose" title="关闭">×</button>
+    </div>
+  </header>
+  <div class="req-review-body" id="reqReviewBody"></div>
+</section>
+<button class="req-review-toggle hidden" type="button" id="reqReviewToggle">需求说明</button>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const firstFlows = [
+  {key:'purpose', label:'目的案例', icon:'▤', steps:['目的案例']},
+  {key:'assess', label:'评估解释', icon:'✚', steps:['护士准备','环境评估','问候核对','风险评估','皮肤初检']},
+  {key:'items', label:'用物准备', icon:'▣', steps:['用物选择']},
+  {key:'care', label:'护理操作', icon:'♿', steps:['翻身准备','体位调整','重点检查','清洁护理','减压摆位','护理确认','用物处理','手卫生','首次记录']},
+  {key:'monitor', label:'动态监护', icon:'◉', steps:['皮肤复查','对比处置','最终记录']},
+];
+
+
+
+const quizQuestions = [
+  {
+    category:'基本概念',
+    question:'压力性损伤主要与下列哪种因素有关？',
+    options:[
+      '单纯皮肤干燥',
+      '压力或压力联合剪切力',
+      '普通细菌感染',
+      '食物过敏反应'
+    ],
+    answer:1,
+    explanation:'压力性损伤是局部皮肤和/或深层组织因压力，或压力联合剪切力作用而发生的损伤。'
+  },
+  {
+    category:'分期识别',
+    question:'完整皮肤出现局部不褪色红斑，最符合哪一类压力性损伤表现？',
+    options:[
+      '1期压力性损伤',
+      '2期压力性损伤',
+      '3期压力性损伤',
+      '不可分期压力性损伤'
+    ],
+    answer:0,
+    explanation:'1期压力性损伤的皮肤仍保持完整，典型表现为局部不褪色红斑，可伴温度、硬度或疼痛变化。'
+  },
+  {
+    category:'风险评估',
+    question:'患者Braden六维度评分为3、2、1、2、2、2，总分12分，应判断为何种风险等级？',
+    options:[
+      '暂无明显风险',
+      '低风险',
+      '中风险',
+      '高风险'
+    ],
+    answer:3,
+    explanation:'Braden总分10～12分属于高风险。默认病例总分12分，应建立个体化体位计划并加强骶尾部和足跟监护。'
+  },
+  {
+    category:'监护部位',
+    question:'仰卧位患者进行皮肤初检时，下列哪组部位属于重点检查区域？',
+    options:[
+      '手掌、前臂和腹部',
+      '枕部、肘部和双足跟',
+      '胸前、手指和大腿前侧',
+      '耳垂、手腕和小腿前侧'
+    ],
+    answer:1,
+    explanation:'仰卧位初检重点包括枕部、肘部、双足跟等骨隆突和持续受压区域。'
+  },
+  {
+    category:'皮肤检查',
+    question:'对完整皮肤上的红斑进行褪色检查时，建议持续指压约多长时间？',
+    options:[
+      '约1秒',
+      '约3秒',
+      '约10秒',
+      '约30秒'
+    ],
+    answer:1,
+    explanation:'对完整皮肤红斑进行约3秒指压，观察按压和松开后的颜色变化。破损创面不执行该操作。'
+  },
+  {
+    category:'翻身护理',
+    question:'协助患者翻身时，下列哪项操作最符合减少摩擦和剪切力的原则？',
+    options:[
+      '直接拖拽患者身体完成移动',
+      '快速拉动患者病号服',
+      '使用抬移和辅助用品分段移动',
+      '只移动肩部而不调整骨盆'
+    ],
+    answer:2,
+    explanation:'翻身时应使用抬移和辅助用品，分段移动肩背部、骨盆和下肢，避免直接拖拽造成摩擦与剪切。'
+  },
+  {
+    category:'足跟减压',
+    question:'下列哪种足跟减压方法是正确的？',
+    options:[
+      '将软枕直接压在足跟下方',
+      '在小腿下方放置枕垫，使足跟真正悬空',
+      '用被子紧紧包裹双足跟',
+      '让双足跟继续接触床面'
+    ],
+    answer:1,
+    explanation:'枕垫应放置于小腿下方，或使用足跟减压装置，使足跟真正离开床面，不能直接顶压足跟。'
+  },
+  {
+    category:'潮湿管理',
+    question:'对于尿失禁或潮湿相关皮肤风险，下列护理措施最合理的是？',
+    options:[
+      '使用热水反复擦洗发红部位',
+      '保持潮湿状态以减少摩擦',
+      '温水轻柔清洁、轻拍擦干并使用皮肤保护用品',
+      '对持续发红区域进行用力按摩'
+    ],
+    answer:2,
+    explanation:'潮湿管理应使用温水和柔软毛巾轻柔清洁，轻拍擦干，必要时使用皮肤保护用品，并及时更换潮湿床单和衣物。'
+  },
+  {
+    category:'动态复查',
+    question:'2小时复查发现骶尾部红斑范围扩大、温度升高并伴疼痛增加，最合适的判断和处置是？',
+    options:[
+      '判断为改善，继续原计划即可',
+      '判断为稳定，无需记录',
+      '判断为加重，调整护理措施并上报',
+      '判断为正常皮肤，不需处理'
+    ],
+    answer:2,
+    explanation:'红斑范围扩大、温度升高、组织变硬或疼痛增加均支持加重判断，应调整减压或潮湿管理措施并上报。'
+  },
+  {
+    category:'异常上报',
+    question:'复查时发现骶尾部出现水疱或表皮分离，提示疑似向2期进展，应采取哪项措施？',
+    options:[
+      '继续观察，不需要上报',
+      '立即按摩局部促进循环',
+      '立即上报，并停止继续压迫该部位',
+      '只记录颜色，不记录完整性'
+    ],
+    answer:2,
+    explanation:'水疱、表皮分离或其他皮肤完整性改变提示疑似进展，应立即解除压力并上报，不进入本系统之外的创面治疗操作。'
+  }
+];
+
+const quizState = {
+  current:0,
+  selected:{},
+  confirmed:{}
+};
+
+const knowledgeSections = [
+  {key:'goal',label:'学习目标与基本概念',subtitle:'明确学习范围，认识形成机制、危险因素和高风险部位'},
+  {key:'stage',label:'压力性损伤分期',subtitle:'浏览六类压力性损伤的外观、完整性和监护重点'},
+  {key:'risk',label:'风险评估',subtitle:'了解Braden六维度、评分原则、风险分级和默认病例示例'},
+  {key:'monitor',label:'皮肤监护要点',subtitle:'掌握监护部位、检查维度、监护时机和记录内容'},
+  {key:'prevent',label:'监护与预防措施',subtitle:'了解风险评估、体位减压、潮湿管理、复查记录和上报原则'}
+];
+
+const learningGoals = [
+  '掌握压力性损伤的定义、形成机制及主要危险因素',
+  '识别压力性损伤高危人群、骨隆突部位和医疗器械接触部位',
+  '掌握1期、2期、3期、4期、不可分期及深部组织压力性损伤的主要表现',
+  '理解Braden量表六个维度、评分原则和风险分级',
+  '掌握皮肤颜色、完整性、温度、湿度、组织软硬度和疼痛的检查方法',
+  '掌握红斑指压褪色检查和异常区域测量方法',
+  '掌握翻身、减压、皮肤清洁、潮湿管理和足跟悬空等护理措施',
+  '理解动态复查、护理记录和异常上报原则'
+];
+
+const conceptData = [
+  {name:'压力性损伤',text:'局部皮肤和/或深层组织因压力或压力联合剪切力作用而发生的损伤。'},
+  {name:'压力',text:'持续受压可影响局部组织灌注，常见于骨隆突和器械压迫部位。'},
+  {name:'剪切力',text:'身体下滑而皮肤相对固定时产生组织错位风险，常见于床头抬高或拖动患者。'},
+  {name:'摩擦力',text:'皮肤与床单、衣物或护理用品反复摩擦可造成表皮损伤。'},
+  {name:'潮湿',text:'尿失禁、出汗、渗液等会降低皮肤耐受性并增加浸渍风险。'}
+];
+
+const riskSiteCards = [
+  ['枕部','仰卧位持续受压部位','观察颜色、完整性、温度和压痛'],
+  ['耳廓与耳后','头部侧卧或器械持续接触时受压','检查压痕、红斑、疼痛及完整性'],
+  ['肩胛部','仰卧或半卧位长期受压','翻身时比较两侧皮肤颜色和组织状态'],
+  ['肘部','骨隆突明显、易形成局部压痕','比较双侧颜色、温度和压痛'],
+  ['脊柱','消瘦或长期卧床时风险增加','关注脊柱突起区域皮肤完整性'],
+  ['骶尾部','仰卧位核心高风险部位','观察、约3秒指压、触温、触诊和测量'],
+  ['髋部/股骨大转子','侧卧位直接受压风险高','使用约30°侧卧，避免直接压迫'],
+  ['膝部','侧卧时双膝可能相互挤压','双膝之间放置软枕'],
+  ['内外踝','下肢骨隆突部位','观察红斑、压痕、疼痛和完整性'],
+  ['双足跟','高风险部位、组织耐受差','足跟应真正悬空或使用减压装置'],
+  ['医疗器械接触部位','鼻翼、耳后、固定带等持续接触区域','通用知识展示；默认病例不配置三维器械']
+];
+
+const stageData = [
+  ['1期压力性损伤','皮肤完整','局部不褪色红斑，可伴温度、硬度或疼痛变化','不褪色','立即减压、测量、记录并上报','默认病例既有损伤和错误分支'],
+  ['2期压力性损伤','部分皮层缺失','浅表破损或水疱，创面较浅','不作为核心判断','保护创面、避免继续受压、记录并上报','严重错误结局警示'],
+  ['3期压力性损伤','全层皮肤缺损','可见脂肪组织，深度因部位不同','不适用','记录深度和组织表现，进入专业创面处理流程','仅知识学习'],
+  ['4期压力性损伤','全层组织缺损','可见或可触及更深层组织','不适用','高度警示，需专业处理','仅知识学习'],
+  ['不可分期压力性损伤','全层损伤但深度不明','创面底部被腐肉或焦痂覆盖','不适用','清晰记录覆盖情况，本系统不开展清创','仅知识学习'],
+  ['深部组织压力性损伤','可完整或出现表皮分离','持续性深红、栗色或紫色改变，可伴血疱','可不褪色','立即解除压力，动态观察颜色和组织变化','知识学习和错误警示']
+];
+
+const bradenRows = [
+  ['感觉能力','患者感知和表达压力不适的能力','1～4分'],
+  ['潮湿程度','皮肤暴露于汗液、尿液、渗液等潮湿环境的频率','1～4分'],
+  ['活动能力','患者离床和活动的水平','1～4分'],
+  ['移动能力','患者自主改变和控制身体位置的能力','1～4分'],
+  ['营养状况','日常摄入和营养风险情况','1～4分'],
+  ['摩擦与剪切力','移位、下滑和床单位摩擦造成的风险','1～3分']
+];
+
+const monitorSiteCards = [
+  ['骶尾部','核心监护部位，完成颜色、完整性、指压、温度、湿度、软硬度、疼痛和异常范围检查。'],
+  ['枕部','仰卧位初检部位，重点观察颜色、温度、完整性和压痛。'],
+  ['肩胛部','翻身后检查长期受压区域并比较对侧组织状态。'],
+  ['肘部','比较双侧颜色、温度、压痕和局部不适。'],
+  ['脊柱','消瘦或长期卧床患者需关注脊柱突起区域。'],
+  ['髋部/股骨大转子','侧卧位避免直接压迫，配合约30°减压体位。'],
+  ['膝部与踝部','侧卧时避免骨隆突相互挤压，观察压痕和红斑。'],
+  ['双足跟','高风险部位，应检查红斑、指压反应和是否真正悬空。'],
+  ['医疗器械接触部位','通用知识包括鼻翼、耳后、固定带等持续接触区域；默认病例不配置器械。']
+];
+
+const preventionData = [
+  ['◷','风险动态评估','首次评估、状态变化后复评，量表与临床判断结合。'],
+  ['⌖','重点部位皮肤检查','检查骨隆突、对侧部位和患者主诉异常区域。'],
+  ['◎','器械接触部位检查','通过图文说明器械持续接触或压迫部位；默认病例不配置三维器械。'],
+  ['↻','个体化体位调整','结合患者情况制定翻身和复查计划，禁止直接拖拽。'],
+  ['30°','30°侧卧与减压支撑','避免直接压迫股骨大转子，支撑用品不能替代翻身。'],
+  ['∪','足跟悬空','枕垫置于小腿下方或使用足跟减压装置。'],
+  ['◇','清洁、干燥与失禁管理','轻柔清洁、轻拍擦干、使用皮肤保护用品并更换潮湿床单位。'],
+  ['▤','动态复查、记录和上报','复查措施效果，记录皮肤变化，异常或无法判断时及时上报。']
+];
+
+const knowledgeState = {active:'goal'};
+
+const sceneBackgrounds = {
+  '目的案例':'assets/backgrounds/bg_case.png',
+  '病历信息':'assets/backgrounds/bg_case.png',
+  '操作目的':'assets/backgrounds/bg_case.png',
+  '护士准备':'assets/backgrounds/bg_nurse_prepare.png',
+  '环境评估':'assets/backgrounds/bg_environment.png',
+  '问候核对':'assets/backgrounds/bg_case.png',
+  '风险评估':'assets/backgrounds/bg_case.png',
+  '皮肤初检':'assets/backgrounds/bg_skin_initial.png',
+  '用物选择':'assets/backgrounds/bg_item_select.png',
+  '翻身准备':'assets/backgrounds/bg_turn_prepare.png',
+  '体位调整':'assets/backgrounds/bg_reposition.png',
+  '重点检查':'assets/backgrounds/bg_focus_inspect.png',
+  '清洁护理':'assets/backgrounds/bg_skin_care.png',
+  '减压摆位':'assets/backgrounds/bg_offload.png',
+  '护理确认':'assets/backgrounds/bg_comfort.png',
+  '用物处理':'assets/backgrounds/bg_item_check.png',
+  '手卫生':'assets/backgrounds/bg_nurse_prepare.png',
+  '首次记录':'assets/backgrounds/bg_record.png',
+  '皮肤复查':'assets/backgrounds/bg_review.png',
+  '对比处置':'assets/backgrounds/bg_review.png',
+  '最终记录':'assets/backgrounds/bg_record.png'
+};
+
+const bodySiteBackgrounds = {
+  '皮肤初检':{
+    '枕部':'assets/backgrounds/bg_case.png',
+    '左肘部':'assets/backgrounds/bg_skin_initial.png',
+    '右肘部':'assets/backgrounds/bg_skin_initial.png',
+    '左足跟':'assets/backgrounds/bg_skin_initial.png',
+    '右足跟':'assets/backgrounds/bg_skin_initial.png'
+  },
+  '皮肤复查':{
+    '骶尾部':'assets/backgrounds/bg_review.png',
+    '左足跟':'assets/backgrounds/bg_skin_initial.png',
+    '右足跟':'assets/backgrounds/bg_skin_initial.png'
+  }
+};
+
+const stepData = {
+  '目的案例':{
+    task:'请查看患者病历信息，并了解本次压力性损伤皮肤监护的操作目的。',
+    speech:["护士：张先生，现在距离上次皮肤护理已经过去两小时了，我来复查骶尾部和双足跟的皮肤情况。检查过程中如果有疼痛、麻木、发热或其他不适，请及时告诉我。", "患者：好的，麻烦您了。", "护士：这两小时内，骶尾部或双足跟有没有更疼、发热、麻木、压迫或其他不舒服？", "患者：没有明显变化，骶尾部还是有一点不舒服。"],
+    modal:'case'
+  },
+  '病历信息':{
+    task:'请查看患者病历并识别压力性损伤高危因素。',
+    speech:['护士：先查看患者病历，了解疾病、活动能力和皮肤情况。'],
+    modal:'case'
+  },
+  '操作目的':{
+    task:'请了解本次压力性损伤皮肤监护的操作目的。',
+    speech:['护士：本次操作包括风险评估、皮肤检查、护理干预和动态复查。'],
+    modal:'purpose'
+  },
+  '护士准备':{
+    task:'请在右侧服饰栏为护士选择规范着装。',
+    speech:[],
+    panel:'outfit'
+  },
+  '环境评估':{
+    task:'请检查光线、隐私、病床、地面、温湿度、床单位和物品摆放。',
+    speech:[],
+    panel:'environment'
+  },
+  '问候核对':{
+    task:'请完成护患沟通，并核对患者口述姓名和腕带信息。',
+    speech:["护士：张先生，您好，我是今天负责您的护士。请问您叫什么名字？我再核对一下您的腕带信息。", "患者：我叫张华。", "护士：我需要为您检查骶尾部和其他受压部位的皮肤情况。您现在有没有疼痛、麻木或其他不舒服？检查过程中如果有不适，请及时告诉我。", "患者：骶尾部有一点不舒服，躺久了更明显，我会配合检查。"],
+    panel:'identity'
+  },
+  '风险评估':{
+    task:'请按顺序完成Braden六个维度，并根据患者回答选择对应分值。',
+    speech:[],
+    panel:'braden'
+  },
+  '皮肤初检':{
+    task:'请检查枕部、肘部和双足跟等仰卧位可见部位。',
+    speech:['护士：我先检查枕部、肘部和双足跟，有不舒服请告诉我。'],
+    panel:'initialSkin',
+    hotspot:true
+  },
+  '用物选择':{
+    task:'请选择本次皮肤监护和减压护理所需用物，并排除干扰物品。',
+    speech:[],
+    panel:'items'
+  },
+  '翻身准备':{
+    task:'请完成翻身前沟通、安全检查和患者姿势准备。',
+    speech:["护士：张先生，我现在协助您翻身，检查背部和骶尾部皮肤。请将手臂放在胸前，尽量屈曲左膝，有不舒服及时告诉我。", "患者：好的，我会配合。"],
+    panel:'turnPrep',
+    hotspot:true
+  },
+  '体位调整':{
+    task:'请依次移动肩背部和骨盆，协助患者翻至侧卧基础状态。',
+    speech:["护士：张先生，翻身后有没有疼痛、头晕、压迫或其他不舒服？", "患者：没有明显不舒服，这个姿势还可以。"],
+    panel:'reposition',
+    hotspot:true
+  },
+  '重点检查':{
+    task:'请暴露骶尾部，完成观察、指压、触温、触诊和软尺测量。',
+    speech:["护士：张先生，我需要暴露您的背部和骶尾部进行检查，我会注意保护您的隐私。", "护士：这里有没有疼痛、麻木、灼热或按压不舒服？", "患者：骶尾部有一点不舒服，按压时会更明显一些。"],
+    panel:'focus',
+    hotspot:true,
+    progress:true
+  },
+  '清洁护理':{
+    task:'请完成水温确认、皮肤清洁、轻拍擦干和皮肤保护。',
+    speech:["护士：张先生，请保持现在的姿势，我要开始为您清洁背部和骶尾部皮肤。"],
+    panel:'clean'
+  },
+  '减压摆位':{
+    task:'请完成约30°侧卧减压，并确保双足跟离开床面。',
+    speech:[],
+    panel:'offload',
+    hotspot:true
+  },
+  '护理确认':{
+    task:'请恢复衣物、被服和床栏，并询问患者体位舒适度。',
+    speech:["护士：张先生，现在有没有疼痛、头晕、麻木、局部压迫或其他不舒服？这个姿势舒适吗？", "患者：现在比较舒服，没有明显不适。"],
+    panel:'comfort'
+  },
+  '用物处理':{
+    task:'请完成污水处理、污物投放、可复用物品归位和治疗车整理。',
+    speech:[],
+    panel:'post'
+  },
+  '手卫生':{
+    task:'请观看七步洗手教学视频并完成手卫生确认。',
+    speech:[],
+    modal:'hand'
+  },
+  '首次记录':{
+    task:'请核对系统自动带入的首次检查和护理数据，确认后保存首次监护记录。',
+    speech:[],
+    modal:'baseline'
+  },
+  '皮肤复查':{
+    task:'请通过护患对话说明已到2小时复查时间，并取得患者配合。',
+    speech:[
+      '护士：张先生，现在距离上次皮肤护理已经过去2小时了，我来为您复查一下骶尾部和双足跟的皮肤情况，请您配合。',
+      '患者：好的，麻烦您了。',
+      '护士：复查过程中如果感到疼痛、麻木、发热或者其他不舒服，请及时告诉我。',
+      '患者：好的。'
+    ],
+    panel:'review',
+    hotspot:true,
+    progress:true
+  },
+  '对比处置':{
+    task:'请先查看首次监护与2小时复查数据，确认客观变化后再进行趋势判断和处置选择。',
+    speech:[],
+    modal:'compare'
+  },
+  '最终记录':{
+    task:'请保存复查结果、趋势、处置和下一次复查计划。',
+    speech:["护士：张先生，复查结果显示目前皮肤情况基本稳定，我们会继续保持减压护理并按时复查。"],
+    modal:'final'
+  }
+};
+
+let activeFlow=0, activeStep='目的案例', doneSteps=new Set(), dialogIndex=0, selectedOption='', startTime=Date.now(), reviewDialogueCompleted=false, baselineSaved=false, compareTrendSelection='', compareDispositionSelection='';
+
+const bodySiteConfigs = {
+  '皮肤初检': [
+    {name:'枕部', view:'枕部评估视角', hint:'正式版本切换至患者枕部局部镜头', left:'51%', top:'34%'},
+    {name:'左肘部', view:'左肘部评估视角', hint:'正式版本切换至患者左肘部局部镜头', left:'42%', top:'50%'},
+    {name:'右肘部', view:'右肘部评估视角', hint:'正式版本切换至患者右肘部局部镜头', left:'60%', top:'50%'},
+    {name:'左足跟', view:'左足跟评估视角', hint:'正式版本切换至患者左足跟局部镜头', left:'47%', top:'69%'},
+    {name:'右足跟', view:'右足跟评估视角', hint:'正式版本切换至患者右足跟局部镜头', left:'56%', top:'69%'}
+  ],
+  '皮肤复查': [
+    {name:'骶尾部', view:'骶尾部2小时复查视角', hint:'重新完成观察、指压、触温、触诊和测量', left:'51%', top:'52%'},
+    {name:'左足跟', view:'左足跟2小时复查视角', hint:'检查左足跟有无新发红斑或完整性改变', left:'47%', top:'69%'},
+    {name:'右足跟', view:'右足跟2小时复查视角', hint:'检查右足跟有无新发红斑或完整性改变', left:'56%', top:'69%'}
+  ]
+};
+
+const bodySiteStates = {
+  '皮肤初检': {active:'枕部', completed:new Set()},
+  '皮肤复查': {active:'骶尾部', completed:new Set()}
+};
+
+const navigationTaskConfigs = {
+  environment: {
+    stepName:'环境评估',
+    title:'环境评估',
+    items:[
+      {name:'病床高度', view:'病床高度评估视角', hint:'镜头定位至病床侧面和床控区域，判断操作高度是否合适', left:'56%', top:'55%'},
+      {name:'地面水渍', view:'地面安全评估视角', hint:'镜头定位至床旁地面，识别并处理水渍风险', left:'42%', top:'71%'},
+      {name:'凳子与物品摆放', view:'物品摆放评估视角', hint:'镜头定位至床旁凳子及周围物品，检查是否阻碍操作', left:'65%', top:'61%'},
+      {name:'光线与隐私', view:'光线隐私评估视角', hint:'镜头切换至窗帘和病房整体环境，检查光线及隐私保护', left:'50%', top:'28%'},
+      {name:'温湿度', view:'温湿度评估视角', hint:'镜头定位至温湿度显示区域，判断环境是否适宜', left:'73%', top:'34%'},
+      {name:'床单位状态', view:'床单位评估视角', hint:'镜头定位至床单与被服，检查潮湿、褶皱和清洁状态', left:'52%', top:'53%'}
+    ]
+  },
+  turnPrep: {
+    stepName:'翻身准备',
+    title:'翻身准备',
+    items:[
+      {name:'说明翻身目的', view:'翻身前沟通视角', hint:'切换至床旁沟通镜头，通过语音说明翻身目的并取得同意', left:'49%', top:'42%'},
+      {name:'床高与床栏', view:'床高床栏检查视角', hint:'切换至床侧和床控区域，完成床高与床栏安全确认', left:'61%', top:'57%'},
+      {name:'移动枕头', view:'枕头移动视角', hint:'镜头定位至患者头部与枕头，拖动枕头至目标侧', left:'47%', top:'37%'},
+      {name:'放置患者双手', view:'双手放置视角', hint:'镜头切换至患者上肢，依次将双手放置于安全位置', left:'50%', top:'48%'},
+      {name:'协助患者屈膝', view:'屈膝准备视角', hint:'镜头切换至患者双膝，完成屈膝准备', left:'54%', top:'60%'},
+      {name:'翻身前安全确认', view:'翻身前全景确认', hint:'恢复床旁全景，确认被服、操作侧和床边安全', left:'50%', top:'50%'}
+    ]
+  },
+  reposition: {
+    stepName:'体位调整',
+    title:'体位调整',
+    items:[
+      {name:'移动肩背部', view:'肩背部移位视角', hint:'镜头切换至患者肩背部，沿提示方向完成移动', left:'48%', top:'43%'},
+      {name:'移动骨盆与下肢', view:'骨盆移位视角', hint:'镜头切换至患者骨盆与下肢，沿提示方向完成移动', left:'53%', top:'57%'},
+      {name:'完成翻身', view:'翻身操作视角', hint:'切换至床旁侧视镜头，完成仰卧至侧卧的翻身动作', left:'51%', top:'51%'},
+      {name:'侧卧角度校正', view:'侧卧基础状态视角', hint:'切换至侧卧全景，校正患者侧卧角度和床边位置', left:'50%', top:'49%'},
+      {name:'翻身后不适询问', view:'翻身后沟通视角', hint:'切换至患者面部，询问疼痛、头晕和压迫不适', left:'46%', top:'38%'}
+    ]
+  },
+  focus: {
+    stepName:'重点检查',
+    title:'重点检查',
+    items:[
+      {name:'暴露肩胛部与骶尾部', view:'皮肤暴露视角', hint:'切换至患者背部，掀开上衣并适度下拉裤腰', left:'52%', top:'48%'},
+      {name:'观察颜色与完整性', view:'骶尾部观察视角', hint:'切换至骶尾部近景，观察皮肤颜色和完整性', left:'52%', top:'53%'},
+      {name:'询问疼痛与感觉', view:'局部症状问询视角', hint:'保持局部视角，通过语音询问疼痛、麻木和灼热', left:'52%', top:'53%'},
+      {name:'触摸皮温', view:'骶尾部触温视角', hint:'切换至手背触温近景，比较局部与周围皮肤温度', left:'52%', top:'53%'},
+      {name:'触诊软硬度', view:'骶尾部触诊视角', hint:'切换至指腹触诊近景，完成组织软硬度检查', left:'52%', top:'53%'},
+      {name:'持续指压约3秒', view:'骶尾部指压视角', hint:'切换至指压近景，按压约3秒并观察松开后的颜色变化', left:'52%', top:'53%'},
+      {name:'软尺测量', view:'骶尾部测量视角', hint:'切换至软尺测量近景，测量最长径和最宽径', left:'52%', top:'53%'}
+    ]
+  },
+  clean: {
+    stepName:'清洁护理',
+    title:'清洁护理',
+    items:[
+      {name:'铺设隐私毛巾', view:'隐私保护视角', hint:'镜头定位至护理区域，放置毛巾并遮盖非操作部位', left:'49%', top:'50%'},
+      {name:'确认水温', view:'水温确认视角', hint:'镜头定位至水盆和水温计，确认水温适宜', left:'66%', top:'61%'},
+      {name:'浸湿并拧干毛巾', view:'毛巾准备视角', hint:'镜头切换至水盆和双手，完成浸湿与拧干', left:'63%', top:'60%'},
+      {name:'擦拭背部与骶尾部', view:'皮肤擦拭视角', hint:'切换至护理区域，沿高亮范围完成擦拭', left:'52%', top:'52%'},
+      {name:'轻拍擦干', view:'轻拍擦干视角', hint:'保持局部视角，使用轻拍方式完成擦干', left:'52%', top:'52%'},
+      {name:'使用皮肤保护剂', view:'皮肤保护视角', hint:'切换至保护剂操作近景，完成薄层涂抹', left:'52%', top:'52%'}
+    ]
+  },
+  offload: {
+    stepName:'减压摆位',
+    title:'减压摆位',
+    items:[
+      {name:'放置上肢软枕', view:'上肢软枕放置视角', hint:'镜头切换至患者上肢，放置支撑软枕', left:'45%', top:'49%'},
+      {name:'放置双膝间软枕', view:'双膝软枕放置视角', hint:'镜头切换至双膝之间，放置软枕避免骨隆突相互挤压', left:'54%', top:'61%'},
+      {name:'放置翻身垫', view:'翻身垫放置视角', hint:'镜头切换至患者背部，放置翻身垫维持约30°侧卧', left:'58%', top:'49%'},
+      {name:'完成足跟减压', view:'足跟减压视角', hint:'镜头切换至双足跟，确保足跟离开床面', left:'57%', top:'70%'},
+      {name:'确认约30°侧卧', view:'30°减压完成视角', hint:'恢复侧卧全景，确认体位和所有减压用品位置', left:'50%', top:'50%'}
+    ]
+  },
+  comfort: {
+    stepName:'护理确认',
+    title:'护理确认',
+    items:[
+      {name:'恢复患者衣物', view:'衣物恢复视角', hint:'镜头切换至患者背部和腰部，恢复病号服', left:'52%', top:'50%'},
+      {name:'恢复被服', view:'被服恢复视角', hint:'镜头切换至病床全景，恢复被子和遮盖状态', left:'50%', top:'51%'},
+      {name:'恢复床栏', view:'床栏恢复视角', hint:'镜头定位至床栏，恢复安全状态', left:'62%', top:'58%'},
+      {name:'检查减压用品', view:'减压用品复查视角', hint:'依次定位软枕、翻身垫和足跟用品，检查有无新压迫', left:'54%', top:'57%'},
+      {name:'询问患者舒适度', view:'舒适度沟通视角', hint:'切换至患者面部，询问疼痛、头晕、麻木和局部压迫', left:'45%', top:'38%'}
+    ]
+  },
+  post: {
+    stepName:'用物处理',
+    title:'用物处理',
+    items:[
+      {name:'处理污水', view:'污水处理视角', hint:'切换至水盆和指定处理区域，完成污水处理', left:'62%', top:'63%'},
+      {name:'处理一次性污物', view:'污物投放视角', hint:'切换至污物袋，完成一次性手套和污染物投放', left:'69%', top:'66%'},
+      {name:'归位可复用物品', view:'物品归位视角', hint:'切换至治疗车，将可复用物品归位', left:'64%', top:'53%'},
+      {name:'整理治疗车', view:'治疗车整理完成视角', hint:'恢复治疗车全景，确认摆放和清洁状态', left:'64%', top:'53%'}
+    ]
+  }
+};
+
+const navigationTaskStates = Object.fromEntries(
+  Object.entries(navigationTaskConfigs).map(([key,value])=>[
+    key,{active:value.items[0]?.name||'', completed:new Set()}
+  ])
+);
+
+const bradenDimensions = [
+  {key:"sensory",name:"感觉能力",question:"您的身体有没有感觉迟钝、麻木，或者不容易感觉到疼痛的情况？",answer:"右侧感觉不太灵敏，但有不舒服时我一般能感觉到，也能告诉您。",correct:3,label:"轻度受限",options:[{score:1,label:"完全受限",detail:"对疼痛刺激无反应，或因意识障碍不能表达不适。"},{score:2,label:"非常受限",detail:"仅对疼痛刺激有反应，或大部分身体感觉受限。"},{score:3,label:"轻度受限",detail:"能够表达不适，但一个或两个肢体局部感觉减退。"},{score:4,label:"无受限",detail:"感觉正常，能准确感知并表达疼痛或不适。"}]},
+  {key:"moisture",name:"潮湿程度",question:"您的皮肤或床单平时会不会因为出汗、尿湿而经常潮湿？",answer:"有时会尿湿，皮肤和床单经常需要帮忙清洁、更换。",correct:2,label:"经常潮湿",options:[{score:1,label:"持续潮湿",detail:"皮肤几乎一直被汗液、尿液等浸湿。"},{score:2,label:"经常潮湿",detail:"皮肤经常潮湿，每班通常至少需要更换一次床单或衣物。"},{score:3,label:"偶尔潮湿",detail:"皮肤偶尔潮湿，每日约需额外更换一次。"},{score:4,label:"很少潮湿",detail:"皮肤通常保持干燥。"}]},
+  {key:"activity",name:"活动能力",question:"您现在能下床活动或走动吗？",answer:"现在基本只能卧床，不能下床走动。",correct:1,label:"卧床",options:[{score:1,label:"卧床",detail:"活动范围仅限于床上。"},{score:2,label:"坐椅",detail:"不能独立行走，需要协助坐到椅子上。"},{score:3,label:"偶尔行走",detail:"白天可偶尔短距离行走。"},{score:4,label:"经常行走",detail:"能够经常独立活动。"}]},
+  {key:"mobility",name:"移动能力",question:"您在床上能自己改变姿势或独立翻身吗？",answer:"右侧动不了，自己只能稍微挪动，翻身需要别人帮助。",correct:2,label:"非常受限",options:[{score:1,label:"完全不能移动",detail:"无协助时不能改变身体或肢体位置。"},{score:2,label:"非常受限",detail:"偶尔能轻微移动，但不能独立完成较大体位改变。"},{score:3,label:"轻度受限",detail:"能经常独立完成小幅度体位改变。"},{score:4,label:"不受限",detail:"能独立完成较大且频繁的体位改变。"}]},
+  {key:"nutrition",name:"营养状况",question:"您最近进食情况怎么样，每餐大概能吃多少？",answer:"最近胃口不太好，每餐大概只能吃一半左右。",correct:2,label:"可能不足",options:[{score:1,label:"非常差",detail:"很少进食、长期禁食或摄入明显不足。"},{score:2,label:"可能不足",detail:"通常只能吃约一半或更少。"},{score:3,label:"充足",detail:"大多数时间能摄入超过一半，蛋白质摄入基本充足。"},{score:4,label:"非常好",detail:"每餐正常摄入，无明显营养不足。"}]},
+  {key:"friction",name:"摩擦与剪切力",question:"在床上移动时，您能抬起身体配合吗？身体会不会向床尾下滑？",answer:"右侧没有力气，移动时需要别人帮助，有时身体会往下滑。",correct:2,label:"有潜在问题",options:[{score:1,label:"有问题",detail:"移动需要大量协助，且经常发生滑动或明显摩擦。"},{score:2,label:"有潜在问题",detail:"移动需要部分协助，偶有滑动或摩擦。"},{score:3,label:"无明显问题",detail:"能独立移动并维持良好体位。"}]}
+];
+
+const bradenState = {
+  activeKey:'sensory',
+  scores:{},
+  selectedScore:null,
+  phase:'dimensions',
+  selectedRisk:'',
+  questionAnswered:false,
+  feedback:''
+};
+
+const moduleHome=document.getElementById('moduleHome');
+const sim=document.getElementById('sim');
+const currentPrimaryBtn=document.getElementById('currentPrimaryBtn');
+const currentPrimaryIcon=document.getElementById('currentPrimaryIcon');
+const currentPrimaryName=document.getElementById('currentPrimaryName');
+const primaryPop=document.getElementById('primaryPop');
+const secondaryFixed=document.getElementById('secondaryFixed');
+const taskStrip=document.getElementById('taskStrip');
+const speech=document.getElementById('speech');
+const avatar=document.getElementById('avatar');
+const dialogNext=document.getElementById('dialogNext');
+const rightPanel=document.getElementById('rightPanel');
+const rightTitle=document.getElementById('rightTitle');
+const rightBody=document.getElementById('rightBody');
+const modalMask=document.getElementById('modalMask');
+const modalBox=document.getElementById('modalBox');
+const modalTitle=document.getElementById('modalTitle');
+const modalBody=document.getElementById('modalBody');
+const modalFooter=document.getElementById('modalFooter');
+const scene=document.getElementById('scene');
+const scenePlaceholder=document.querySelector('.scene-placeholder');
+const hotspot=document.getElementById('hotspot');
+const progressHint=document.getElementById('progressHint');
+const scenePlaceholderBig=document.getElementById('scenePlaceholderBig');
+const scenePlaceholderSmall=document.getElementById('scenePlaceholderSmall');
+const toast=document.getElementById('toast');
+
+function allOrderedSteps(){
+  return firstFlows.flatMap(flow=>flow.steps);
+}
+function nextStepAfter(step){
+  const steps=allOrderedSteps();
+  const index=steps.indexOf(step);
+  return index>=0 && index<steps.length-1 ? steps[index+1] : null;
+}
+function completeAndAdvance(step=activeStep, message=''){
+  doneSteps.add(step);
+  showToast(message || `${step}已完成`);
+  renderAll();
+  const next=nextStepAfter(step);
+  setTimeout(()=>{
+    if(next){
+      openStep(next);
+    }else{
+      openModal('score');
+    }
+  },450);
+}
+
+function showToast(text){
+  toast.textContent=text;toast.classList.add('show');
+  clearTimeout(showToast.t);showToast.t=setTimeout(()=>toast.classList.remove('show'),1500);
+}
+
+
+const quizScreen=document.getElementById('quizScreen');
+const quizNumberGrid=document.getElementById('quizNumberGrid');
+const quizBody=document.getElementById('quizBody');
+const quizTopCount=document.getElementById('quizTopCount');
+const quizKnowledgeTitle=document.getElementById('quizKnowledgeTitle');
+const quizKnowledgeSubtitle=document.getElementById('quizKnowledgeSubtitle');
+const quizPrevBtn=document.getElementById('quizPrevBtn');
+const quizNextBtn=document.getElementById('quizNextBtn');
+const quizConfirmBtn=document.getElementById('quizConfirmBtn');
+
+function showQuiz(){
+  moduleHome.classList.add('hidden');
+  knowledgeScreen.classList.add('hidden');
+  sim.classList.add('hidden');
+  quizScreen.classList.remove('hidden');
+  renderQuiz();
+}
+function leaveQuiz(){
+  quizScreen.classList.add('hidden');
+  moduleHome.classList.remove('hidden');
+}
+function quizAllAnswered(){
+  return Object.keys(quizState.confirmed).length===quizQuestions.length;
+}
+function renderQuizNav(){
+  quizNumberGrid.innerHTML='';
+  quizQuestions.forEach((question,index)=>{
+    const btn=document.createElement('button');
+    btn.className=`quiz-number ${quizState.current===index?'active':''} ${quizState.confirmed[index]?'answered':''}`;
+    btn.textContent=index+1;
+    btn.onclick=()=>{
+      quizState.current=index;
+      renderQuiz();
+    };
+    quizNumberGrid.appendChild(btn);
+  });
+}
+function renderQuiz(){
+  const question=quizQuestions[quizState.current];
+  const selected=quizState.selected[quizState.current];
+  const confirmed=quizState.confirmed[quizState.current];
+  quizTopCount.textContent=`第 ${quizState.current+1} / ${quizQuestions.length} 题`;
+  quizKnowledgeTitle.textContent=question.category;
+  quizKnowledgeSubtitle.textContent='选择答案并确认后，立即显示正确答案和解析';
+  renderQuizNav();
+
+  let feedback='';
+  if(confirmed){
+    const correct=selected===question.answer;
+    feedback=`<div class="quiz-feedback ${correct?'correct-feedback':'wrong-feedback'}">
+      <div class="quiz-feedback-title">${correct?'回答正确':'答案不正确'}</div>
+      <div class="quiz-answer-line"><b>正确答案：</b>${String.fromCharCode(65+question.answer)}．${question.options[question.answer]}</div>
+      <div class="quiz-explanation"><b>解析：</b>${question.explanation}</div>
+    </div>`;
+  }
+
+  let completion='';
+  if(quizAllAnswered() && quizState.current===quizQuestions.length-1){
+    completion=`<div class="quiz-complete-box">
+      <div class="quiz-complete-icon">✓</div>
+      <h3>10道选择题已全部作答</h3>
+      <p>本练习不计算总成绩。可通过左侧题号重新查看每题答案与解析，或重新开始练习。</p>
+      <div class="quiz-complete-actions">
+        <button class="quiz-nav-btn" id="quizRestartInner">重新练习</button>
+        <button class="quiz-confirm-btn" id="quizReturnInner">返回模块选择</button>
+      </div>
+    </div>`;
+  }
+
+  quizBody.innerHTML=`
+    <div class="quiz-question-number">第 ${quizState.current+1} 题</div>
+    <div class="quiz-question-text">${question.question}</div>
+    <div class="quiz-option-list">
+      ${question.options.map((option,index)=>{
+        let classes='quiz-option';
+        if(selected===index) classes+=' selected';
+        if(confirmed && index===question.answer) classes+=' correct';
+        if(confirmed && selected===index && selected!==question.answer) classes+=' wrong';
+        return `<button class="${classes}" data-quiz-option="${index}" ${confirmed?'disabled':''}>
+          <span class="quiz-letter">${String.fromCharCode(65+index)}</span>
+          <span>${option}</span>
+        </button>`;
+      }).join('')}
+    </div>
+    ${feedback}
+    ${completion}
+  `;
+
+  quizBody.querySelectorAll('[data-quiz-option]').forEach(btn=>{
+    btn.onclick=()=>{
+      if(confirmed) return;
+      quizState.selected[quizState.current]=Number(btn.dataset.quizOption);
+      renderQuiz();
+    };
+  });
+
+  const restartInner=document.getElementById('quizRestartInner');
+  if(restartInner) restartInner.onclick=resetQuiz;
+  const returnInner=document.getElementById('quizReturnInner');
+  if(returnInner) returnInner.onclick=leaveQuiz;
+
+  quizPrevBtn.disabled=quizState.current===0;
+  quizNextBtn.disabled=quizState.current===quizQuestions.length-1;
+  quizConfirmBtn.disabled=confirmed || selected===undefined;
+  quizConfirmBtn.textContent=confirmed?'已显示答案':'确认答案';
+}
+function confirmQuizAnswer(){
+  if(quizState.selected[quizState.current]===undefined) return;
+  quizState.confirmed[quizState.current]=true;
+  renderQuiz();
+}
+function resetQuiz(){
+  quizState.current=0;
+  quizState.selected={};
+  quizState.confirmed={};
+  renderQuiz();
+  showToast('课后练习已重置');
+}
+
+const knowledgeScreen=document.getElementById('knowledgeScreen');
+const knowledgeNav=document.getElementById('knowledgeNav');
+const knowledgeContent=document.getElementById('knowledgeContent');
+const knowledgePageTitle=document.getElementById('knowledgePageTitle');
+const knowledgePageSubtitle=document.getElementById('knowledgePageSubtitle');
+const knowledgeCurrentTitle=document.getElementById('knowledgeCurrentTitle');
+
+function showKnowledge(){
+  moduleHome.classList.add('hidden');
+  sim.classList.add('hidden');
+  knowledgeScreen.classList.remove('hidden');
+  renderKnowledge();
+}
+function leaveKnowledge(){
+  knowledgeScreen.classList.add('hidden');
+  moduleHome.classList.remove('hidden');
+}
+function activeKnowledgeSection(){
+  return knowledgeSections.find(item=>item.key===knowledgeState.active) || knowledgeSections[0];
+}
+function renderKnowledgeNav(){
+  knowledgeNav.innerHTML='';
+  knowledgeSections.forEach((item,index)=>{
+    const btn=document.createElement('button');
+    btn.className=`knowledge-nav-btn ${knowledgeState.active===item.key?'active':''}`;
+    btn.dataset.index=String(index+1).padStart(2,'0');
+    btn.textContent=item.label;
+    btn.onclick=()=>{
+      knowledgeState.active=item.key;
+      renderKnowledge();
+    };
+    knowledgeNav.appendChild(btn);
+  });
+}
+function renderKnowledge(){
+  const current=activeKnowledgeSection();
+  knowledgePageTitle.textContent=current.label;
+  knowledgePageSubtitle.textContent=current.subtitle;
+  knowledgeCurrentTitle.textContent=current.label;
+  renderKnowledgeNav();
+  if(current.key==='goal') renderKnowledgeGoal();
+  if(current.key==='stage') renderKnowledgeStage();
+  if(current.key==='risk') renderKnowledgeRisk();
+  if(current.key==='monitor') renderKnowledgeMonitor();
+  if(current.key==='prevent') renderKnowledgePrevent();
+  knowledgeContent.scrollTop=0;
+}
+function renderKnowledgeGoal(){
+  knowledgeContent.innerHTML=`
+    <div class="knowledge-lead">压力性损伤皮肤监护不仅包括预防，还包括风险评估、皮肤检查、异常判断、动态复查、记录和上报。</div>
+    <h3 class="knowledge-section-title">8项学习目标</h3>
+    <div class="goal-list">${learningGoals.map((goal,index)=>`<div class="goal-card"><b>${index+1}</b><span>${goal}</span></div>`).join('')}</div>
+    <h3 class="knowledge-section-title" style="margin-top:18px">基本概念</h3>
+    <div class="concept-grid">${conceptData.map(item=>`<div class="concept-card"><h4>${item.name}</h4><p>${item.text}</p></div>`).join('')}</div>
+    <h3 class="knowledge-section-title" style="margin-top:18px">高风险部位</h3>
+    <div class="knowledge-card-grid">${riskSiteCards.map(item=>`<div class="knowledge-card"><h3>${item[0]}</h3><p><strong>常见受压情况：</strong>${item[1]}</p><p style="margin-top:6px"><strong>监护提示：</strong>${item[2]}</p></div>`).join('')}</div>
+  `;
+}
+function renderKnowledgeStage(){
+  knowledgeContent.innerHTML=`
+    <div class="knowledge-lead">分期表示当前组织损伤程度，不代表一定按照1期至4期顺序发展。皮肤颜色表现受肤色和光线影响，不能只依赖单一红色视觉判断。</div>
+    <div class="stage-grid">
+      ${stageData.map(item=>`<div class="stage-card">
+        <div class="stage-visual"><div class="stage-skin"></div></div>
+        <div class="stage-content">
+          <h3>${item[0]}</h3>
+          <p><b>皮肤完整性：</b>${item[1]}</p>
+          <p><b>颜色或外观：</b>${item[2]}</p>
+          <p><b>指压表现：</b>${item[3]}</p>
+          <p><b>监护重点：</b>${item[4]}</p>
+          <p><b>默认病例用途：</b>${item[5]}</p>
+        </div>
+      </div>`).join('')}
+    </div>
+    <div class="knowledge-warning" style="margin-top:14px">1期不等于轻微损伤后必然进入2期；不可分期和深部组织压力性损伤不得使用1期描述替代。本系统不提供3期、4期和不可分期的创面治疗操作。</div>
+  `;
+}
+function renderKnowledgeRisk(){
+  knowledgeContent.innerHTML=`
+    <div class="knowledge-lead">Braden量表是风险筛查和辅助评估工具，不能代替完整的皮肤和组织检查。风险分级不得直接绑定为所有患者统一的固定翻身间隔。</div>
+    <div class="risk-layout">
+      <div>
+        <h3 class="knowledge-section-title">Braden六维度</h3>
+        <table class="static-table">
+          <tr><th>维度</th><th>学习内容</th><th>分值范围</th></tr>
+          ${bradenRows.map(row=>`<tr><td><strong>${row[0]}</strong></td><td>${row[1]}</td><td>${row[2]}</td></tr>`).join('')}
+        </table>
+        <h3 class="knowledge-section-title" style="margin-top:16px">风险分级</h3>
+        <table class="static-table">
+          <tr><th>总分</th><th>风险等级</th><th>监护原则</th></tr>
+          <tr><td>19～23</td><td>暂无明显风险</td><td>保持基础观察和皮肤保护</td></tr>
+          <tr><td>15～18</td><td>低风险</td><td>加强观察，制定基础监护计划</td></tr>
+          <tr><td>13～14</td><td>中风险</td><td>增加皮肤复查，实施体位和潮湿管理</td></tr>
+          <tr><td>10～12</td><td>高风险</td><td>建立个体化体位计划，使用减压用品并重点监护骶尾部和足跟</td></tr>
+          <tr><td>≤9</td><td>极高风险</td><td>强化动态监护、减压支撑、足跟悬空和异常上报</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="risk-result-card">
+          <div style="text-align:center;color:#60777b;font-size:12px">默认病例示例</div>
+          <div class="risk-example-score">12分</div>
+          <div class="risk-example-level">高风险</div>
+          <table class="static-table" style="margin-top:12px">
+            <tr><th>维度</th><th>选择</th><th>分值</th></tr>
+            <tr><td>感觉能力</td><td>轻度受限</td><td>3</td></tr>
+            <tr><td>潮湿程度</td><td>经常潮湿</td><td>2</td></tr>
+            <tr><td>活动能力</td><td>卧床</td><td>1</td></tr>
+            <tr><td>移动能力</td><td>非常受限</td><td>2</td></tr>
+            <tr><td>营养状况</td><td>可能不足</td><td>2</td></tr>
+            <tr><td>摩擦与剪切力</td><td>有潜在问题</td><td>2</td></tr>
+          </table>
+        </div>
+        <div class="knowledge-warning" style="margin-top:12px">需要重新评估的时机：初次评估、病情或意识变化、活动能力变化、发现新的皮肤异常以及护理措施调整后。</div>
+      </div>
+    </div>
+  `;
+}
+function renderKnowledgeMonitor(){
+  knowledgeContent.innerHTML=`
+    <div class="knowledge-lead">皮肤监护需要回答四个问题：检查哪里、检查什么、何时检查、记录什么。正常、受压预警、疑似1期、其他异常和无法判断需上报应明确区分。</div>
+    <h3 class="knowledge-section-title">监护部位</h3>
+    <div class="knowledge-card-grid">${monitorSiteCards.map(item=>`<div class="knowledge-card"><h3>${item[0]}</h3><p>${item[1]}</p></div>`).join('')}</div>
+    <div class="group-grid" style="margin-top:16px">
+      <div class="group-card">
+        <h3>监护维度</h3>
+        <ul>
+          <li>颜色及与周围或对侧皮肤的差异</li>
+          <li>皮肤完整性、水疱、破损或表皮分离</li>
+          <li>对完整皮肤红斑进行约3秒指压</li>
+          <li>局部温度、湿度、浸渍、水肿或分泌物</li>
+          <li>组织软硬度、硬结、异常柔软或水肿</li>
+          <li>疼痛、麻木、灼热或压迫不适</li>
+          <li>异常区域最长径和垂直最宽径</li>
+        </ul>
+      </div>
+      <div class="group-card">
+        <h3>监护时机</h3>
+        <ul>
+          <li>患者首次进入护理场景时</li>
+          <li>病情、意识、活动或移动能力变化时</li>
+          <li>翻身或体位调整过程中</li>
+          <li>皮肤清洁、失禁护理或更换床单位时</li>
+          <li>发现红斑、疼痛、温度或组织异常后</li>
+          <li>实施翻身、减压、清洁和保护措施后复查</li>
+        </ul>
+      </div>
+      <div class="group-card">
+        <h3>记录内容</h3>
+        <ul>
+          <li>检查日期、时间和检查人员</li>
+          <li>检查部位、左右侧及是否器械相关</li>
+          <li>颜色、完整性、指压、温度、湿度、软硬度和疼痛</li>
+          <li>异常区域长度和宽度</li>
+          <li>清洁、擦干、皮肤保护、体位和减压措施</li>
+          <li>下次翻身、复查时间及是否上报</li>
+        </ul>
+      </div>
+      <div class="group-card">
+        <h3>操作说明</h3>
+        <ul>
+          <li>破损创面不执行指压操作</li>
+          <li>异常区域测量最长径和与其垂直的最宽径</li>
+          <li>结果区分正常、受压预警、疑似1期、其他异常和无法判断</li>
+          <li>无法判断或出现皮肤完整性改变时及时上报</li>
+        </ul>
+      </div>
+    </div>
+  `;
+}
+function renderKnowledgePrevent(){
+  knowledgeContent.innerHTML=`
+    <div class="knowledge-lead">从风险识别、皮肤监护、体位减压、潮湿管理到动态复查，形成完整压力性损伤监护与预防流程。</div>
+    <div class="measure-grid">
+      ${preventionData.map(item=>`<div class="measure-card">
+        <div class="measure-icon">${item[0]}</div>
+        <h3>${item[1]}</h3>
+        <p>${item[2]}</p>
+      </div>`).join('')}
+    </div>
+    <div class="common-taboo"><b>通用禁忌：</b>避免按摩持续发红部位；避免拖、拉、推造成摩擦与剪切；避免将减压用品直接压在足跟或异常部位。</div>
+  `;
+}
+
+function showTraining(){
+  moduleHome.classList.add('hidden');sim.classList.remove('hidden');renderAll();openStep('目的案例');
+}
+document.querySelectorAll('.module-card').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    if(btn.dataset.module==='knowledge') showKnowledge();
+    else if(btn.dataset.module==='practice') showTraining();
+    else if(btn.dataset.module==='quiz') showQuiz();
+  });
+});
+
+function navigationPanelHtml(configKey){
+  const config=navigationTaskConfigs[configKey];
+  const state=navigationTaskStates[configKey];
+  return `
+    <div class="nav-task-help">点击任务名称或定位图标，系统将切换到对应场景、局部视角或交互状态。方框仅表示系统完成状态，不用于手动勾选。</div>
+    <div class="nav-task-current"><span>当前任务</span><b>${state.active}</b></div>
+    <div class="nav-task-list">
+      ${config.items.map(item=>`
+        <button class="nav-task-row ${state.active===item.name?'active':''} ${state.completed.has(item.name)?'done':''}" data-task="${item.name}">
+          <span class="nav-task-status">${state.completed.has(item.name)?'✓':''}</span>
+          <span class="nav-task-name">${item.name}</span>
+          <span class="nav-task-locate">⌖</span>
+        </button>`).join('')}
+    </div>
+    <div class="panel-actions"><button class="orange-btn" id="navTaskCompleteBtn">当前项完成</button></div>`;
+}
+function switchNavigationTask(configKey, taskName, rerender=true){
+  const config=navigationTaskConfigs[configKey];
+  const state=navigationTaskStates[configKey];
+  const item=config.items.find(x=>x.name===taskName);
+  if(!item)return;
+  state.active=taskName;
+  applySceneBackground(config.stepName);
+  scenePlaceholderBig.textContent=item.view;
+  scenePlaceholderSmall.textContent=item.hint;
+  hotspot.style.left=item.left;
+  hotspot.style.top=item.top;
+  hotspot.classList.remove('hidden');
+  taskStrip.textContent=`${config.stepName}：${taskName}`;
+  if(rerender) renderNavigationPanel(configKey);
+}
+function renderNavigationPanel(configKey){
+  const config=navigationTaskConfigs[configKey];
+  const state=navigationTaskStates[configKey];
+  panelTemplate(config.title,navigationPanelHtml(configKey));
+  rightBody.querySelectorAll('.nav-task-row').forEach(row=>{
+    row.onclick=()=>switchNavigationTask(configKey,row.dataset.task,true);
+  });
+  document.getElementById('navTaskCompleteBtn').onclick=()=>{
+    state.completed.add(state.active);
+    const next=config.items.find(item=>!state.completed.has(item.name));
+    if(next){
+      showToast(`${state.active}已完成，已切换至${next.name}`);
+      switchNavigationTask(configKey,next.name,true);
+    }else{
+      rightPanel.classList.add('hidden');
+      completeAndAdvance(config.stepName,`${config.stepName}全部任务已完成`);
+    }
+  };
+}
+
+function activeBradenDimension(){
+  return bradenDimensions.find(item=>item.key===bradenState.activeKey) || bradenDimensions[0];
+}
+function bradenCompletedCount(){
+  return Object.keys(bradenState.scores).length;
+}
+function bradenTotal(){
+  return Object.values(bradenState.scores).reduce((sum,val)=>sum+Number(val||0),0);
+}
+function renderBradenDialogue(){
+  const dim=activeBradenDimension();
+  const dialogueBox=document.getElementById('dialogue');
+  dialogueBox.classList.remove('hidden');
+
+  const showingAnswer=dialogIndex===1;
+  const line=showingAnswer ? `患者：${dim.answer}` : `护士：${dim.question}`;
+  const patient=showingAnswer;
+
+  avatar.textContent=patient?'👴':'👩‍⚕️';
+  speech.innerHTML=`<b>${patient?'患者':'护士'}：</b>${line.replace(/^护士：|^患者：/,'')}`;
+  dialogNext.style.display='block';
+  dialogNext.textContent=showingAnswer?'语音结束，开始评分':'播放患者回答';
+}
+function bradenDimensionListHtml(){
+  const firstIncomplete=bradenDimensions.find(item=>!bradenState.scores[item.key]);
+  return `<div class="braden-dim-list">${bradenDimensions.map((dim,index)=>{
+    const score=bradenState.scores[dim.key];
+    const locked=!score && firstIncomplete?.key!==dim.key;
+    return `<button class="braden-dim ${dim.key===bradenState.activeKey?'active':''} ${score?'done':''} ${locked?'locked':''}" data-braden="${dim.key}" ${locked?'disabled':''}>
+      <span class="braden-index">${score?'✓':locked?'🔒':index+1}</span>
+      <span class="braden-dim-name">${dim.name}</span>
+      <span class="braden-score-badge">${score?score+'分':locked?'锁定':'待评分'}</span>
+    </button>`;
+  }).join('')}</div>`;
+}
+function bradenDimensionPanelHtml(){
+  const dim=activeBradenDimension();
+  const completedScore=bradenState.scores[dim.key];
+  const canScore=bradenState.questionAnswered && !completedScore;
+  return `
+    <div class="braden-intro">每个能力都必须独立完成问诊和评分。当前项正确后，才解锁下一项。</div>
+    <div class="braden-progress"><span>Braden评估进度</span><b>${bradenCompletedCount()} / 6</b></div>
+    <div class="braden-layout">
+      <div class="braden-left">${bradenDimensionListHtml()}</div>
+      <div class="braden-main">
+        <div class="braden-question-card">
+          <div class="braden-question-title">${dim.name}问诊</div>
+          <div class="braden-question-text">${dim.question}</div>
+        </div>
+        <div class="braden-answer-hint ${bradenState.questionAnswered||completedScore?'ready':''}">
+          ${bradenState.questionAnswered||completedScore ? '患者回答：'+dim.answer : '点击底部“播放患者回答”，听取回答后才能选择评分。'}
+        </div>
+        <div class="braden-score-guide"><b>${dim.name}评分项</b><br>请依据患者回答，从以下完整定义中选择一项。</div>
+        <div class="braden-score-options">
+          ${dim.options.map(opt=>`<button class="braden-score-option ${bradenState.selectedScore===opt.score?'active':''} ${completedScore===opt.score?'locked-score':''}" data-score="${opt.score}" ${canScore?'':'disabled'}>
+            <b>${opt.score}分｜${opt.label}</b><br><span>${opt.detail}</span>
+          </button>`).join('')}
+        </div>
+        ${bradenState.feedback?`<div class="braden-feedback">${bradenState.feedback}</div>`:''}
+        <div class="panel-actions">
+          <button class="orange-btn" id="confirmBradenScore" ${!canScore||!bradenState.selectedScore?'disabled':''}>确认${dim.name}评分</button>
+        </div>
+      </div>
+    </div>`;
+}
+function bradenSummaryHtml(){
+  const total=bradenTotal();
+  return `
+    <div class="braden-intro">六个维度已完成。系统根据各维度分值自动合计，请判断患者当前压力性损伤风险等级。</div>
+    <div class="braden-summary-grid">
+      <div class="head">维度</div><div class="head">评分</div>
+      ${bradenDimensions.map(dim=>`<div>${dim.name}｜${dim.label}</div><div>${bradenState.scores[dim.key]}分</div>`).join('')}
+    </div>
+    <div class="braden-total"><span>Braden总分</span><b>${total}分</b></div>
+    <div class="risk-basis">主要风险依据：长期卧床、不能独立翻身、右侧感觉减退、潮湿、营养摄入不足及摩擦剪切风险。</div>
+    <div class="panel-title">请选择风险等级</div>
+    <div class="option-list">
+      ${['低风险','中风险','高风险','极高风险'].map(level=>`<button class="option-btn ${bradenState.selectedRisk===level?'active':''}" data-risk="${level}">${level}</button>`).join('')}
+    </div>
+    <div class="risk-result-box">六维度已锁定为3、2、1、2、2、2，总分12分。请独立判断风险等级。</div>
+    ${bradenState.feedback?`<div class="braden-feedback">${bradenState.feedback}</div>`:''}
+    <div class="panel-actions"><button class="orange-btn" id="confirmBradenRisk" ${!bradenState.selectedRisk?'disabled':''}>确认风险评估</button></div>`;
+}
+function selectBradenDimension(key){
+  const firstIncomplete=bradenDimensions.find(item=>!bradenState.scores[item.key]);
+  const isCompleted=Boolean(bradenState.scores[key]);
+
+  if(!isCompleted && firstIncomplete?.key!==key){
+    showToast('请先完成当前维度评分');
+    return;
+  }
+
+  bradenState.activeKey=key;
+  bradenState.selectedScore=bradenState.scores[key] || null;
+  bradenState.questionAnswered=isCompleted;
+  bradenState.feedback='';
+  dialogIndex=0;
+
+  const dim=activeBradenDimension();
+  applySceneBackground('风险评估');
+  scenePlaceholderBig.textContent=`${dim.name}评估`;
+
+  if(isCompleted){
+    scenePlaceholderSmall.textContent='该维度已完成，可回看评分定义';
+    taskStrip.textContent=`${dim.name}已锁定为${bradenState.scores[key]}分。`;
+    document.getElementById('dialogue').classList.add('hidden');
+    renderBradenPanel();
+    return;
+  }
+
+  scenePlaceholderSmall.textContent='先完成护患问答，语音结束后再进行评分';
+  taskStrip.textContent=`请先完成${dim.name}问诊。`;
+  rightPanel.classList.remove('braden-panel');
+  rightPanel.classList.add('hidden');
+  renderBradenDialogue();
+}
+function renderBradenPanel(){
+  rightPanel.classList.add('braden-panel');
+  rightTitle.textContent='Braden风险评估';
+  rightBody.innerHTML=bradenState.phase==='summary' ? bradenSummaryHtml() : bradenDimensionPanelHtml();
+  rightPanel.classList.remove('hidden');
+
+  if(bradenState.phase==='dimensions'){
+    rightBody.querySelectorAll('.braden-dim').forEach(btn=>{
+      btn.onclick=()=>selectBradenDimension(btn.dataset.braden);
+    });
+    rightBody.querySelectorAll('.braden-score-option').forEach(btn=>{
+      btn.onclick=()=>{
+        bradenState.selectedScore=Number(btn.dataset.score);
+        bradenState.feedback='';
+        renderBradenPanel();
+      };
+    });
+    const confirm=document.getElementById('confirmBradenScore');
+    if(confirm){
+      confirm.onclick=()=>{
+        const dim=activeBradenDimension();
+        if(bradenState.selectedScore!==dim.correct){
+          bradenState.feedback=`评分不正确。患者回答“${dim.answer}”，应重新对照${dim.name}评分定义。`;
+          renderBradenPanel();
+          return;
+        }
+        bradenState.scores[dim.key]=dim.correct;
+        bradenState.selectedScore=null;
+        bradenState.feedback='';
+        const next=bradenDimensions.find(item=>!bradenState.scores[item.key]);
+        if(next){
+          rightPanel.classList.remove('braden-panel');
+          rightPanel.classList.add('hidden');
+          showToast(`${dim.name}已锁定为${dim.correct}分，开始${next.name}问诊`);
+          selectBradenDimension(next.key);
+        }else{
+          bradenState.phase='summary';
+          document.getElementById('dialogue').classList.add('hidden');
+          taskStrip.textContent='六维度评分完成，请核对总分并判断风险等级。';
+          renderBradenPanel();
+        }
+      };
+    }
+  }else{
+    rightBody.querySelectorAll('[data-risk]').forEach(btn=>{
+      btn.onclick=()=>{
+        bradenState.selectedRisk=btn.dataset.risk;
+        bradenState.feedback='';
+        renderBradenPanel();
+      };
+    });
+    document.getElementById('confirmBradenRisk').onclick=()=>{
+      const total=bradenTotal();
+      if(total!==12 || bradenState.selectedRisk!=='高风险'){
+        bradenState.feedback=`当前六维度总分为${total}分，正确风险等级为高风险。`;
+        renderBradenPanel();
+        return;
+      }
+      rightPanel.classList.remove('braden-panel');
+      rightPanel.classList.add('hidden');
+      completeAndAdvance('风险评估','风险评估已完成：12分，高风险');
+    };
+  }
+}
+
+function applySceneBackground(step, overridePath=''){
+  const path=overridePath || sceneBackgrounds[step] || '';
+  if(path){
+    scene.style.setProperty('--scene-bg',`url("${path}")`);
+    scenePlaceholder.classList.add('has-background');
+  }else{
+    scene.style.removeProperty('--scene-bg');
+    scenePlaceholder.classList.remove('has-background');
+  }
+}
+
+function setGenericSceneView(step){
+  applySceneBackground(step);
+  scenePlaceholderBig.textContent=`${step}场景`;
+  scenePlaceholderSmall.textContent='当前步骤暂未配置背景图';
+  hotspot.style.left='51%';
+  hotspot.style.top='51%';
+}
+function switchBodySite(stepName, siteName, rerender=true){
+  const config=(bodySiteConfigs[stepName]||[]).find(item=>item.name===siteName);
+  if(!config)return;
+  bodySiteStates[stepName].active=siteName;
+  applySceneBackground(stepName,bodySiteBackgrounds[stepName]?.[siteName]||'');
+  scenePlaceholderBig.textContent=config.view;
+  scenePlaceholderSmall.textContent=config.hint;
+  hotspot.style.left=config.left;
+  hotspot.style.top=config.top;
+  hotspot.classList.remove('hidden');
+  if(stepName==='皮肤初检'){
+    taskStrip.textContent=`请检查${siteName}皮肤颜色、完整性及受压情况。`;
+  }else{
+    taskStrip.textContent=`请重新检查${siteName}，并记录与首次检查相比的变化。`;
+  }
+  if(rerender) renderBodySitePanel(stepName);
+}
+function bodySitePanelHtml(stepName){
+  const state=bodySiteStates[stepName];
+  const sites=bodySiteConfigs[stepName]||[];
+  return `
+    <div class="site-panel-help">点击部位名称或定位图标，系统将切换至对应评估步骤和局部视角。方框仅表示系统完成状态，不用于手动勾选。</div>
+    <div class="site-current"><span>当前评估部位</span><b>${state.active}</b></div>
+    <div class="site-list">
+      ${sites.map(site=>`
+        <button class="site-row ${state.active===site.name?'active':''} ${state.completed.has(site.name)?'done':''}" data-site="${site.name}">
+          <span class="site-status">${state.completed.has(site.name)?'✓':''}</span>
+          <span class="site-name">${site.name}</span>
+          <span class="site-locate">⌖</span>
+        </button>`).join('')}
+    </div>
+    <div class="panel-actions"><button class="orange-btn" id="siteCompleteBtn">当前部位完成</button></div>`;
+}
+function renderBodySitePanel(stepName){
+  const title=stepName==='皮肤初检'?'部位评估':'复查部位';
+  panelTemplate(title,bodySitePanelHtml(stepName));
+  rightBody.querySelectorAll('.site-row').forEach(row=>{
+    row.onclick=()=>switchBodySite(stepName,row.dataset.site,true);
+  });
+  const completeBtn=document.getElementById('siteCompleteBtn');
+  completeBtn.onclick=()=>{
+    const state=bodySiteStates[stepName];
+    state.completed.add(state.active);
+    const sites=bodySiteConfigs[stepName];
+    const next=sites.find(site=>!state.completed.has(site.name));
+    if(next){
+      showToast(`${state.active}评估已完成，已切换至${next.name}`);
+      switchBodySite(stepName,next.name,true);
+    }else{
+      rightPanel.classList.add('hidden');
+      completeAndAdvance(stepName,`${stepName}全部部位已完成`);
+    }
+  };
+}
+
+function renderPrimary(){
+  const flow=firstFlows[activeFlow];
+  currentPrimaryIcon.textContent=flow.icon;
+  currentPrimaryName.textContent=flow.label;
+
+  primaryPop.innerHTML='';
+  firstFlows.forEach((item,index)=>{
+    const btn=document.createElement('button');
+    btn.className=`primary-pop-btn ${index===activeFlow?'active':''}`;
+    btn.innerHTML=`<span>${item.icon}</span><span>${item.label}</span>`;
+    btn.onclick=()=>{
+      activeFlow=index;
+      activeStep=item.steps[0];
+      primaryPop.classList.add('hidden');
+      openStep(activeStep);
+    };
+    primaryPop.appendChild(btn);
+  });
+}
+function renderSecondary(){
+  const flow=firstFlows[activeFlow];
+  secondaryFixed.innerHTML='';
+  const icons=['▤','◉','✓','□','⌖','↻','✚'];
+  flow.steps.forEach((step,index)=>{
+    const btn=document.createElement('button');
+    btn.className=`secondary-step ${step===activeStep?'active':''} ${doneSteps.has(step)?'done':''}`;
+    btn.innerHTML=`<span class="secondary-circle">${icons[index]||'•'}</span><span class="step-label">${step}</span>`;
+    btn.onclick=()=>openStep(step);
+    secondaryFixed.appendChild(btn);
+  });
+}
+function openStep(step){
+  if(step==='皮肤复查' && !baselineSaved){
+    showToast('请先完成首次记录');
+    step='首次记录';
+  }
+  activeStep=step;
+  activeFlow=firstFlows.findIndex(f=>f.steps.includes(step));
+  dialogIndex=0;selectedOption='';
+  rightPanel.classList.add('hidden');modalMask.classList.add('hidden');
+  primaryPop.classList.add('hidden');
+  setGenericSceneView(step);
+  const data=stepData[step]||{};
+  const waitForReviewDialogue=step==='皮肤复查' && !reviewDialogueCompleted;
+  hotspot.classList.toggle('hidden',!data.hotspot || waitForReviewDialogue);
+  progressHint.classList.toggle('hidden',!data.progress || waitForReviewDialogue);
+  renderAll();
+  syncNurseOutfitPreview();
+  if(data.panel && !waitForReviewDialogue) openRightPanel(data.panel);
+  if(data.modal) openModal(data.modal);
+}
+function renderAll(){
+  renderPrimary();
+  renderSecondary();
+  if(activeStep==='皮肤复查' && reviewDialogueCompleted){
+    taskStrip.textContent='请重新检查患者骶尾部及双足跟皮肤情况。';
+  }else{
+    taskStrip.textContent=stepData[activeStep]?.task||'请完成当前操作。';
+  }
+  renderDialogue();
+}
+function renderDialogue(){
+  if(activeStep==='风险评估' && bradenState.phase==='dimensions'){
+    renderBradenDialogue();
+    return;
+  }
+  const arr=stepData[activeStep]?.speech||[];
+  const dialogueBox=document.getElementById('dialogue');
+  if(!arr.length || (activeStep==='皮肤复查' && reviewDialogueCompleted)){
+    dialogueBox.classList.add('hidden');
+    return;
+  }
+  dialogueBox.classList.remove('hidden');
+  const line=arr[Math.min(dialogIndex,arr.length-1)];
+  const patient=line.startsWith('患者');
+  avatar.textContent=patient?'👴':'👩‍⚕️';
+  speech.innerHTML=`<b>${patient?'患者':'护士'}：</b>${line.replace(/^护士：|^患者：|^系统：/,'')}`;
+  dialogNext.style.display=arr.length>1?'block':'none';
+}
+dialogNext.onclick=()=>{
+  if(activeStep==='风险评估' && bradenState.phase==='dimensions'){
+    if(dialogIndex===0){
+      dialogIndex=1;
+      bradenState.feedback='';
+      renderBradenDialogue();
+      return;
+    }
+
+    if(dialogIndex===1 && !bradenState.questionAnswered){
+      bradenState.questionAnswered=true;
+      bradenState.feedback='';
+      document.getElementById('dialogue').classList.add('hidden');
+      taskStrip.textContent=`请根据患者回答完成${activeBradenDimension().name}评分。`;
+      renderBradenPanel();
+      return;
+    }
+    return;
+  }
+  const arr=stepData[activeStep]?.speech||[];
+  if(!arr.length)return;
+  const isLast=dialogIndex>=arr.length-1;
+  const data=stepData[activeStep]||{};
+  if(activeStep==='问候核对' && isLast){
+    identityState.dialogueCompleted=true;
+    document.getElementById('dialogue').classList.add('hidden');
+    taskStrip.textContent='请核对患者口述姓名和腕带信息。';
+    renderIdentityPanel();
+    showToast('护患沟通完成，请进行身份核对');
+    return;
+  }
+  if(activeStep==='皮肤复查' && isLast){
+    reviewDialogueCompleted=true;
+    document.getElementById('dialogue').classList.add('hidden');
+    taskStrip.textContent='请重新检查患者骶尾部及双足跟皮肤情况。';
+    hotspot.classList.remove('hidden');
+    progressHint.classList.remove('hidden');
+    openRightPanel('review');
+    showToast('请开始2小时皮肤复查');
+    return;
+  }
+  if(isLast && !data.panel && !data.modal){
+    completeAndAdvance(activeStep);
+    return;
+  }
+  dialogIndex=Math.min(dialogIndex+1,arr.length-1);
+  renderDialogue();
+};
+
+
+
+const identityState={
+  dialogueCompleted:false,
+  spokenNameChecked:false,
+  wristbandChecked:false,
+  selectedResult:'',
+  feedback:''
+};
+function identityPanelHtml(){
+  const ready=identityState.dialogueCompleted;
+  return `
+    <div class="braden-intro">完成护患对话后，必须实际核对患者口述姓名和腕带信息。本步骤不进行Braden评分。</div>
+    <div class="identity-card">
+      <div class="identity-row"><b>患者口述姓名</b><span>张华</span></div>
+      <div class="identity-row"><b>病历姓名</b><span>张华</span></div>
+      <div class="identity-row"><b>腕带信息</b><span>张华｜男｜65岁｜12床｜住院号123456</span></div>
+    </div>
+    <div class="identity-checks">
+      <button class="option-btn identity-check-btn ${identityState.spokenNameChecked?'done':''}" id="checkSpokenName" ${ready?'':'disabled'}>
+        ${identityState.spokenNameChecked?'✓ 已核对口述姓名':'核对口述姓名'}
+      </button>
+      <button class="option-btn identity-check-btn ${identityState.wristbandChecked?'done':''}" id="checkWristband" ${ready?'':'disabled'}>
+        ${identityState.wristbandChecked?'✓ 已核对腕带信息':'核对腕带信息'}
+      </button>
+    </div>
+    <div class="panel-title">核对结果</div>
+    <div class="option-list">
+      ${['信息一致','信息不一致'].map(value=>`<button class="option-btn ${identityState.selectedResult===value?'active':''}" data-identity-result="${value}" ${identityState.spokenNameChecked&&identityState.wristbandChecked?'':'disabled'}>${value}</button>`).join('')}
+    </div>
+    ${identityState.feedback?`<div class="identity-feedback">${identityState.feedback}</div>`:''}
+    <div class="panel-actions">
+      <button class="orange-btn" id="confirmIdentity" ${identityState.spokenNameChecked&&identityState.wristbandChecked&&identityState.selectedResult?'':'disabled'}>确认身份核对</button>
+    </div>`;
+}
+function renderIdentityPanel(){
+  panelTemplate('身份核对',identityPanelHtml());
+  rightPanel.classList.add('identity-panel');
+  document.getElementById('checkSpokenName').onclick=()=>{
+    identityState.spokenNameChecked=true;
+    identityState.feedback='';
+    renderIdentityPanel();
+  };
+  document.getElementById('checkWristband').onclick=()=>{
+    identityState.wristbandChecked=true;
+    identityState.feedback='';
+    renderIdentityPanel();
+  };
+  rightBody.querySelectorAll('[data-identity-result]').forEach(btn=>{
+    btn.onclick=()=>{
+      identityState.selectedResult=btn.dataset.identityResult;
+      identityState.feedback='';
+      renderIdentityPanel();
+    };
+  });
+  document.getElementById('confirmIdentity').onclick=()=>{
+    if(identityState.selectedResult!=='信息一致'){
+      identityState.feedback='患者口述姓名、腕带信息与病历一致，应选择“信息一致”。';
+      renderIdentityPanel();
+      return;
+    }
+    rightPanel.classList.remove('identity-panel');
+    rightPanel.classList.add('hidden');
+    completeAndAdvance('问候核对','患者身份核对完成');
+  };
+}
+
+const nurseOutfitCategories = [
+  {key:'head',title:'头部',correct:'nurse_cap',options:[{value:'no_hat',label:'无帽',icon:'◯'},{value:'nurse_cap',label:'护士帽',icon:'♢'}]},
+  {key:'face',title:'面部',correct:'medical_mask',options:[{value:'no_mask',label:'无口罩',icon:'☺'},{value:'medical_mask',label:'医用口罩',icon:'▰'}]},
+  {key:'top',title:'上衣',correct:'nurse_top',options:[{value:'casual_top',label:'常服上衣',icon:'▦'},{value:'nurse_top',label:'护士服上衣',icon:'✚'}]},
+  {key:'bottom',title:'裤装',correct:'nurse_pants',options:[{value:'casual_pants',label:'普通长裤',icon:'Ⅱ'},{value:'nurse_pants',label:'护士服裤子',icon:'║'}]},
+  {key:'shoes',title:'鞋子',correct:'nurse_shoes',options:[{value:'slippers',label:'拖鞋',icon:'⌣'},{value:'nurse_shoes',label:'护士鞋',icon:'◒'}]}
+];
+const nurseOutfitState={selected:{head:'no_hat',face:'no_mask',top:'casual_top',bottom:'casual_pants',shoes:'slippers'},touched:new Set(),submitted:false};
+const nurseOutfitPreview=document.getElementById('nurseOutfitPreview');
+function outfitOptionLabel(categoryKey,value){
+  const category=nurseOutfitCategories.find(item=>item.key===categoryKey);
+  return category?.options.find(item=>item.value===value)?.label||value;
+}
+function nurseOutfitErrors(){
+  const messages={head:'护士帽选择不正确，请重新选择。',face:'操作前应佩戴医用口罩。',top:'护士上衣选择不正确。',bottom:'裤装不符合护理操作要求。',shoes:'不应穿拖鞋进行护理操作，请选择护士鞋。'};
+  return nurseOutfitCategories.filter(category=>nurseOutfitState.selected[category.key]!==category.correct).map(category=>({key:category.key,message:messages[category.key]}));
+}
+function syncNurseOutfitPreview(){
+  if(activeStep!=='护士准备'){nurseOutfitPreview.classList.add('hidden');return;}
+  nurseOutfitPreview.classList.remove('hidden');
+  nurseOutfitPreview.innerHTML='<b>当前着装</b>'+nurseOutfitCategories.map(category=>`<span class="nurse-outfit-chip">${category.title}：${outfitOptionLabel(category.key,nurseOutfitState.selected[category.key])}</span>`).join('');
+}
+function nurseOutfitPanelHtml(){
+  const errors=nurseOutfitState.submitted?nurseOutfitErrors():[];
+  const errorKeys=new Set(errors.map(item=>item.key));
+  const allTouched=nurseOutfitState.touched.size===nurseOutfitCategories.length;
+  return `<div class="outfit-intro">点击服饰卡片后，护士模型对应部件立即切换。同一类别只能选择一项，五类均选择后点击“确定”。</div>
+    ${nurseOutfitCategories.map(category=>`<div class="outfit-category">
+      <div class="outfit-category-title"><span>${category.title}</span><span>${nurseOutfitState.touched.has(category.key)?'已选择':'待选择'}</span></div>
+      <div class="outfit-options">${category.options.map(option=>{
+        const selected=nurseOutfitState.selected[category.key]===option.value;
+        const error=nurseOutfitState.submitted&&selected&&errorKeys.has(category.key);
+        return `<button class="outfit-card ${selected?'selected':''} ${error?'error':''}" data-outfit-category="${category.key}" data-outfit-value="${option.value}"><span class="outfit-icon">${option.icon}</span><span class="outfit-name">${option.label}</span></button>`;
+      }).join('')}</div></div>`).join('')}
+    ${errors.length?`<div class="outfit-feedback">${errors.map(item=>'• '+item.message).join('<br>')}</div>`:allTouched?'<div class="outfit-ready">五类服饰已选择，请点击“确定”进行统一判断。</div>':''}
+    <div class="panel-actions"><button class="orange-btn" id="outfitConfirmBtn" ${allTouched?'':'disabled'}>确定</button></div>`;
+}
+function renderNurseOutfitPanel(){
+  panelTemplate('服饰选择',nurseOutfitPanelHtml());
+  rightPanel.classList.add('outfit-panel');
+  syncNurseOutfitPreview();
+  rightBody.querySelectorAll('.outfit-card').forEach(card=>{
+    card.onclick=()=>{
+      const category=card.dataset.outfitCategory;
+      nurseOutfitState.selected[category]=card.dataset.outfitValue;
+      nurseOutfitState.touched.add(category);
+      nurseOutfitState.submitted=false;
+      syncNurseOutfitPreview();
+      renderNurseOutfitPanel();
+    };
+  });
+  document.getElementById('outfitConfirmBtn').onclick=()=>{
+    if(nurseOutfitState.touched.size<nurseOutfitCategories.length){showToast('请完成五类服饰选择');return;}
+    nurseOutfitState.submitted=true;
+    const errors=nurseOutfitErrors();
+    if(errors.length){renderNurseOutfitPanel();showToast('护士着装存在错误，请按提示修改');return;}
+    rightPanel.classList.remove('outfit-panel');rightPanel.classList.add('hidden');nurseOutfitPreview.classList.add('hidden');
+    completeAndAdvance('护士准备','护士着装符合操作要求');
+  };
+}
+
+function panelTemplate(title,body){
+  rightPanel.classList.remove('outfit-panel','identity-panel','braden-panel');
+  rightTitle.textContent=title;rightBody.innerHTML=body;rightPanel.classList.remove('hidden');
+}
+function checkboxList(items){
+  return `<div class="check-list">${items.map(x=>`<label class="check-item"><input type="checkbox"><span>${x}</span><span class="pin">⌖</span></label>`).join('')}</div>
+  <div class="panel-actions"><button class="orange-btn step-complete">确定</button></div>`;
+}
+function optionPanel(question,opts){
+  return `<div class="panel-title">${question}</div><div class="option-list">${opts.map(x=>`<button class="option-btn">${x}</button>`).join('')}</div>
+  <div class="panel-actions"><button class="orange-btn step-complete">提交</button></div>`;
+}
+function openRightPanel(type){
+  const panels={
+    outfit:['OUTFIT','outfit'],
+    environment:['TASK_NAV','environment'],
+    identity:['IDENTITY','identity'],
+    braden:['BRADEN','braden'],
+    initialSkin:['BODY_SITE','皮肤初检'],
+    items:['用物栏',`<div class="item-grid">${['手套','水盆','毛巾','清洁剂','保护剂','软尺','翻身垫','足跟垫'].map((x,i)=>`<button class="item-card"><span class="item-thumb">${['□','◡','▱','♢','▯','⌁','△','∪'][i]}</span><span>${x}</span></button>`).join('')}</div><div class="panel-actions"><button class="orange-btn step-complete">选择完成</button></div>`],
+    turnPrep:['TASK_NAV','turnPrep'],
+    reposition:['TASK_NAV','reposition'],
+    focus:['TASK_NAV','focus'],
+    clean:['TASK_NAV','clean'],
+    offload:['TASK_NAV','offload'],
+    comfort:['TASK_NAV','comfort'],
+    post:['TASK_NAV','post'],
+    review:['BODY_SITE','皮肤复查']
+  };
+  const p=panels[type];
+  if(p[0]==='IDENTITY'){
+    renderIdentityPanel();
+    return;
+  }
+  if(p[0]==='OUTFIT'){
+    renderNurseOutfitPanel();
+    return;
+  }
+  if(p[0]==='BODY_SITE'){
+    renderBodySitePanel(p[1]);
+    switchBodySite(p[1],bodySiteStates[p[1]].active,false);
+    return;
+  }
+  if(p[0]==='TASK_NAV'){
+    renderNavigationPanel(p[1]);
+    switchNavigationTask(p[1],navigationTaskStates[p[1]].active,false);
+    return;
+  }
+  if(p[0]==='BRADEN'){
+    bradenState.phase=Object.keys(bradenState.scores).length===6?'summary':'dimensions';
+    if(bradenState.phase==='dimensions'){
+      rightPanel.classList.remove('braden-panel');
+      rightPanel.classList.add('hidden');
+      selectBradenDimension(bradenState.activeKey);
+    }else{
+      document.getElementById('dialogue').classList.add('hidden');
+      renderBradenPanel();
+    }
+    return;
+  }
+  panelTemplate(p[0],p[1]);
+  bindPanelEvents();
+}
+function bindPanelEvents(){
+  rightBody.querySelectorAll('.option-btn,.item-card').forEach(btn=>{
+    btn.onclick=()=>btn.classList.toggle('active');
+  });
+  rightBody.querySelectorAll('.step-complete').forEach(btn=>{
+    btn.onclick=()=>{
+      rightPanel.classList.add('hidden');
+      completeAndAdvance(activeStep);
+    };
+  });
+}
+document.getElementById('rightClose').onclick=()=>rightPanel.classList.add('hidden');
+
+document.getElementById('quizBackBtn').onclick=leaveQuiz;
+document.getElementById('quizExitBtn').onclick=leaveQuiz;
+document.getElementById('quizResetBtn').onclick=resetQuiz;
+quizPrevBtn.onclick=()=>{
+  if(quizState.current>0){
+    quizState.current--;
+    renderQuiz();
+  }
+};
+quizNextBtn.onclick=()=>{
+  if(quizState.current<quizQuestions.length-1){
+    quizState.current++;
+    renderQuiz();
+  }
+};
+quizConfirmBtn.onclick=confirmQuizAnswer;
+
+document.getElementById('knowledgeBackBtn').onclick=leaveKnowledge;
+document.getElementById('knowledgeExitBtn').onclick=leaveKnowledge;
+document.getElementById('knowledgeSettingsBtn').onclick=()=>showToast('设置入口：正式系统接入音量、分辨率、全屏和画质设置。');
+
+
+function modalContent(type){
+  const caseHtml=`
+    <div class="info-grid">
+      <label>姓名</label><div>张华</div><label>性别</label><div>男</div>
+      <label>年龄</label><div>65岁</div><label>住院号</label><div>123456</div>
+    </div>
+    <div class="section-line">诊断</div>
+    <div class="text-block">脑梗死恢复期伴右侧偏瘫；骶尾部1期压力性损伤。合并2型糖尿病、高血压及营养风险。</div>
+    <div class="section-line">现病史</div>
+    <div class="text-block">长期卧床，活动能力受限，存在潮湿、摩擦剪切及局部持续受压风险。</div>
+    <div class="section-line">生活自理能力</div>
+    <div class="text-block">翻身、清洁、穿衣及如厕需要协助，能够理解并配合简单护理指令。</div>`;
+  const purposeHtml=`<div class="text-block" style="font-size:15px;line-height:2">
+    针对本例高龄、卧床、偏瘫、糖尿病及既有压力性损伤患者，通过执行系统化、规范化的初筛、风险评估、皮肤检查、护理干预、减压处理及2小时动态复查，持续监护皮肤颜色、完整性、温度、软硬度、疼痛和范围变化，及时识别加重或疑似进展并完成上报。
+  </div>`;
+  const handHtml=`<div class="time-card"><div class="time-icon">✋</div><div class="time-big">七步洗手教学视频</div><div class="time-note">本原型仅保留视频播放入口，正式系统调用外部视频资源。</div></div>`;
+  const baselineHtml=`
+    <div class="compare-intro">系统已根据风险评估、首次皮肤检查和护理操作自动带入以下内容。请核对记录与实际操作是否一致，确认后保存为2小时复查的首次基线。</div>
+    <table class="record-table">
+      <tr><th>记录类别</th><th>自动带入内容</th></tr>
+      <tr><td>风险评估</td><td>Braden总分12分，高风险</td></tr>
+      <tr><td>骶尾部皮肤</td><td>深红色不褪色红斑，皮肤完整，局部温度偏高，组织轻度偏硬</td></tr>
+      <tr><td>异常范围</td><td>4.0cm × 3.0cm</td></tr>
+      <tr><td>疼痛情况</td><td>局部轻度压痛，疼痛评分3分</td></tr>
+      <tr><td>其他部位</td><td>枕部、双肘和双足跟皮肤完整，无明确新发异常</td></tr>
+      <tr><td>护理措施</td><td>皮肤清洁、轻拍擦干、皮肤保护、约30°侧卧减压、双足跟悬空</td></tr>
+      <tr><td>护理确认</td><td>衣物、被服和床栏已恢复；减压用品位置正确；患者可耐受当前体位</td></tr>
+      <tr><td>复查计划</td><td>首次护理后2小时复查骶尾部和双足跟</td></tr>
+      <tr><td>操作签名</td><td>护士小王</td></tr>
+    </table>
+    <div class="knowledge-warning" style="margin-top:12px">核心检查结果来自前序三维操作。如记录与实际操作不一致，应返回对应步骤纠正后再保存。</div>`;
+  const compareHtml=`
+    <div class="compare-intro">请先查看首次监护记录与2小时复查的客观数据。此页面不显示最终趋势答案，确认已完成对比后再进行趋势判断和处置选择。</div>
+    <table class="compare-table">
+      <tr><th>检查指标</th><th>首次监护记录</th><th>2小时复查</th><th>客观变化</th></tr>
+      <tr><td>颜色</td><td>深红色</td><td>深红色，范围未扩大</td><td><span class="objective-chip">无明显变化</span></td></tr>
+      <tr><td>约3秒指压</td><td>不褪色</td><td>不褪色</td><td><span class="objective-chip">无变化</span></td></tr>
+      <tr><td>皮肤完整性</td><td>完整</td><td>完整</td><td><span class="objective-chip">无变化</span></td></tr>
+      <tr><td>局部温度</td><td>高于周围皮肤</td><td>仍轻度偏高</td><td><span class="objective-chip">无明显变化</span></td></tr>
+      <tr><td>组织软硬度</td><td>轻度偏硬</td><td>轻度偏硬</td><td><span class="objective-chip">无变化</span></td></tr>
+      <tr><td>疼痛</td><td>3分</td><td>3分</td><td><span class="objective-chip">无变化</span></td></tr>
+      <tr><td>异常范围</td><td>4.0×3.0cm</td><td>4.0×3.0cm</td><td><span class="objective-chip">无扩大</span></td></tr>
+      <tr><td>双足跟</td><td>皮肤完整，无红斑</td><td>皮肤完整，无新发异常</td><td><span class="objective-chip">无新发异常</span></td></tr>
+    </table>`;
+  const compareDecisionHtml=`
+    <div class="compare-intro">已完成前后数据查看。请根据皮肤完整性、颜色、范围、温度、组织状态、疼痛和足跟变化进行临床判断。</div>
+    <div class="decision-block">
+      <h3>一、趋势判断</h3>
+      <div class="decision-hint">请选择患者当前皮肤状态的总体变化趋势。</div>
+      <div class="option-list">
+        ${['改善','稳定','加重','疑似进展'].map(value=>`<button class="option-btn ${compareTrendSelection===value?'active':''}" data-compare-group="trend" data-compare-value="${value}">${value}</button>`).join('')}
+      </div>
+    </div>
+    <div class="decision-block">
+      <h3>二、处置选择</h3>
+      <div class="decision-hint">请根据趋势选择最合适的后续护理处置。</div>
+      <div class="option-list">
+        ${['继续当前计划并按时复查','调整减压或潮湿管理措施并上报','立即上报'].map(value=>`<button class="option-btn ${compareDispositionSelection===value?'active':''}" data-compare-group="disposition" data-compare-value="${value}">${value}</button>`).join('')}
+      </div>
+    </div>`;
+  const correctTrend='稳定';
+  const correctDisposition='继续当前计划并按时复查';
+  const decisionCorrect=compareTrendSelection===correctTrend && compareDispositionSelection===correctDisposition;
+  const compareResultHtml=`
+    <div class="compare-feedback ${decisionCorrect?'correct':'wrong'}">
+      <h3>${decisionCorrect?'判断正确':'当前判断需要调整'}</h3>
+      <div class="compare-feedback-grid">
+        <div class="label">您的趋势判断</div><div>${compareTrendSelection||'未选择'}</div>
+        <div class="label">您的处置选择</div><div>${compareDispositionSelection||'未选择'}</div>
+        <div class="label">系统趋势判断</div><div>${correctTrend}</div>
+        <div class="label">推荐处置</div><div>${correctDisposition}</div>
+      </div>
+      <div class="compare-basis"><b>判断依据：</b>2小时复查显示骶尾部皮肤仍保持完整，红斑范围没有扩大，指压仍不褪色，局部温度、组织硬度和疼痛均无明显变化，双足跟无新发异常，因此本次趋势判断为“稳定”。继续保持当前减压和皮肤监护计划，并按计划复查。</div>
+    </div>`;
+  const finalHtml=`<table class="record-table">
+    <tr><th>字段</th><th>记录内容</th></tr>
+    <tr><td>复查时间</td><td>首次护理后2小时</td></tr>
+    <tr><td>复查结果</td><td>骶尾部红斑范围无扩大，皮肤完整；双足跟无新发异常</td></tr>
+    <tr><td>学员趋势判断</td><td>${compareTrendSelection||'稳定'}</td></tr>
+    <tr><td>系统趋势判断</td><td>稳定</td></tr>
+    <tr><td>实际处置</td><td>${compareDispositionSelection||'继续当前计划并按时复查'}</td></tr>
+    <tr><td>下一次复查</td><td>2小时后</td></tr>
+  </table>`;
+  const scoreHtml=`<div class="score-big">86</div><div style="text-align:center;color:#5f7479">本次监护闭环总分</div>
+  <div class="score-list">${[['目的案例',95],['评估解释',88],['用物准备',90],['护理操作',82],['动态监护',84]].map(x=>`<div class="score-cell">${x[0]}<b>${x[1]}</b></div>`).join('')}</div>
+  <div class="section-line">重点反馈</div><div class="text-block">首次监护记录已确认保存，并完成2小时复查；重点检查中软尺测量用时偏长，动态监护处置判断已记录。</div>`;
+  return {
+    case:caseHtml,
+    purpose:purposeHtml,
+    hand:handHtml,
+    baseline:baselineHtml,
+    compare:compareHtml,
+    compareDecision:compareDecisionHtml,
+    compareResult:compareResultHtml,
+    final:finalHtml,
+    score:scoreHtml
+  }[type]||'';
+}
+
+function openModal(type){
+  const titles={
+    case:'病历信息',
+    purpose:'操作目的',
+    hand:'手卫生',
+    baseline:'首次监护记录',
+    compare:'前后对比',
+    compareDecision:'趋势判断与处置选择',
+    compareResult:'判断结果与处置依据',
+    final:'最终监护记录',
+    score:'本次评估结果'
+  };
+  modalTitle.textContent=titles[type]||'提示';
+  modalBody.innerHTML=modalContent(type);
+
+  if(type==='compareDecision'){
+    modalFooter.innerHTML=`<button class="ghost-btn" id="compareBackBtn">返回对比</button><button class="orange-btn" id="modalConfirm">提交判断</button>`;
+  }else if(type==='compareResult'){
+    const correct=compareTrendSelection==='稳定' && compareDispositionSelection==='继续当前计划并按时复查';
+    modalFooter.innerHTML=`${correct?'':'<button class="ghost-btn" id="compareRetryBtn">重新判断</button>'}<button class="orange-btn" id="modalConfirm">进入最终记录</button>`;
+  }else{
+    modalFooter.innerHTML=`<button class="orange-btn" id="modalConfirm">${
+      type==='compare' ? '确认' :
+      type==='baseline' ? '确认保存' :
+      type==='score' ? '关闭' : '确定'
+    }</button>`;
+  }
+
+  modalBox.classList.toggle('wide',['baseline','compare','compareDecision','compareResult','score'].includes(type));
+  modalMask.classList.remove('hidden');
+
+  modalBody.querySelectorAll('[data-compare-group]').forEach(btn=>{
+    btn.onclick=()=>{
+      const group=btn.dataset.compareGroup;
+      const value=btn.dataset.compareValue;
+      if(group==='trend') compareTrendSelection=value;
+      if(group==='disposition') compareDispositionSelection=value;
+      modalBody.querySelectorAll(`[data-compare-group="${group}"]`).forEach(item=>item.classList.remove('active'));
+      btn.classList.add('active');
+    };
+  });
+
+  const backBtn=document.getElementById('compareBackBtn');
+  if(backBtn) backBtn.onclick=()=>openModal('compare');
+  const retryBtn=document.getElementById('compareRetryBtn');
+  if(retryBtn) retryBtn.onclick=()=>openModal('compareDecision');
+
+  document.getElementById('modalConfirm').onclick=()=>{
+    if(type==='case' && activeStep==='目的案例'){
+      modalMask.classList.add('hidden');
+      setTimeout(()=>openModal('purpose'),120);
+      return;
+    }
+    if(type==='purpose' && activeStep==='目的案例'){
+      modalMask.classList.add('hidden');
+      completeAndAdvance('目的案例','目的案例已完成');
+      return;
+    }
+    if(type==='score'){
+      modalMask.classList.add('hidden');
+      return;
+    }
+    if(type==='hand'){
+      modalMask.classList.add('hidden');
+      completeAndAdvance('手卫生','手卫生已完成');
+      return;
+    }
+    if(type==='baseline'){
+      modalMask.classList.add('hidden');
+      baselineSaved=true;
+      completeAndAdvance('首次记录','首次监护记录已确认保存');
+      return;
+    }
+    if(type==='compare'){
+      openModal('compareDecision');
+      return;
+    }
+    if(type==='compareDecision'){
+      if(!compareTrendSelection || !compareDispositionSelection){
+        showToast('请完成趋势判断和处置选择');
+        return;
+      }
+      openModal('compareResult');
+      return;
+    }
+    if(type==='compareResult'){
+      modalMask.classList.add('hidden');
+      completeAndAdvance('对比处置','对比、趋势判断和处置选择已完成');
+      return;
+    }
+    modalMask.classList.add('hidden');
+    completeAndAdvance(activeStep);
+  };
+}
+document.getElementById('modalClose').onclick=()=>modalMask.classList.add('hidden');
+currentPrimaryBtn.onclick=()=>primaryPop.classList.toggle('hidden');
+
+document.getElementById('backHomeBtn').onclick=()=>{
+  sim.classList.add('hidden');moduleHome.classList.remove('hidden');
+};
+document.getElementById('exitBtn').onclick=()=>{
+  sim.classList.add('hidden');moduleHome.classList.remove('hidden');
+};
+document.getElementById('resetBtn').onclick=()=>{
+  doneSteps.clear();
+  Object.values(bodySiteStates).forEach(state=>state.completed.clear());
+  bodySiteStates['皮肤初检'].active='枕部';
+  bodySiteStates['皮肤复查'].active='骶尾部';
+  Object.entries(navigationTaskStates).forEach(([key,state])=>{
+    state.completed.clear();
+    state.active=navigationTaskConfigs[key].items[0]?.name||'';
+  });
+  bradenState.activeKey='sensory';
+  bradenState.scores={};
+  bradenState.selectedScore=null;
+  bradenState.phase='dimensions';
+  bradenState.selectedRisk='';
+  bradenState.questionAnswered=false;
+  bradenState.feedback='';
+  identityState.dialogueCompleted=false;
+  identityState.spokenNameChecked=false;
+  identityState.wristbandChecked=false;
+  identityState.selectedResult='';
+  identityState.feedback='';
+  reviewDialogueCompleted=false;
+  baselineSaved=false;
+  compareTrendSelection='';
+  compareDispositionSelection='';
+  activeFlow=0;openStep('目的案例');showToast('原型状态已重置');
+};
+document.getElementById('settingsBtn').onclick=()=>showToast('设置入口：正式系统接入音量、画质与全屏设置。');
+
+setInterval(()=>{
+  const sec=Math.floor((Date.now()-startTime)/1000);
+  const mm=String(Math.floor(sec/60)).padStart(2,'0');
+  const ss=String(sec%60).padStart(2,'0');
+  document.getElementById('timerText').textContent=`${mm}:${ss}`;
+},1000);
+
+Object.values(sceneBackgrounds).forEach(path=>{
+  const image=new Image();
+  image.src=path;
+});
+Object.values(bodySiteBackgrounds).forEach(group=>{
+  Object.values(group).forEach(path=>{
+    const image=new Image();
+    image.src=path;
+  });
+});
+
+
+const requirementReviewData = {"module":{"number":1,"title":"模块选择","pageCode":"P002","annotation":"[1] 三大模块入口。","功能描述":"提供知识准备、虚拟实战和课后练习三个主模块入口。","场景":"青绿色医疗教学系统模块选择背景；不进入病房三维操作场景。","资源调用":"模块图标、卡片UI和系统背景；无模型与动画调用。","初始状态":"三个模块入口均为待选择状态，没有默认选中项；不显示登录、用户信息或AI助手。","视角":"固定PC全屏视角，三个模块卡片居中并列显示。","提示":"无。","交互":"鼠标悬停模块卡片时显示高亮和轻微上浮反馈；点击“知识准备”进入P003-1，点击“虚拟实战”进入目的案例流程，点击“课后练习”进入P020。重置、设置和退出位于右上角。页面切换期间锁定重复点击；初始化失败时显示“模块加载失败，请重试”。","特殊规则":"","判定规则":""},"knowledge:goal":{"number":2,"title":"学习目标与基本概念","pageCode":"P003-1","annotation":"[3] 知识准备—学习目标与基本概念。","功能描述":"静态展示8项学习目标、压力性损伤基本概念、形成机制和高风险部位知识。","场景":"PC图文知识浏览页面，不进入三维病房。","资源调用":"UI文字、图标和静态知识卡片；不调用模型、动画和人体热点。","初始状态":"首次进入知识准备时默认打开该栏目。左侧显示5个知识栏目，当前栏目高亮；顶部不显示学习进度。","视角":"固定平面页面视角，中部内容区支持纵向滚动。","提示":"固定重点提示：“压力性损伤皮肤监护不仅包括预防，还包括风险评估、皮肤检查、异常判断、动态复查、记录和上报。”","交互":"用户滚动查看8项学习目标、压力、剪切力、摩擦力、潮湿等概念，以及枕部、肩胛、肘部、骶尾部、髋部、膝部、踝部、足跟和器械接触部位等静态卡片。页面不记录阅读进度、点击次数和停留时间，不显示完成按钮或完成勾选。用户通过左侧菜单自由切换其他知识栏目。","特殊规则":"","判定规则":""},"knowledge:stage":{"number":3,"title":"压力性损伤分期","pageCode":"P003-2","annotation":"[4] 知识准备—压力性损伤分期。","功能描述":"静态展示1期、2期、3期、4期、不可分期和深部组织压力性损伤的主要表现。","场景":"PC图文知识浏览页面。","资源调用":"6类分期静态示意图片和卡片UI；不调用三维患者模型或皮肤状态动画。","初始状态":"显示2行×3列六张静态卡片；全部卡片直接显示核心知识。","视角":"固定平面页面视角；分辨率不足时内容区纵向滚动。","提示":"页面底部固定显示“分期表示当前组织损伤程度，不代表一定按照1期至4期顺序发展”。","交互":"用户浏览每张卡片中的名称、皮肤完整性、颜色或外观、可见组织、指压表现、监护重点和默认病例用途。可配置普通图片放大，但不设置必须点击、展开数量、完成条件或实训跳转。正式术语统一使用“压力性损伤”。","特殊规则":"","判定规则":""},"knowledge:risk":{"number":4,"title":"知识准备风险评估","pageCode":"P003-3","annotation":"[5] 知识准备—Braden风险知识。","功能描述":"静态展示Braden六维度、评分规则、风险分级和默认病例示例。","场景":"PC图文知识浏览页面。","资源调用":"Braden评分表、风险分级表和默认病例静态表格；无模型和动画调用。","初始状态":"左侧显示六维度说明，右侧显示风险等级和固定病例示例“3、2、1、2、2、2，总分12分，高风险”。","视角":"固定平面页面视角。","提示":"固定显示“Braden量表是风险筛查和辅助评估工具，不能代替完整的皮肤和组织检查”。","交互":"用户仅浏览感觉能力、潮湿程度、活动能力、移动能力、营养状况、摩擦与剪切力和各风险区间。页面不提供下拉选分、实时计算、提交、正确错误判断或载入默认病例按钮。不使用按分值固定翻身时间的绝对规则。","特殊规则":"","判定规则":""},"knowledge:monitor":{"number":5,"title":"皮肤监护要点","pageCode":"P003-4","annotation":"[6] 知识准备—皮肤监护要点。","功能描述":"静态说明监护部位、检查维度、监护时机和护理记录内容。","场景":"PC图文知识浏览页面。","资源调用":"监护部位卡片、监护维度卡片、监护时机卡片和记录字段表；不调用人体热点和局部镜头。","初始状态":"连续展示全部知识分组，不默认隐藏任何分组。","视角":"固定平面页面视角，中部内容区支持滚动。","提示":"固定说明“破损创面不执行指压操作；异常区域测量最长径和与其垂直的最宽径”。","交互":"用户浏览骶尾部、枕部、肩胛部、肘部、脊柱、髋部、膝部、踝部、双足跟和器械接触部位卡片，以及颜色、完整性、约3秒指压、温度、湿度、软硬度、疼痛和测量知识。页面不使用可点击人体图、定位热点或标签完成判定。","特殊规则":"","判定规则":""},"knowledge:prevent":{"number":6,"title":"监护与预防措施","pageCode":"P003-5","annotation":"[7] 知识准备—监护与预防措施。","功能描述":"通过8张静态卡片展示风险评估、皮肤检查、体位减压、潮湿管理、动态复查、记录和上报原则。","场景":"PC图文知识浏览页面。","资源调用":"8张措施卡片和通用禁忌提示；无模型、动画和虚拟实战入口。","初始状态":"2行×4列显示风险动态评估、重点部位检查、器械接触部位检查、个体化体位调整、30°侧卧、足跟悬空、清洁干燥与失禁管理、动态复查记录和上报。","视角":"固定平面页面视角；屏幕宽度不足时纵向滚动。","提示":"固定显示“避免按摩持续发红部位；避免拖、拉、推造成摩擦与剪切；避免将减压用品直接压在足跟或异常部位”。","交互":"用户只浏览卡片正文，不设置点击展开、查看数量、完成按钮、进度记录和对应虚拟实战步骤入口。","特殊规则":"","判定规则":""},"目的案例":{"number":7,"title":"目的案例","pageCode":"P005/P006","annotation":"[8] 病历信息与操作目的连续弹窗。","功能描述":"在一个二级步骤中连续展示病历信息和操作目的，使学员在实训开始前了解病例、风险线索、监护目标和操作边界。","场景":"配药间或治疗准备区背景，不显示患者模型。","资源调用":"病历信息弹窗、操作目的弹窗；不调用模型和动画。","初始状态":"配药间背景为空场景，首先打开病历信息弹窗。底部当前一级菜单为“目的案例”，二级菜单只显示“目的案例”。","视角":"固定配药间中景，病历和目的弹窗居中显示。","提示":"“请查看患者病历信息，并了解本次压力性损伤皮肤监护的操作目的。”","交互":"病历弹窗展示姓名、性别、年龄、诊断、既往史、生活自理能力、营养排泄、骶尾部1期压力性损伤和风险线索。点击“确定”后直接打开操作目的弹窗。正式Unity版目的页应展示总体目的、分项目标、操作边界及1道目的确认题；HTML原型可先连续展示病历和目的。操作目的确认后，目的案例标记完成并自动进入护士准备。关闭后重新进入该步骤可重新查看内容。","特殊规则":"","判定规则":"【病历信息】\n正确条件：病历弹窗已完整打开；滚动至底部或停留≥5 s；病例字段加载完整\n错误/阻断条件：字段缺失、病历未打开、加载失败\n完成条件与反馈：点击“确定”后记录 `caseViewed=true`；加载失败提示“病历信息加载失败，请重试”\n\n【操作目的】\n正确条件：已查看总体目的、分项目标和操作边界；目的确认题选择正确\n错误/阻断条件：未查看目的或答题错误\n完成条件与反馈：正确后 `purposeConfirmed=true` 并解锁护士准备；错误显示医学解释，不自动跳转"},"护士准备":{"number":8,"title":"护士准备","pageCode":"P007","annotation":"[9] 护士服饰选择与模型即时换装。","功能描述":"用户通过右侧服饰选择面板，为护士选择符合护理操作要求的护士帽、医用口罩、护士服上衣、护士服裤子和护士鞋。","场景":"配药间或治疗室，护士自然站立。","资源调用":"【模型1：护士】、【动画1：护士站姿】、服饰选择面板和当前着装提示。所有服饰作为模型1服饰变体。","初始状态":"护士默认无护士帽、无口罩，穿常服上衣、普通长裤和拖鞋；五类服饰均未完成主动选择，确定按钮禁用。","视角":"保持护士全身固定视角，点击卡片后立即更新护士模型外观。","提示":"请在右侧服饰栏为护士选择规范着装。","交互":"右侧面板按头部、面部、上衣、裤装和鞋子五类展示服饰卡片。同类单选，点击后即时切换护士模型对应部件。五类均主动选择后开放确定按钮；点击确定后统一判断，错误类别单独标红，正确类别保留；全部正确后进入环境评估。","特殊规则":"不再采用点击护士身体部位观察的交互；不制作穿脱或整理服饰动画。","判定规则":"正确条件：五类均主动选择；最终为护士帽、医用口罩、护士服上衣、护士服裤子和护士鞋；UI状态与模型状态一致。\n错误/阻断条件：任一类别未操作；选择无帽、无口罩、常服、普通长裤、拖鞋或便鞋；同类多选；模型状态未同步。\n完成条件与反馈：全部正确时提示“护士着装符合操作要求”，设置 nurseOutfitReady=true 并进入环境评估；错误时只标记错误类别并允许重试。"},"环境评估":{"number":9,"title":"环境评估","pageCode":"P008","annotation":"[10] 病房环境与床单位评估。","功能描述":"检查病床高度、地面水渍、凳子与物品摆放、光线与隐私、温湿度和床单位状态。","场景":"老年病房。","资源调用":"【模型1：护士】、【模型2：患者】、【模型3：地板水渍】、【模型4：凳子】、【动画1：护士站姿】、【动画2：患者初始】、【动画4：拉起床栏】。","初始状态":"患者仰卧；场景存在预设环境问题，包括地面水渍、凳子歪斜、床高或床栏不当、床单潮湿或褶皱、光线隐私或温湿度问题。","视角":"默认病房全景；点击任务后自动定位病床、地面、凳子、窗帘、温湿度区域或床单位。","提示":"“请检查光线、隐私、病床、地面、温湿度、床单位和物品摆放。”","交互":"任务导航方框不可直接勾选。用户点击任务行切换镜头并完成对象点击、判断或状态调整。地板水渍清理后隐藏【模型3：地板水渍】；凳子扶正由程序旋转和位移【模型4：凳子】。床高、窗帘和床单状态由程序控制；床栏安全状态调用【动画4：拉起床栏】，不制作护士完整操作动画。温湿度目标为24℃、50%，适宜范围为22～26℃、40%～60%。全部任务完成后自动进入问候核对。","特殊规则":"","判定规则":"【环境评估整体完成】\n正确条件：6项全部通过\n错误/阻断条件：任一项未完成\n完成条件与反馈：解锁问候核对\n\n说明：点击右侧具体任务可查看该任务的数值阈值和错误条件。"},"问候核对":{"number":10,"title":"问候核对","pageCode":"P009","annotation":"护患沟通、口述姓名与腕带核对。","功能描述":"完成四句护患对话后，通过实际点击核对患者口述姓名和腕带信息，并确认与病历一致。本步骤不进行Braden评分。","场景":"老年病房。","资源调用":"【模型1：护士】、【模型2：患者】、患者腕带热点、身份核对面板及语音key_1～key_4。","初始状态":"四句对话未完成时，姓名和腕带核对按钮禁用。","视角":"床旁双人中景；对话完成后定位腕带近景。","提示":"请完成护患沟通，并核对患者口述姓名和腕带信息。","交互":"四句对话完成后，点击“核对口述姓名”和“核对腕带信息”；选择信息一致或信息不一致；点击确认。正确后进入独立风险评估步骤。","评分项":"信息一致；信息不一致。","判定规则":"正确条件：四句对话完成；口述姓名已核对；腕带姓名、性别、年龄、床号和住院号已核对；选择信息一致。\n错误/阻断条件：任一核对项未点击、腕带数据不完整或选择信息不一致。\n完成条件与反馈：设置 identityVerified=true、consentObtained=true，进入风险评估。","特殊规则":"问候核对不显示Braden面板；纯语音结束不等于完成。"},"风险评估":{"number":11,"title":"虚拟实战风险评估","pageCode":"P010","annotation":"[12] Braden六维度问诊与评分。","功能描述":"独立完成Braden感觉能力、潮湿程度、活动能力、移动能力、营养状况、摩擦与剪切力六个维度的逐项评估。","场景":"老年病房。","资源调用":"【模型1：护士】、【模型2：患者】、【动画1：护士站姿】、【动画2：患者初始】。","初始状态":"感觉能力为当前项；潮湿程度及后续维度锁定。","视角":"床旁沟通中景；右侧显示Braden维度和评分选项。","提示":"“请逐项完成Braden六维度问诊，并根据患者回答选择对应分值。”","交互":"每个维度按“护士提问→患者回答→语音结束→右侧弹出当前维度评分项→选择分值→确认判断”执行。语音播放期间右侧风险评估面板保持隐藏；评分正确后面板关闭，再开始下一维度语音。六项全部完成后，右侧显示总分和风险等级判断。","特殊规则":"右侧评分面板只在当前维度护患语音结束后显示；不得在问诊语音播放期间持续占据右侧。后续维度未解锁时不可点击；已完成维度只读。","判定规则":"正确条件：六项依次锁定为3、2、1、2、2、2，总分12分，风险等级高风险。\n错误/阻断条件：越级、漏项、评分错误、修改已锁定分值或风险等级错误。\n完成条件与反馈：设置 bradenCompleted=true，进入皮肤初检。","评分项":"感觉能力1～4分；潮湿程度1～4分；活动能力1～4分；移动能力1～4分；营养状况1～4分；摩擦与剪切力1～3分。"},"皮肤初检":{"number":12,"title":"皮肤初检","pageCode":"P011/P012","annotation":"[13] 仰卧位重点部位导航与初步检查。","功能描述":"检查枕部、左右肘部和双足跟等仰卧位可见部位，为后续翻身后详细检查建立初始记录。","场景":"老年病房。","资源调用":"【模型1：护士】、【模型2：患者】、【模型5：被子】、【模型6：枕头】、【模型19：双手】、【动画2：患者初始】。枕部检查通过镜头定位、枕头移动和程序交互完成，不调用独立枕部检查动画。","初始状态":"患者仰卧；右侧部位导航显示枕部、左肘部、右肘部、左足跟和右足跟，默认选择枕部。","视角":"点击部位后切换至对应局部镜头；枕部检查时允许轻托头部或移动枕头。","提示":"“请检查枕部、肘部和双足跟等仰卧位可见部位。”","交互":"点击部位名称或定位图标切换局部视角。方框只显示系统完成状态。检查颜色、完整性、温度、压痕和患者不适；红斑部位按规则调用指压工具。点击“当前部位完成”后自动进入下一未完成部位。不得在仰卧位完成骶尾部详细判断。全部部位完成后自动进入用物选择。","特殊规则":"","判定规则":"【初检整体完成】\n正确条件：5个部位均有独立记录\n错误/阻断条件：任一部位漏检\n完成条件与反馈：解锁用物选择\n\n说明：点击右侧具体任务可查看该任务的数值阈值和错误条件。\n\n【红斑追加指压】\n正确条件：仅在皮肤完整且发现红斑时开放JP-PRESS-01（指压：红斑中心持续2.5～3.5 s；中心落在红斑中心50%区域内）\n错误/阻断条件：破损皮肤执行指压\n完成条件与反馈：正常皮肤无需强制指压"},"用物选择":{"number":13,"title":"用物选择","pageCode":"P013","annotation":"[14] 正确用物与干扰物品选择。","功能描述":"从用物栏选择压力性损伤皮肤监护所需用品，并排除干扰物品。","场景":"病房治疗车区域。","资源调用":"【模型18：治疗车】；正确用品调用【模型13：脸盆】、【模型9：温水壶】、【模型10：毛巾】、【模型11：消毒液】、【模型12：肥皂】、【模型14：保护膜】、【模型7：翻身垫】、【模型8：软枕】、【模型20：足跟减压垫】、【模型21：软尺】、【模型15：记录单】和【模型16：笔】；干扰项调用【模型22：注射器】、【模型23：棉签】和【模型24：酒精瓶】；选择完成效果调用【模型17：摆放的治疗车】。","初始状态":"治疗车为空或未整理；右侧用物栏显示正确用品和干扰物品。","视角":"稍高的治疗车观察视角，可同时看到治疗车台面和用物栏。","提示":"“请选择本次皮肤监护和减压护理所需用物，并排除干扰物品。”","交互":"正式Unity版将物品从右侧栏拖至治疗车插槽；HTML原型使用卡片选择模拟。正确用物包括脸盆、温水壶、毛巾、消毒液、肥皂、保护膜、翻身垫、软枕、足跟减压垫、软尺、记录单和笔。注射器、棉签和酒精瓶为干扰项。选择干扰物品时显示错误原因并扣分；全部核心用品选择后直接进入翻身准备。系统不再设置独立物品检查步骤。","特殊规则":"","判定规则":"【正确用品】\n正确条件：必须选择脸盆、温水壶、毛巾、消毒液、肥皂、保护膜、翻身垫、软枕、足跟减压垫、软尺、记录单、笔\n错误/阻断条件：漏选任一正确用品\n完成条件与反馈：所有正确用品放入治疗车目标区\n\n【干扰用品】\n正确条件：注射器、棉签、酒精瓶均不得选择\n错误/阻断条件：选择任一干扰物\n完成条件与反馈：显示具体错误用品名称\n\n【摆放】\n正确条件：每件物品目标中心误差≤5 cm，重叠率≤10%\n错误/阻断条件：放错位置、严重重叠\n完成条件与反馈：全部正确后调用摆放治疗车效果\n\n【完成】\n正确条件：正确用品12项全部在位，干扰物0项\n错误/阻断条件：条件不满足\n完成条件与反馈：`itemsPrepared=true`，进入翻身准备"},"翻身准备":{"number":14,"title":"翻身准备","pageCode":"P015","annotation":"[15] 翻身前沟通、安全和姿势准备。","功能描述":"在移动患者前完成解释、床旁安全检查、移动枕头、放置双手和协助屈膝。","场景":"老年病房。","资源调用":"【模型1：护士】、【模型2：患者】、【模型5：被子】、【模型6：枕头】、【模型19：双手】、【动画2：患者初始】、【动画4：拉起床栏】、【动画5：移动枕头】、【动画6：放置双手】、【动画7：屈膝】。","初始状态":"患者仰卧；枕头、双手和双膝尚未进入翻身准备姿势。","视角":"默认床旁中景；点击任务依次定位沟通、床栏、枕头、上肢和膝部。","提示":"“请完成翻身前沟通、安全检查和患者姿势准备。”","交互":"患者处于仰卧【动画2：患者初始】状态。先播放护士语音【语音key_17】（张先生，我现在协助您翻身，检查背部和骶尾部皮肤。请将手臂放在胸前，尽量屈曲左膝，有不舒服及时告诉我。），随后播放患者语音【语音key_18】（好的，我会配合。）。患者语音播放结束后解锁床旁任务。\n\n按任务顺序确认床高和床栏；确认床栏后调用【动画4：拉起床栏】。枕头出现方向箭头和高亮拖动点，拖至目标侧约1/3位置并点击确认，程序判断正确后调用【动画5：移动枕头】。随后双手区域高亮，分别拖至胸前目标区域，位置正确后调用【动画6：放置双手】。最后双膝区域显示向上箭头，拖动膝部高亮点并点击确认；正确位置为屈膝状态，判断通过后调用【动画7：屈膝】。全部任务完成后进入体位调整。","特殊规则":"本页只播放语音key_17和key_18，不为移动枕头、放置双手和屈膝播放额外旁白。两句语音未播放完成前，患者身体交互保持锁定。","判定规则":"【说明翻身目的】\n正确条件：key_17、key_18播放完成\n错误/阻断条件：未完成语音即操作患者\n完成条件与反馈：解锁床旁操作\n\n【床高与床栏】\n正确条件：JP-BED-01（床面操作高度：82～98 cm；推荐90 cm；地面至床垫上表面）（床面操作高度：82～98 cm；推荐90 cm；地面至床垫上表面）；JP-BED-02（病床脚轮：4个脚轮全部锁定）（病床脚轮：4个脚轮全部锁定）；JP-BED-03（床面水平：头高角、脚高角均在-2°～+2°）（床面水平：头高角、脚高角均在-2°～+2°）满足；非操作侧床栏升起，操作侧床栏放下\n错误/阻断条件：床高错误、脚轮未锁、床栏状态错误\n完成条件与反馈：提示具体错误项；全部正确后完成\n\n【移动枕头】\n正确条件：JP-PILLOW-01（枕头侧移：向目标侧移动枕头宽度的25%～40%，目标33%）满足；头部仍有稳定支撑\n错误/阻断条件：位移不足/过大或头部悬空\n完成条件与反馈：调用【动画5】\n\n【放置患者双手】\n正确条件：JP-HAND-01（双手放置：左右腕部中心距胸前目标点≤5 cm，双手不压在身体下方）满足，左右手均完成\n错误/阻断条件：只完成一侧或手臂压在身体下\n完成条件与反馈：调用【动画6】\n\n【协助患者屈膝】\n正确条件：JP-KNEE-01（屈膝角度：双膝60°～90°，左右角度差≤10°）满足\n错误/阻断条件：单侧未屈、角度错误或穿插\n完成条件与反馈：调用【动画7】\n\n【翻身前安全确认】\n正确条件：床旁通道≥80 cm、床高/床栏/脚轮/枕头/双手/双膝全部通过\n错误/阻断条件：任一前置状态未通过\n完成条件与反馈：通过后进入体位调整"},"体位调整":{"number":15,"title":"体位调整","pageCode":"P015-A","annotation":"[16] 分段移位与翻身。","功能描述":"分段移动肩背、骨盆和下肢，将患者由仰卧调整为侧卧基础状态。","场景":"老年病房。","资源调用":"【模型1：护士】、【模型2：患者】、【模型19：双手】、【动画8：移动肩膀】、【动画9：移动髋部】、【动画10：翻身】、【动画3：患者侧躺】、【动画11：翻身说话】和【动画12：翻身深呼吸】。","初始状态":"患者已完成移动枕头、放置双手和屈膝，尚未移动肩背和骨盆。","视角":"支持主视、俯视、侧视和局部视角；切换视角不重置操作进度。","提示":"“请依次移动肩背部和骨盆，协助患者翻至侧卧基础状态。”","交互":"患者已完成翻身准备。肩背安全抓取区高亮并显示移动箭头，用户拖动至目标区域，程序判断正确后调用【动画8：移动肩膀】。随后骨盆和下肢安全抓取区高亮，拖动正确后调用【动画9：移动髋部】。完成两段移位后显示翻身方向箭头，用户拖动患者完成翻身，判断通过后调用【动画10：翻身】，并切换至【动画3：患者侧躺】状态。\n\n翻身完成后播放护士语音【语音key_19】（张先生，翻身后有没有疼痛、头晕、压迫或其他不舒服？），随后播放患者语音【语音key_20】（没有明显不舒服，这个姿势还可以。）。患者语音播放期间可复用【动画11：翻身说话】和【动画12：翻身深呼吸】。语音结束后进入重点检查。","特殊规则":"错误抓取、患者接近床缘或未完成骨盆移动时，阻断操作并显示文字提示，不播放错误反馈语音。","判定规则":"【体位调整整体完成】\n正确条件：上述5项全部完成\n错误/阻断条件：任一项未完成\n完成条件与反馈：进入重点检查\n\n说明：点击右侧具体任务可查看该任务的数值阈值和错误条件。"},"重点检查":{"number":16,"title":"重点检查","pageCode":"P015-B","annotation":"[17] 骶尾部首次详细检查。","功能描述":"在侧卧基础状态下暴露肩胛、背部和骶尾部，完成观察、问询、指压、触温、触诊和软尺测量。","场景":"老年病房局部皮肤检查状态。","资源调用":"【模型1：护士】、【模型2：患者】、【模型19：双手】、【模型21：软尺】、【动画3：患者侧躺】、【动画14：掀开上衣】、【动画15：脱下裤子】、【动画20：3秒指压检查】、【动画21：触摸皮温】、【动画22：触诊软硬度】和【动画23：软尺测量】。骶尾部首次深红色红斑由【模型2：患者】材质切换表现。","初始状态":"患者处于侧卧基础状态；衣物未暴露，骶尾部基线皮肤状态已加载。","视角":"默认侧卧中景；任务切换至背部、骶尾部和检查工具近景。","提示":"“请暴露骶尾部，完成观察、指压、触温、触诊和软尺测量。”","交互":"患者保持【动画3：患者侧躺】状态。先播放护士语音【语音key_21】（张先生，我需要暴露您的背部和骶尾部进行检查，我会注意保护您的隐私。）。语音播放结束后，上衣与裤腰区域解锁并高亮。点击上衣调用【动画14：掀开上衣】，点击裤腰调用【动画15：脱下裤子】，随后切换至肩胛、背部和骶尾部检查视角。\n\n完成颜色、范围和完整性观察后，选中骶尾部，播放护士语音【语音key_22】（这里有没有疼痛、麻木、灼热或按压不舒服？），随后播放患者语音【语音key_23】（骶尾部有一点不舒服，按压时会更明显一些。）。\n\n患者语音播放结束后依次开放检查工具：调用【动画21：触摸皮温】、【动画22：触诊软硬度】、【动画20：3秒指压检查】和【动画23：软尺测量】。全部检查项完成并确认后，保存首次详细检查数据并进入清洁护理。","特殊规则":"语音key_21播放结束前不得操作衣物；语音key_22和key_23播放结束前不得确认疼痛字段。红斑未完成约3秒指压和双方向测量时不得提交判断。","判定规则":"【重点检查整体完成】\n正确条件：观察、主观症状、触温、触诊、指压、长度、宽度全部完成\n错误/阻断条件：任一字段缺失\n完成条件与反馈：建立首次详细检查数据\n\n说明：点击右侧具体任务可查看该任务的数值阈值和错误条件。"},"清洁护理":{"number":17,"title":"清洁护理","pageCode":"P016","annotation":"[18] 清洁、擦干与皮肤保护。","功能描述":"在侧卧状态下完成隐私保护、水温确认、毛巾准备、轨迹擦拭、轻拍擦干和皮肤保护。","场景":"老年病房皮肤护理状态。","资源调用":"【模型1：护士】、【模型2：患者】、【模型9：温水壶】、【模型10：毛巾】、【模型11：消毒液】、【模型13：脸盆】、【模型14：保护膜】、【模型19：双手】、【动画16：铺上毛巾】、【动画17：放置毛巾】和【动画18：拧干毛巾】。水壶倒水、水位、水温、擦拭、轻拍擦干和保护膜处理由程序或UI实现。","初始状态":"患者保持侧卧，检查区域已暴露；脸盆为空，毛巾干燥，保护膜未使用。","视角":"脸盆和物品准备使用床旁近景；擦拭、擦干和涂抹使用背部与骶尾部局部视角。","提示":"“请完成水温确认、皮肤清洁、轻拍擦干和皮肤保护。”","交互":"患者保持侧卧且检查区域已暴露。播放护士语音【语音key_24】（张先生，请保持现在的姿势，我要开始为您清洁背部和骶尾部皮肤。）。语音播放结束后解锁护理用品。\n\n调用【动画16：铺上毛巾】完成隐私保护；拖动【模型9：温水壶】向【模型13：脸盆】倒水，程序显示水位和温度并判断是否适宜。将【模型10：毛巾】放入脸盆后调用【动画17：放置毛巾】，拖动双手完成拧干并调用【动画18：拧干毛巾】。\n\n用户沿肩胛、背部和骶尾部高亮区域擦拭，程序判断轨迹、覆盖率、速度、力度和重复摩擦；有效覆盖率达到85%后开放轻拍擦干。完成擦干后使用【模型14：保护膜】处理骶尾部，程序切换护理后皮肤材质并进入减压摆位。","特殊规则":"本页只播放语音key_24。水温、速度、力度、覆盖率和重复摩擦由程序判断；异常时使用文字提示，不播放患者反馈语音。","判定规则":"【清洁护理整体完成】\n正确条件：告知、遮盖、水温、毛巾、擦拭、擦干、保护全部完成\n错误/阻断条件：任一状态缺失\n完成条件与反馈：进入减压摆位\n\n说明：点击右侧具体任务可查看该任务的数值阈值和错误条件。"},"减压摆位":{"number":18,"title":"减压摆位","pageCode":"P016-A","annotation":"[19] 30°侧卧与足跟减压。","功能描述":"使用软枕、翻身垫和足跟减压用品形成约30°侧卧减压体位。","场景":"老年病房减压摆位状态。","资源调用":"【模型2：患者】、【模型7：翻身垫】、【模型8：软枕】、【模型20：足跟减压垫】、【动画3：患者侧躺】、【动画13：放置软枕】、【动画19：放置三角垫】、【动画24：放置翻身垫】和【动画25：足跟减压】。","初始状态":"患者仍为侧卧基础状态，尚未放置减压用品。","视角":"根据任务切换上肢、双膝、背部、双足跟和侧卧全景。","提示":"“请完成约30°侧卧减压，并确保双足跟离开床面。”","交互":"拖拽软枕、翻身垫和足跟减压垫至半透明目标区域，命中后吸附。先在上肢下方和双膝之间放置软枕，调用【动画13：放置软枕】；在背后放置翻身垫，调用【动画24：放置翻身垫】；在小腿下方放枕或使用专用减压垫，使足跟真正离床，调用【动画25：足跟减压】。位置全部正确后，由上述动画和状态组合形成约30°侧卧减压效果。减压用品直接压住足跟或异常皮肤时提示错误。完成后自动进入护理确认。","特殊规则":"","判定规则":"【减压摆位整体完成】\n正确条件：4类支撑全部正确，双足跟离床\n错误/阻断条件：任一用品错误\n完成条件与反馈：进入护理确认\n\n说明：点击右侧具体任务可查看该任务的数值阈值和错误条件。"},"护理确认":{"number":19,"title":"护理确认","pageCode":"P016-B","annotation":"[20] 护理后安全、体位和舒适确认。","功能描述":"恢复衣物、被服和床栏，检查减压用品是否造成新压迫，并确认患者能够耐受当前减压体位。","场景":"老年病房30°减压完成状态。","资源调用":"【模型1：护士】、【模型2：患者】、【模型5：被子】、【模型6：枕头】、【模型7：翻身垫】、【模型8：软枕】、【模型20：足跟减压垫】；反向调用【动画14：掀开上衣】和【动画15：脱下裤子】恢复衣物，调用【动画4：拉起床栏】恢复床栏安全状态，并保持【动画3：患者侧躺】、【动画13：放置软枕】、【动画19：放置三角垫】、【动画24：放置翻身垫】和【动画25：足跟减压】组合形成的减压状态。","初始状态":"减压用品位置正确，但衣物、被服和床栏尚未全部恢复。","视角":"依次切换衣物、被服、床栏、减压用品和患者面部视角。","提示":"“请恢复衣物、被服和床栏，检查减压用品，并确认患者能够耐受当前体位。”","交互":"依次恢复病号服、被子和床栏；衣物恢复通过反向调用【动画14：掀开上衣】和【动画15：脱下裤子】完成，床栏恢复调用【动画4：拉起床栏】。随后检查软枕、翻身垫和足跟减压用品的位置。\n\n位置全部正确后，播放护士语音【语音key_25】（张先生，现在有没有疼痛、头晕、麻木、局部压迫或其他不舒服？这个姿势舒适吗？），随后播放患者语音【语音key_26】（现在比较舒服，没有明显不适。）。患者语音播放结束后，将当前约30°侧卧减压体位标记为可耐受并进入用物处理。","特殊规则":"减压用品位置错误时只高亮错误物品并显示文字原因；位置未全部通过前不播放语音key_25和key_26。","判定规则":"【护理确认整体完成】\n正确条件：衣物、被服、床栏、用品和舒适度全部通过\n错误/阻断条件：任一项未完成\n完成条件与反馈：进入用物处理\n\n说明：点击右侧具体任务可查看该任务的数值阈值和错误条件。"},"用物处理":{"number":20,"title":"用物处理","pageCode":"P017","annotation":"[21] 护理操作后的污水、污物和治疗车整理。","功能描述":"完成首次护理后的污水处理、一次性污物投放和可复用物品归位。","场景":"病房治疗车和污物处理区域。","资源调用":"【模型18：治疗车】、【模型13：脸盆】、【模型10：毛巾】及本次已使用用品。污物投入【模型18：治疗车】侧边垃圾桶；污水处理和物品归位由程序实现。","初始状态":"脸盆中有污水，污染物未投放，可复用物品尚未归位。","视角":"任务切换至脸盆、治疗车侧边垃圾桶、治疗车台面和整体整理视角。","提示":"“请完成污水处理、污物投放、可复用物品归位和治疗车整理。”","交互":"完成污水处理、污染物投放、可复用用品归位和治疗车整理。全部完成后自动进入手卫生。本步骤归属于护理操作。","特殊规则":"","判定规则":"【用物处理整体完成】\n正确条件：4项全部通过\n错误/阻断条件：任一项未完成\n完成条件与反馈：进入手卫生\n\n说明：点击右侧具体任务可查看该任务的数值阈值和错误条件。"},"手卫生":{"number":21,"title":"手卫生","pageCode":"P017-A","annotation":"[22] 外部七步洗手视频。","功能描述":"通过外部教学视频介绍“内、外、夹、弓、大、立、腕”七步洗手法，并完成操作后手卫生确认。","场景":"UI视频页面或病房背景上的视频弹窗。","资源调用":"外部七步洗手教学视频；可保留【模型1：护士】和【动画1：护士站姿】作为背景状态，不调用三维洗手动画。","初始状态":"视频停在起始帧，播放、暂停、进度和关闭操作可用。","视角":"视频内容居中显示。","提示":"“请观看七步洗手教学视频并完成手卫生确认。”","交互":"用户播放、暂停和拖动七步洗手教学视频进度。完成手卫生确认后关闭视频弹窗，并播放护士语音【语音key_27】（张先生，本次皮肤护理已经完成，请保持现在的减压体位。如果出现疼痛、麻木、发热或局部压迫，请及时呼叫我们，不要自行按摩发红部位。）。语音播放结束后，护理操作阶段标记完成并自动进入首次记录。","特殊规则":"语音key_27属于护理阶段结束告知，不是系统步骤完成旁白。语音未播放结束前不得自动打开首次记录。","判定规则":"【手卫生整体完成】\n正确条件：视频和告知均完成\n错误/阻断条件：任一项未完成\n完成条件与反馈：自动打开首次记录\n\n说明：点击右侧具体任务可查看该任务的数值阈值和错误条件。"},"首次记录":{"number":22,"title":"首次监护记录","pageCode":"P018","annotation":"[23] 首次检查和护理措施确认保存。","功能描述":"核对系统自动带入的风险评估、首次皮肤检查、测量结果、护理措施、减压体位和2小时复查计划，确认保存后形成正式首次监护基线。","场景":"病房背景上的居中预填记录弹窗。","资源调用":"【模型15：记录单】、【模型16：笔】及前序风险评估、皮肤检查和护理操作数据。记录内容通过UI表单完成，不制作书写动画。","初始状态":"系统已自动带入Braden 12分高风险、骶尾部首次检查、双足跟等部位状态、护理措施、护理确认结果和2小时复查计划。","视角":"大型记录弹窗居中，病房背景保持可见。","提示":"“请核对首次检查和护理数据，确认后保存首次监护记录。”","交互":"用户查看自动带入内容，必要时补充备注、复查计划和签名。核心检查结果来自前序三维操作，不能任意修改；发现不一致时返回对应步骤纠正。点击【确认保存】后形成正式首次监护基线，并进入动态监护—皮肤复查。未保存时不得进入皮肤复查。","特殊规则":"","判定规则":"【自动带入】\n正确条件：Braden=12、高风险；初检与重点检查数据、护理措施、体位状态均来自日志\n错误/阻断条件：自动字段缺失或与日志不一致\n完成条件与反馈：技术异常提示，不计学员错误\n\n【核对记录】\n正确条件：JP-RECORD-01（记录完整性：所有必填字段100%填写，且与操作日志一致）满足；用户逐组确认风险、皮肤、护理措施和体位\n错误/阻断条件：未核对或存在冲突\n完成条件与反馈：冲突字段高亮并允许返回纠正\n\n【复查计划】\n正确条件：下次复查设置为护理后2小时；签名和时间完整\n错误/阻断条件：复查时间缺失或不为2小时\n完成条件与反馈：开放保存按钮\n\n【确认保存】\n正确条件：所有必填字段完整且无冲突\n错误/阻断条件：任一必填为空\n完成条件与反馈：保存后生成不可覆盖的baseline记录\n\n【进入动态监护】\n正确条件：baseline保存成功\n错误/阻断条件：未保存或保存失败\n完成条件与反馈：保存成功后方可进入皮肤复查"},"皮肤复查":{"number":23,"title":"2小时皮肤复查","pageCode":"P018-A","annotation":"[24] 2小时复查护患沟通和皮肤动态复查。","功能描述":"通过护士与患者对话说明距离首次护理已过去2小时，取得配合后重新检查骶尾部和双足跟，形成独立2小时复查记录。","场景":"老年病房局部复查状态。","资源调用":"已确认保存的首次监护记录、【模型1：护士】、【模型2：患者】、【模型19：双手】、【模型21：软尺】、【动画3：患者侧躺】、【动画13：放置软枕】、【动画19：放置三角垫】、【动画24：放置翻身垫】、【动画25：足跟减压】、【动画14：掀开上衣】、【动画15：脱下裤子】、【动画20：3秒指压检查】、【动画21：触摸皮温】、【动画22：触诊软硬度】和【动画23：软尺测量】。2小时皮肤变化通过【模型2：患者】材质切换表现。","初始状态":"首次监护记录已确认保存，患者保持约30°减压体位和减压用品位置。","视角":"先显示床旁护患对话中景，对话完成后进入骶尾部和双足跟局部镜头。","提示":"对话完成后显示“请重新检查患者骶尾部及双足跟皮肤情况”。","交互":"首次记录确认保存后进入复查场景，患者保持约30°减压体位。播放护士语音【语音key_28】（张先生，现在距离上次皮肤护理已经过去两小时了，我来复查骶尾部和双足跟的皮肤情况。检查过程中如果有疼痛、麻木、发热或其他不适，请及时告诉我。），随后播放患者语音【语音key_29】（好的，麻烦您了。）。患者语音播放结束前，骶尾部、左足跟和右足跟任务面板保持隐藏或禁用。\n\n开放复查任务后，播放护士语音【语音key_30】（这两小时内，骶尾部或双足跟有没有更疼、发热、麻木、压迫或其他不舒服？）。根据当前病例分支只播放一条患者语音：\n- 稳定分支：播放患者语音【语音key_31】（没有明显变化，骶尾部还是有一点不舒服。）。\n- 改善分支：播放患者语音【语音key_32】（比刚才舒服一些，骶尾部的不适减轻了。）。\n- 加重或疑似进展分支：播放患者语音【语音key_33】（骶尾部比刚才更不舒服，还有一点发热。）。\n\n患者语音播放结束后，按部位重新执行骶尾部、左足跟和右足跟检查。复查数据保存为独立记录，不覆盖首次记录；三个部位全部完成后进入前后对比与处置。","特殊规则":"不显示独立“时间推进至2小时”弹窗。语音key_28和key_29播放结束前不得开放复查任务；症状分支每次只播放一条患者语音，对话不能代替三维皮肤复查。","判定规则":"【复查整体完成】\n正确条件：三部位均保存，baseline未被覆盖\n错误/阻断条件：任一部位缺失\n完成条件与反馈：进入前后对比\n\n说明：点击右侧具体任务可查看该任务的数值阈值和错误条件。"},"对比处置":{"number":24,"title":"前后对比与处置","pageCode":"P018-B","annotation":"[25] 前后数据比较、趋势判断和处置决策。","功能描述":"在同一个二级步骤中，先让用户查看并确认首次监护基线与2小时复查的客观变化；确认后再弹出趋势判断与处置选择，提交后显示结果和医学依据。","场景":"复查病房背景上的前后对比页面、决策弹窗和结果反馈弹窗。","资源调用":"已确认保存的首次监护记录、2小时复查记录及【模型2：患者】皮肤材质状态数据；前后对比表、决策选项和结果反馈为UI资源，不调用独立动态皮肤动画。","初始状态":"首先打开“前后对比”页面，只显示首次监护基线、2小时复查和客观变化。趋势判断和处置选择尚未显示。","视角":"第一环节使用大型居中前后对比页面；点击确认后切换为中型趋势与处置决策弹窗；提交后切换为结果反馈弹窗。背景持续保留复查病房场景。","提示":"第一环节显示“请先查看首次监护与2小时复查数据，确认客观变化后再进行趋势判断和处置选择”。","交互":"1. **前后对比查看：**程序读取首次监护基线和2小时复查记录，展示检查指标、首次结果、复查结果和客观变化。\n2. **确认对比：**点击【确认】后锁定本次客观对比数据，并打开趋势与处置决策弹窗。\n3. **趋势判断：**从改善、稳定、加重、疑似进展中选择一项。\n4. **处置选择：**从继续当前计划并按时复查、调整减压或潮湿管理措施并上报、立即上报中选择一项。\n5. **提交判断：**趋势和处置均已选择后才允许提交。\n6. **结果反馈：**提交后显示学员选择、系统趋势、推荐处置和医学依据，并根据结果播放对应护士语音：\n   - 改善或稳定：播放护士语音【语音key_34】（张先生，复查结果显示目前皮肤情况基本稳定，我们会继续保持减压护理并按时复查。）。\n   - 加重：播放护士语音【语音key_35】（张先生，复查发现皮肤发红范围有所扩大，我会调整减压和皮肤护理措施，并及时上报。）。\n   - 疑似进展：播放护士语音【语音key_36】（张先生，复查发现皮肤完整性出现变化，我会立即上报并安排进一步评估处理。）。\n7. **完成步骤：**结果语音播放结束后开放【进入最终记录】，点击后保存趋势和处置数据。","特殊规则":"结果语音三选一，患者不再重复回应。判断错误时使用结果弹窗文字说明，不播放“回答错误”等语音。","判定规则":"【前后客观对比】\n正确条件：首次与复查数据均完整；长度、宽度和估算面积变化自动计算；不提前显示趋势答案\n错误/阻断条件：数据缺失或对比错位\n完成条件与反馈：用户确认客观表后锁定本次对比\n\n【改善判断】\n正确条件：满足JP-TREND-01（改善：皮肤完整；估算面积较首次下降≥10%或颜色等级下降1级；无任何加重指标）\n错误/阻断条件：不满足改善条件\n完成条件与反馈：选择后由程序校验\n\n【稳定判断】\n正确条件：满足JP-TREND-02（稳定：皮肤完整；估算面积变化在-10%～+10%；颜色等级不升高；无新发足跟异常）；默认病例正确答案为稳定\n错误/阻断条件：选择与条件不符\n完成条件与反馈：显示医学依据\n\n【加重判断】\n正确条件：满足JP-TREND-03（加重：面积增加＞10%，或颜色等级升高1级，或温度/硬度/疼痛任一升高1级，或足跟出现新发红斑）\n错误/阻断条件：未出现加重指标却选择加重\n完成条件与反馈：显示具体触发指标\n\n【疑似进展判断】\n正确条件：满足JP-TREND-04（疑似进展：出现水疱、表皮分离、浅表破损或其他完整性改变），完整性改变优先级最高\n错误/阻断条件：忽略水疱/破损\n完成条件与反馈：判为严重错误并要求重新判断\n\n【处置—继续计划】\n正确条件：仅改善/稳定可选；继续减压、潮湿管理和按时复查\n错误/阻断条件：加重/进展仍选择继续观察\n完成条件与反馈：阻断提交\n\n【处置—调整并上报】\n正确条件：加重分支正确\n错误/阻断条件：稳定分支错误选择\n完成条件与反馈：允许重新选择\n\n【处置—立即上报】\n正确条件：疑似进展分支正确\n错误/阻断条件：无完整性改变时选择\n完成条件与反馈：显示判断依据\n\n【结果告知】\n正确条件：根据结果只播放key_34/35/36之一\n错误/阻断条件：播放与趋势不一致的语音\n完成条件与反馈：语音结束后进入最终记录"},"最终记录":{"number":25,"title":"最终监护记录","pageCode":"P018-C","annotation":"[26] 复查结果、趋势、处置和上报记录。","功能描述":"保存2小时复查结果、前后对比、趋势判断、处置、上报情况和下一次监护计划。","场景":"老年病房背景上的居中记录弹窗。","资源调用":"【模型15：记录单】、【模型16：笔】、已确认保存的首次监护记录、复查记录、趋势和处置UI数据；无书写动画。","初始状态":"自动带入已确认保存的首次监护记录、2小时复查、系统趋势结果和推荐处置。","视角":"记录弹窗居中显示。","提示":"“请保存复查结果、趋势、处置和下一次复查计划。”","交互":"用户确认虚拟经过时间、复查观察、对比结果、学员趋势判断、处置选择、是否需要上报、上报方式、下一次复查时间和签名。加重或疑似进展时，上报方式或对象为条件必填。记录与复查操作或处置不一致时阻止提交。提交成功后自动打开操作结果。","特殊规则":"","判定规则":"【数据带入】\n正确条件：baseline、followup、趋势和处置均正确读取\n错误/阻断条件：任一数据缺失或读取错误\n完成条件与反馈：技术异常提示\n\n【实际处置确认】\n正确条件：与已判定趋势匹配；稳定=继续计划，加重=调整并上报，疑似进展=立即上报\n错误/阻断条件：处置与趋势冲突\n完成条件与反馈：冲突字段高亮\n\n【上报信息】\n正确条件：加重/疑似进展时上报对象、时间、方式均必填；稳定时可不填\n错误/阻断条件：必填缺失\n完成条件与反馈：不开放保存\n\n【下次复查时间】\n正确条件：稳定/改善按计划设置；加重/进展按处置要求设置且不得晚于稳定计划\n错误/阻断条件：时间缺失或逻辑冲突\n完成条件与反馈：通过后开放保存\n\n【签名与保存】\n正确条件：JP-RECORD-01（记录完整性：所有必填字段100%填写，且与操作日志一致）满足，签名和记录时间完整\n错误/阻断条件：任一必填为空\n完成条件与反馈：保存为final记录，不覆盖baseline/followup\n\n【操作结果】\n正确条件：final保存成功后生成成绩单\n错误/阻断条件：保存失败或数据不完整\n完成条件与反馈：显示总分、错误和改进建议"},"score":{"number":26,"title":"操作结果","pageCode":"P019","annotation":"[27] 虚拟实战成绩和错误分析。","功能描述":"展示本次完整监护闭环的总分、用时、流程完成情况、首次与复查结果、趋势判断、上报决策和错误明细。","场景":"独立结果页或病房背景上的大型结果弹窗。","资源调用":"本次操作日志、首次监护记录、复查记录、趋势比较和评分配置；无模型与动画调用。","初始状态":"最终监护记录已成功提交，成绩数据已计算完成。","视角":"固定平面结果视角。","提示":"无。","交互":"结果按目的案例、评估解释、用物准备、护理操作和动态监护五个一级维度汇总，并可细分翻身准备、体位调整、重点检查、清洁护理、减压摆位、护理确认、用物处理、手卫生、首次记录、皮肤复查、对比处置和最终记录。首次记录作为护理操作步骤参与评分。显示正确项、一般错误、严重错误和改进建议。支持查看详情、重练当前步骤、重新开始和返回模块选择。页面关闭后不写入学生历史成绩库。","特殊规则":"","判定规则":""},"quiz":{"number":27,"title":"课后练习","pageCode":"P020","annotation":"[28] 10道单项选择题。","功能描述":"通过10道单项选择题复习压力性损伤基本概念、分期、风险评估、皮肤检查、翻身减压、动态复查和上报知识。","场景":"PC平面答题页面，不进入三维病房。","资源调用":"题目文字、选项、正确答案和解析UI；无模型与动画调用。","初始状态":"默认显示第1题，10个题号均为未作答状态；不显示总分。","视角":"左侧题号导航，中部题干和选项，顶部显示当前题号。","提示":"“10道单项选择题；每题作答后显示正确答案与解析。”","交互":"用户选择一个选项后点击“确认答案”。系统立即显示回答是否正确、正确选项和医学解析，并锁定该题选项。用户可通过上一题、下一题或左侧题号自由切换；已作答题号显示绿色状态，当前题号橙色。题目覆盖压力或剪切力、1期识别、Braden 12分高风险、仰卧位重点部位、约3秒指压、翻身减少剪切力、足跟悬空、潮湿管理、2小时加重判断和疑似2期立即上报。10题完成后只显示练习完成提示，可重新练习或返回模块选择。系统不计算总成绩，不显示正确题数、错误题数和雷达图，不保存历史记录。","特殊规则":"","判定规则":""},"环境评估::病床高度":{"number":0,"title":"环境评估 · 病床高度","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"判断并调整病床至适合床旁护理操作的高度。","场景":"老年病房床旁。","资源调用":"病床和床控属于场景资源；床体高度变化由程序实现。","初始状态":"病床处于预设不合适高度，患者仰卧。","视角":"切换至病床侧面和床控区域。","提示":"请将病床调整到适合操作的高度。","交互":"点击床控后显示升高、降低按钮或拖动控件。调整后点击【确认】，程序读取床体高度区间并判断；处于安全操作高度时标记完成，否则显示文字提示。","特殊规则":"调整过程中患者与床上用品同步移动，不得发生模型穿插。","判定规则":"正确条件：JP-BED-01（床面操作高度：82～98 cm；推荐90 cm；地面至床垫上表面）、JP-BED-02（病床脚轮：4个脚轮全部锁定）、JP-BED-03（床面水平：头高角、脚高角均在-2°～+2°）全部满足；初始高度建议65 cm，每次升降2 cm\n错误/阻断条件：床高超范围、脚轮未锁、床仍在运动\n完成条件与反馈：高度进入82～98 cm后数值变绿并开放确认；过低/过高分别提示具体范围"},"环境评估::地面水渍":{"number":0,"title":"环境评估 · 地面水渍","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"识别并处理床旁地面水渍，消除滑倒风险。","场景":"老年病房床旁地面。","资源调用":"【模型3：地板水渍】；清理完成后由程序隐藏模型。","初始状态":"床旁地面存在可见水渍。","视角":"镜头定位至床旁地面近景。","提示":"请处理床旁地面的水渍。","交互":"水渍区域高亮，点击水渍后显示处理选项。选择正确处理方式并确认后隐藏【模型3：地板水渍】，任务标记完成。","特殊规则":"点击水渍本身不等于完成，必须完成处理确认。","判定规则":"正确条件：点击水渍并选择正确清理方式；处理后【模型3】隐藏\n错误/阻断条件：仅点击未处理，或选择忽略\n完成条件与反馈：`waterStainVisible=false` 后完成"},"环境评估::凳子与物品摆放":{"number":0,"title":"环境评估 · 凳子与物品摆放","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"调整凳子和周围物品位置，保证床旁操作通道通畅。","场景":"老年病房床旁。","资源调用":"【模型4：凳子】；旋转和位置变化由程序实现。","初始状态":"凳子处于歪斜或阻碍操作的位置。","视角":"切换至床旁凳子和通道视角。","提示":"请调整凳子及周围物品，保持操作通道通畅。","交互":"凳子显示高亮和目标摆放轮廓。用户拖动凳子至目标区域并确认；程序判断位置和旋转角度，通过后吸附并标记完成。","特殊规则":"不得将凳子放置在床栏、治疗车或主要操作通道内。","判定规则":"正确条件：凳子移出床旁操作区；JP-SPACE-01（床旁有效操作通道：最窄处≥80 cm）满足；凳子吸附误差≤5 cm、旋转误差≤15°\n错误/阻断条件：通道＜80 cm或凳子阻挡床栏/治疗车\n完成条件与反馈：吸附后显示“床旁通道已恢复”"},"环境评估::光线与隐私":{"number":0,"title":"环境评估 · 光线与隐私","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"确认病房光线满足皮肤观察要求，并完成隐私保护。","场景":"老年病房整体环境。","资源调用":"窗帘、照明和隐私帘属于场景资源；状态由程序控制。","初始状态":"光线或隐私状态存在预设问题。","视角":"切换至窗帘、照明和病床整体视角。","提示":"请确认光线充足并完成隐私保护。","交互":"用户依次调整照明和隐私帘状态。点击确认后程序判断照明是否开启、观察区域是否可见、隐私帘是否正确关闭；全部满足后完成任务。","特殊规则":"隐私保护不能造成检查区域光照不足。","判定规则":"正确条件：JP-LIGHT-01（皮肤观察照度：300～500 lx）和JP-PRIVACY-01（隐私帘：闭合率≥95%，可见缝隙≤10 cm）同时满足\n错误/阻断条件：光照不足/过强，隐私帘未闭合\n完成条件与反馈：两项均通过后完成；不得因关帘导致照度低于300 lx"},"环境评估::温湿度":{"number":0,"title":"环境评估 · 温湿度","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"查看并判断病房温湿度是否处于适宜范围。","场景":"老年病房温湿度显示区域。","资源调用":"温湿度显示为场景或UI资源。","初始状态":"显示预设温度和湿度数据。","视角":"定位温湿度显示设备或UI近景。","提示":"请判断当前温湿度是否适宜。","交互":"界面显示当前温度和湿度，用户选择“适宜”或“不适宜”并确认。程序按22～26℃、40%～60%判断；默认目标值为24℃、50%。","特殊规则":"该任务只做查看和判断，不要求制作空调或加湿设备调节动画。","判定规则":"正确条件：JP-ENV-01（环境温度：22～26℃；目标24℃）、JP-ENV-02（环境湿度：40%～60%；目标50%）满足\n错误/阻断条件：任一值超范围\n完成条件与反馈：选择“适宜”且数值正确后完成；默认24℃、50%"},"环境评估::床单位状态":{"number":0,"title":"环境评估 · 床单位状态","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"检查床单、被服是否清洁、干燥、平整并适合继续护理。","场景":"老年病房床单位。","资源调用":"床单、被子和病床属于场景资源；潮湿、褶皱状态由程序或材质表现。","初始状态":"床单存在潮湿、污染或明显褶皱等预设问题。","视角":"切换至床面和患者周围被服近景。","提示":"请检查床单位是否清洁、干燥、平整。","交互":"用户点击床单、被子等区域查看状态，并选择正确处理方式。程序判断潮湿、污染和褶皱问题均已处理后标记完成。","特殊规则":"床单位问题未处理前不得进入需要翻身和皮肤暴露的操作。","判定规则":"正确条件：JP-LINEN-01（床单位：干燥、无污染，明显褶皱面积≤10%）满足；床面无尖锐物和异物\n错误/阻断条件：潮湿、污染、褶皱超阈值或存在异物\n完成条件与反馈：处理后 `linenReady=true`"},"翻身准备::说明翻身目的":{"number":0,"title":"翻身准备 · 说明翻身目的","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"向患者说明翻身和检查目的、配合方式及不适反馈要求，并取得配合。","场景":"老年病房床旁沟通状态。","资源调用":"【模型1：护士】、【模型2：患者】、【动画2：患者初始】；播放护士语音【语音key_17】和患者语音【语音key_18】。","初始状态":"患者仰卧，床旁操作尚未解锁。","视角":"床旁双人中景，可看到护士和患者面部。","提示":"请向患者说明翻身目的并取得配合。","交互":"播放护士语音【语音key_17】（张先生，我现在协助您翻身，检查背部和骶尾部皮肤。请将手臂放在胸前，尽量屈曲左膝，有不舒服及时告诉我。），随后播放患者语音【语音key_18】（好的，我会配合。）。两句语音播放结束后当前任务完成，并解锁床高、床栏和患者身体交互。","特殊规则":"语音未播放完成前，移动枕头、双手和双膝交互保持锁定。","判定规则":"正确条件：key_17、key_18播放完成\n错误/阻断条件：未完成语音即操作患者\n完成条件与反馈：解锁床旁操作"},"翻身准备::床高与床栏":{"number":0,"title":"翻身准备 · 床高与床栏","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"确认病床高度适合翻身操作，并保证非操作侧床栏处于安全状态。","场景":"老年病房床旁。","资源调用":"病床和床控为场景资源；调用【动画4：拉起床栏】。","初始状态":"患者仰卧，床高或床栏处于待确认状态。","视角":"切换至病床侧面、床控和床栏区域。","提示":"请确认病床高度和床栏安全状态。","交互":"用户调整床高并操作非操作侧床栏。点击确认后程序判断床高是否适宜、非操作侧床栏是否升起；通过后调用【动画4：拉起床栏】并标记完成。","特殊规则":"操作侧床栏可保持放下以便护理，非操作侧必须保持防护。","判定规则":"正确条件：JP-BED-01（床面操作高度：82～98 cm；推荐90 cm；地面至床垫上表面）（床面操作高度：82～98 cm；推荐90 cm；地面至床垫上表面）；JP-BED-02（病床脚轮：4个脚轮全部锁定）（病床脚轮：4个脚轮全部锁定）；JP-BED-03（床面水平：头高角、脚高角均在-2°～+2°）（床面水平：头高角、脚高角均在-2°～+2°）满足；非操作侧床栏升起，操作侧床栏放下\n错误/阻断条件：床高错误、脚轮未锁、床栏状态错误\n完成条件与反馈：提示具体错误项；全部正确后完成"},"翻身准备::移动枕头":{"number":0,"title":"翻身准备 · 移动枕头","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"将枕头移动至目标侧，为后续翻身和头颈支撑预留位置。","场景":"老年病房患者头部区域。","资源调用":"【模型6：枕头】、【动画5：移动枕头】。","初始状态":"枕头位于患者头部正中位置。","视角":"切换至患者头部和枕头近景。","提示":"请将枕头拖至目标侧约1/3位置。","交互":"枕头高亮并显示方向箭头和半透明目标轮廓。用户拖动枕头后点击确认，程序判断方向、距离和目标命中；正确后吸附并调用【动画5：移动枕头】。","特殊规则":"拖动距离过大、完全移出头部支撑范围或方向错误时不计完成。","判定规则":"正确条件：JP-PILLOW-01（枕头侧移：向目标侧移动枕头宽度的25%～40%，目标33%）满足；头部仍有稳定支撑\n错误/阻断条件：位移不足/过大或头部悬空\n完成条件与反馈：调用【动画5】"},"翻身准备::放置患者双手":{"number":0,"title":"翻身准备 · 放置患者双手","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"将患者双手放置于胸前安全位置，避免翻身过程中受压或牵拉。","场景":"老年病房患者上肢区域。","资源调用":"【模型2：患者】、【模型19：双手】、【动画6：放置双手】。","初始状态":"患者双上肢位于身体两侧。","视角":"切换至患者胸部和双上肢近景。","提示":"请依次将患者双手放置于胸前。","交互":"左右手分别高亮并显示目标区域。用户依次拖动双手到胸前，两个目标均命中后调用【动画6：放置双手】并标记完成。","特殊规则":"只完成单侧手部放置时不得进入下一项。","判定规则":"正确条件：JP-HAND-01（双手放置：左右腕部中心距胸前目标点≤5 cm，双手不压在身体下方）满足，左右手均完成\n错误/阻断条件：只完成一侧或手臂压在身体下\n完成条件与反馈：调用【动画6】"},"翻身准备::协助患者屈膝":{"number":0,"title":"翻身准备 · 协助患者屈膝","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"协助患者双膝进入适合翻身的屈曲状态。","场景":"老年病房患者下肢区域。","资源调用":"【模型2：患者】、【动画7：屈膝】。","初始状态":"患者双下肢伸直。","视角":"切换至患者双膝和小腿近景。","提示":"请拖动膝部高亮点，使患者双膝进入屈曲状态。","交互":"双膝显示向上箭头和拖动点。用户拖动膝部后点击确认，程序判断膝关节角度；正确位置为屈膝状态，通过后调用【动画7：屈膝】。","特殊规则":"膝部角度不足、仅单侧屈膝或下肢模型穿插时不得完成。","判定规则":"正确条件：JP-KNEE-01（屈膝角度：双膝60°～90°，左右角度差≤10°）满足\n错误/阻断条件：单侧未屈、角度错误或穿插\n完成条件与反馈：调用【动画7】"},"翻身准备::翻身前安全确认":{"number":0,"title":"翻身准备 · 翻身前安全确认","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"综合确认患者姿势、枕头、双手、双膝、床栏和床旁空间均满足翻身条件。","场景":"老年病房床旁全景。","资源调用":"复用本步骤已完成的模型和动画状态，无新增资源。","初始状态":"移动枕头、放置双手和屈膝已完成。","视角":"恢复床旁全景。","提示":"请确认翻身前所有准备均已完成。","交互":"界面列出床高、床栏、枕头、双手、双膝和床旁空间六项状态。用户点击确认后程序统一校验；全部通过后完成翻身准备并进入体位调整。","特殊规则":"任一前置任务未完成时确认按钮保持禁用。","判定规则":"正确条件：床旁通道≥80 cm、床高/床栏/脚轮/枕头/双手/双膝全部通过\n错误/阻断条件：任一前置状态未通过\n完成条件与反馈：通过后进入体位调整"},"体位调整::移动肩背部":{"number":0,"title":"体位调整 · 移动肩背部","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"先移动患者肩背部，使身体靠近翻身目标位置并减少拖拽。","场景":"老年病房患者肩背区域。","资源调用":"【模型2：患者】、【模型19：双手】、【动画8：移动肩膀】。","初始状态":"患者已屈膝、双手置于胸前，肩背尚未移动。","视角":"肩背部局部近景。","提示":"请在安全抓取区移动患者肩背部。","交互":"肩背安全抓取区高亮并显示移动方向箭头。用户从正确抓取点拖动至目标轮廓，程序判断抓取位置、方向和距离；通过后调用【动画8：移动肩膀】。","特殊规则":"禁止直接拖拽手臂、颈部或衣物。","判定规则":"正确条件：JP-MOVE-01（肩背/骨盆分段移动：每段沿目标方向移动10～20 cm；两段差值≤5 cm）满足；抓取区位于肩背安全区域\n错误/阻断条件：抓取颈部、手臂或衣物；方向偏差＞15°\n完成条件与反馈：调用【动画8】"},"体位调整::移动骨盆与下肢":{"number":0,"title":"体位调整 · 移动骨盆与下肢","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"分段移动患者骨盆和下肢，使躯干与下肢保持对齐。","场景":"老年病房患者骨盆和下肢区域。","资源调用":"【模型2：患者】、【模型19：双手】、【动画9：移动髋部】。","初始状态":"肩背部已经移动，骨盆和下肢仍在原位置。","视角":"骨盆和大腿近景。","提示":"请移动患者骨盆与下肢，使身体保持对齐。","交互":"骨盆安全抓取区高亮，用户沿提示方向拖动。程序判断骨盆移动距离、下肢跟随和身体对齐状态；正确后调用【动画9：移动髋部】。","特殊规则":"只移动肩背而未移动骨盆时不得进入翻身。","判定规则":"正确条件：JP-MOVE-01（肩背/骨盆分段移动：每段沿目标方向移动10～20 cm；两段差值≤5 cm）满足；与肩背移动差值≤5 cm\n错误/阻断条件：未移动骨盆或拖拽下肢过度\n完成条件与反馈：调用【动画9】"},"体位调整::完成翻身":{"number":0,"title":"体位调整 · 完成翻身","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"将患者由仰卧位翻至侧卧基础状态。","场景":"老年病房床旁。","资源调用":"【模型2：患者】、【动画10：翻身】。","初始状态":"肩背、骨盆和下肢已完成分段移位。","视角":"床旁侧视中景，可观察完整翻身路径。","提示":"请沿提示方向协助患者完成翻身。","交互":"显示翻身弧线和目标侧卧轮廓。用户拖动患者躯干完成翻身，程序判断方向、连续性、身体对齐和床缘距离；通过后调用【动画10：翻身】。","特殊规则":"患者接近床缘、翻身方向错误或动作中断时显示文字警告并回到安全状态。","判定规则":"正确条件：JP-EDGE-01（身体与床缘安全距离：最近身体轮廓至床缘≥20 cm）、JP-ALIGN-01（身体轴线：肩、髋、膝中心线偏差≤10°）满足；翻身轨迹连续\n错误/阻断条件：距床缘＜20 cm、身体轴线偏差＞10°\n完成条件与反馈：调用【动画10】"},"体位调整::侧卧角度校正":{"number":0,"title":"体位调整 · 侧卧角度校正","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"将患者调整为稳定的侧卧基础状态，为皮肤暴露和后续减压摆位做准备。","场景":"老年病房患者侧卧状态。","资源调用":"【模型2：患者】、【动画3：患者侧躺】。","初始状态":"患者已完成翻身，但角度和身体对齐尚未确认。","视角":"侧卧全景和轻微俯视角度。","提示":"请校正患者侧卧角度和床边位置。","交互":"显示身体轴线、床缘安全距离和侧卧目标角度。用户调整躯干或骨盆后点击确认，程序校验侧卧稳定性和身体对齐；通过后切换至【动画3：患者侧躺】。","特殊规则":"该任务只形成侧卧基础位，不放置软枕、翻身垫和足跟减压用品。","判定规则":"正确条件：JP-LATERAL-01（检查用侧卧基础位：相对仰卧旋转70°～90°）满足\n错误/阻断条件：＜70°暴露不足；＞90°存在过度侧翻\n完成条件与反馈：切换【动画3：患者侧躺】"},"体位调整::翻身后不适询问":{"number":0,"title":"体位调整 · 翻身后不适询问","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"翻身后询问患者疼痛、头晕、压迫或其他不适。","场景":"老年病房患者侧卧沟通状态。","资源调用":"【模型1：护士】、【模型2：患者】、【动画11：翻身说话】、【动画12：翻身深呼吸】；播放【语音key_19】和【语音key_20】。","初始状态":"患者已处于侧卧基础状态。","视角":"切换至患者面部和护士床旁沟通中景。","提示":"请确认患者翻身后的耐受情况。","交互":"播放护士语音【语音key_19】（张先生，翻身后有没有疼痛、头晕、压迫或其他不舒服？），随后播放患者语音【语音key_20】（没有明显不舒服，这个姿势还可以。）。患者回答结束后任务完成并进入重点检查。","特殊规则":"未完成不适询问前不得开始衣物暴露。","判定规则":"正确条件：key_19、key_20播放完成\n错误/阻断条件：跳过问答\n完成条件与反馈：`turnToleranceConfirmed=true`"},"重点检查::暴露肩胛部与骶尾部":{"number":0,"title":"重点检查 · 暴露肩胛部与骶尾部","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"在保护患者隐私的前提下，暴露肩胛部、背部和骶尾部检查区域。","场景":"老年病房患者侧卧皮肤检查状态。","资源调用":"【模型1：护士】、【模型2：患者】、【动画3：患者侧躺】、【动画14：掀开上衣】、【动画15：脱下裤子】；播放护士语音【语音key_21】。","初始状态":"患者处于侧卧基础状态，上衣和裤腰未调整，皮肤检查区域不可见。","视角":"先显示患者侧卧中景；语音结束后定位上衣和裤腰，再切换至背部局部视角。","提示":"请说明检查和隐私保护后，适度暴露肩胛部与骶尾部。","交互":"先播放护士语音【语音key_21】（张先生，我需要暴露您的背部和骶尾部进行检查，我会注意保护您的隐私。）。语音结束后，上衣和裤腰区域依次高亮。点击上衣调用【动画14：掀开上衣】；动画结束后裤腰高亮，点击裤腰调用【动画15：脱下裤子】。两项均完成后程序显示肩胛、背部和骶尾部皮肤区域，并自动进入“观察颜色与完整性”。","特殊规则":"语音未播放完成前不得操作衣物；只暴露检查所需区域，禁止大范围暴露。","判定规则":"正确条件：key_21完成；JP-EXPOSE-01（检查区域暴露：肩胛、背部、骶尾部目标区可见率≥90%；非目标暴露≤10%）满足；先上衣后裤腰\n错误/阻断条件：未说明隐私、暴露不足/过度、顺序错误\n完成条件与反馈：调用【动画14】【动画15】后开放观察"},"重点检查::观察颜色与完整性":{"number":0,"title":"重点检查 · 观察颜色与完整性","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"观察肩胛、背部和骶尾部皮肤颜色、红斑范围及皮肤完整性。","场景":"老年病房患者侧卧局部皮肤检查状态。","资源调用":"【模型2：患者】皮肤材质状态；骶尾部显示深红色不褪色红斑，肩胛和背部保持正常肤色。","初始状态":"肩胛、背部和骶尾部已经暴露，尚未记录观察结果。","视角":"骶尾部近景，可切换肩胛部和背部局部视角。","提示":"请观察皮肤颜色、红斑范围和完整性。","交互":"点击肩胛部、背部和骶尾部依次查看。右侧显示颜色和完整性选项：正常肤色、浅红色、深红色；完整、破损或水疱。默认病例中肩胛和背部选择正常、完整；骶尾部选择深红色红斑、皮肤完整、范围清晰。三处结果均确认后任务完成。","特殊规则":"本任务只完成视觉观察，不在此阶段自动给出分期结论；颜色选择必须与模型材质表现一致。","判定规则":"正确条件：肩胛/背部=正常完整；骶尾部=深红色、不褪色红斑外观、皮肤完整、边界清晰\n错误/阻断条件：颜色/完整性选择与模型不一致\n完成条件与反馈：三处均确认后完成"},"重点检查::询问疼痛与感觉":{"number":0,"title":"重点检查 · 询问疼痛与感觉","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"询问骶尾部是否存在疼痛、麻木、灼热或按压不适，记录患者主观感受。","场景":"老年病房骶尾部局部检查和护患沟通状态。","资源调用":"【模型1：护士】、【模型2：患者】；播放护士语音【语音key_22】和患者语音【语音key_23】。","初始状态":"颜色和完整性观察已完成，疼痛与感觉字段未记录。","视角":"保持骶尾部局部视角，可同时显示患者面部小窗或底部对白框。","提示":"请询问局部疼痛、麻木、灼热和按压不适。","交互":"播放护士语音【语音key_22】（这里有没有疼痛、麻木、灼热或按压不舒服？），随后播放患者语音【语音key_23】（骶尾部有一点不舒服，按压时会更明显一些。）。患者语音结束后，系统自动写入“骶尾部轻度不适，按压时更明显”，任务标记完成。","特殊规则":"语音未结束前疼痛字段不可确认；该主观反馈不能代替后续触温、触诊和指压检查。","判定规则":"正确条件：key_22、key_23播放完成，记录“轻度不适，按压时更明显”\n错误/阻断条件：未完成语音即提交疼痛字段\n完成条件与反馈：自动写入主观记录"},"重点检查::触摸皮温":{"number":0,"title":"重点检查 · 触摸皮温","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"使用手背比较骶尾部异常区域与周围正常皮肤的温度差异。","场景":"老年病房骶尾部触温近景。","资源调用":"【模型19：双手】、【动画21：触摸皮温】。","初始状态":"骶尾部已暴露，疼痛与感觉询问已完成。","视角":"手背和骶尾部局部近景，异常区与周围正常区均可见。","提示":"请使用手背比较异常区域与周围皮肤温度。","交互":"先点击周围正常皮肤作为对照，再拖动手背至骶尾部红斑区域。两个触摸点均完成后调用【动画21：触摸皮温】，程序显示比较结果并允许选择“正常、偏高、偏低”。确认结果后完成任务。","特殊规则":"必须完成对照区域和异常区域两次触摸；不能使用指尖代替手背触温。","判定规则":"正确条件：JP-TOUCH-01（触温：先正常对照区、后异常区；每处接触1～2 s）满足，先正常区后红斑区\n错误/阻断条件：漏对照区、顺序错误或接触时间不足\n完成条件与反馈：开放温度结果选择"},"重点检查::触诊软硬度":{"number":0,"title":"重点检查 · 触诊软硬度","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"使用指腹轻触异常区域及周围组织，判断组织软硬度、水肿或硬结。","场景":"老年病房骶尾部触诊近景。","资源调用":"【模型19：双手】、【动画22：触诊软硬度】。","初始状态":"皮温检查已完成，软硬度字段未记录。","视角":"指腹和骶尾部局部近景。","提示":"请使用指腹检查局部组织软硬度。","交互":"点击并拖动指腹至红斑区域和周围组织，程序记录触诊点位和顺序；完成后调用【动画22：触诊软硬度】，开放“正常、柔软、水肿、硬结、不确定”选择。确认后标记完成。","特殊规则":"触诊动作应为轻触或轻压，不允许长时间持续重压。","判定规则":"正确条件：JP-PALPATE-01（触诊：异常区及周围区均检查；每区3～5个点，每点0.5～1.5 s）满足\n错误/阻断条件：点位不足、持续重压\n完成条件与反馈：开放软硬度选择"},"重点检查::持续指压约3秒":{"number":0,"title":"重点检查 · 持续指压约3秒","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"对完整皮肤红斑区域持续指压约3秒，观察松开后的颜色变化。","场景":"老年病房骶尾部指压近景。","资源调用":"【模型19：双手】、【动画20：3秒指压检查】、【模型2：患者】皮肤材质变化。","初始状态":"骶尾部皮肤完整，红斑区域可执行指压。","视角":"指尖、红斑中心和周围正常皮肤局部近景。","提示":"请在红斑区域持续按压约3秒并观察松开后的颜色。","交互":"按住骶尾部红斑中心，界面显示3秒环形计时；持续时间达到要求后调用【动画20：3秒指压检查】。松开后显示颜色变化，用户选择“褪色”或“不褪色”。默认病例正确结果为“不褪色”。","特殊规则":"按压不足3秒不计完成；皮肤破损、水疱或表皮分离时禁用指压工具。","判定规则":"正确条件：JP-PRESS-01（指压：红斑中心持续2.5～3.5 s；中心落在红斑中心50%区域内）满足；皮肤完整\n错误/阻断条件：时长/位置错误，或破损皮肤指压\n完成条件与反馈：默认病例结果选择“不褪色”"},"重点检查::软尺测量":{"number":0,"title":"重点检查 · 软尺测量","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"使用软尺测量骶尾部红斑最长径及与其垂直的最宽径。","场景":"老年病房骶尾部测量近景。","资源调用":"【模型21：软尺】、【模型19：双手】、【动画23：软尺测量】。","初始状态":"红斑边界已确认，长度和宽度尚未记录。","视角":"垂直俯视骶尾部区域，完整显示红斑边界和软尺。","提示":"请测量红斑最长径和与其垂直的最宽径。","交互":"拖动软尺第一端至红斑边缘，再拖动第二端跨越最长方向，点击确认记录长度；随后程序显示垂直方向提示，重新摆放软尺测量最宽径。两个方向均完成后调用【动画23：软尺测量】，写入长度和宽度数据并完成重点检查。","特殊规则":"必须先测最长径，再测与其垂直的最宽径；仅完成单方向测量不得提交。","判定规则":"正确条件：JP-MEASURE-01（软尺测量：先最长径，后垂直最宽径；两方向夹角80°～100°；端点距边界≤0.5 cm）满足；长度和宽度均记录\n错误/阻断条件：只测一个方向或方向不垂直\n完成条件与反馈：调用【动画23】并保存数值"},"清洁护理::铺设隐私毛巾":{"number":0,"title":"清洁护理 · 铺设隐私毛巾","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"在清洁护理前遮盖非操作部位，维持患者隐私和保暖。","场景":"老年病房患者侧卧护理状态。","资源调用":"【模型10：毛巾】、【动画16：铺上毛巾】。","初始状态":"患者检查区域暴露，尚未进行隐私遮盖。","视角":"患者背部和腰部中近景。","提示":"请铺设毛巾并遮盖非操作部位。","交互":"毛巾高亮并显示目标轮廓，拖动至非操作区域后吸附并调用【动画16：铺上毛巾】。程序确认检查区域可见且其他区域已遮盖后完成任务。","特殊规则":"毛巾不得覆盖骶尾部待清洁区域。","判定规则":"正确条件：毛巾覆盖非操作区≥90%，不遮挡骶尾部目标区\n错误/阻断条件：覆盖目标区或隐私遮盖不足\n完成条件与反馈：调用【动画16】"},"清洁护理::确认水温":{"number":0,"title":"清洁护理 · 确认水温","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"准备温水并通过程序数值判断水温是否适宜。","场景":"病床旁脸盆和温水壶区域。","资源调用":"【模型9：温水壶】、【模型13：脸盆】；水位和温度由UI显示。","初始状态":"脸盆为空，温水壶未倒水。","视角":"脸盆、温水壶和温度数值近景。","提示":"请向脸盆中加入适量温水并确认水温。","交互":"拖动温水壶向脸盆倒水，程序显示水位和温度。达到预设水量后停止倒水并点击确认；程序判断温度是否适宜。正确后完成任务，过高或过低时显示文字提示并要求调整。","特殊规则":"本任务不播放水温询问或患者反馈语音。","判定规则":"正确条件：JP-WATER-01（清洁用水：38～42℃；目标40℃；不得超过44℃）、JP-BASIN-01（脸盆水量：容量的25%～40%）满足\n错误/阻断条件：水温＜38℃、＞42℃；＞44℃严重错误；水量错误\n完成条件与反馈：数值变绿并开放下一项"},"清洁护理::浸湿并拧干毛巾":{"number":0,"title":"清洁护理 · 浸湿并拧干毛巾","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"将毛巾充分浸湿并拧至不滴水状态。","场景":"病床旁脸盆区域。","资源调用":"【模型10：毛巾】、【模型13：脸盆】、【动画17：放置毛巾】、【动画18：拧干毛巾】。","初始状态":"脸盆内水温适宜，毛巾处于干燥状态。","视角":"脸盆和双手操作近景。","提示":"请将毛巾浸湿并拧至不滴水。","交互":"将毛巾拖入脸盆后调用【动画17：放置毛巾】，毛巾切换湿润状态；随后拖动双手完成拧干操作并调用【动画18：拧干毛巾】。程序判断含水状态达到不滴水标准后完成任务。","特殊规则":"毛巾仍滴水或未完全浸湿时不得进入擦拭。","判定规则":"正确条件：JP-TOWEL-01（毛巾拧干：湿润但无连续滴水；程序含水状态40%～60%）满足\n错误/阻断条件：毛巾干燥或持续滴水\n完成条件与反馈：调用【动画17】【动画18】"},"清洁护理::擦拭背部与骶尾部":{"number":0,"title":"清洁护理 · 擦拭背部与骶尾部","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"按照指定范围和方向清洁肩胛、背部及骶尾部皮肤。","场景":"老年病房背部与骶尾部护理近景。","资源调用":"【模型10：毛巾】、【模型19：双手】；擦拭轨迹由程序实现。","初始状态":"毛巾已浸湿并拧干，护理区域尚未清洁。","视角":"背部和骶尾部局部视角。","提示":"请沿高亮区域轻柔擦拭，避免反复摩擦红斑。","交互":"按住鼠标沿高亮区域移动毛巾，程序实时计算轨迹、覆盖率、速度、力度和重复摩擦。有效覆盖率达到85%，且未发生严重速度或力度错误时完成任务。","特殊规则":"过快、过重或在红斑区域反复摩擦时暂停有效累计并显示文字提示。","判定规则":"正确条件：JP-WIPE-01（擦拭覆盖率：每个目标区有效覆盖率≥85%）（擦拭覆盖率：每个目标区有效覆盖率≥85%）；JP-WIPE-02（擦拭速度：世界坐标路径速度5～20 cm/s）（擦拭速度：世界坐标路径速度5～20 cm/s）；JP-WIPE-03（擦拭路径：相邻轨迹重叠20%～40%；非目标区轨迹≤10%；同一点有效往返≤3次）（擦拭路径：相邻轨迹重叠20%～40%；非目标区轨迹≤10%；同一点有效往返≤3次）满足\n错误/阻断条件：覆盖不足、速度超限、超出区域或反复摩擦\n完成条件与反馈：每个分区分别达到85%后完成"},"清洁护理::轻拍擦干":{"number":0,"title":"清洁护理 · 轻拍擦干","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"使用轻拍方式将护理区域擦干，保持皮肤表面清洁、干燥。","场景":"老年病房背部与骶尾部护理近景。","资源调用":"【模型10：毛巾】、【模型19：双手】；轻拍动作由程序实现。","初始状态":"皮肤清洁已完成，表面仍为湿润状态。","视角":"背部与骶尾部局部近景。","提示":"请使用轻拍方式擦干皮肤。","交互":"点击或短距离轻触高亮区域完成轻拍，程序判断触点覆盖和力度；覆盖所有护理区域后切换为清洁、干燥皮肤材质并完成任务。","特殊规则":"不得使用来回摩擦方式擦干。","判定规则":"正确条件：JP-DRY-01（轻拍擦干：有效覆盖率≥85%；单次移动≤3 cm；连续拖动≤10 cm）满足\n错误/阻断条件：大范围来回拖擦或覆盖不足\n完成条件与反馈：皮肤切换清洁、干燥状态"},"清洁护理::使用皮肤保护剂":{"number":0,"title":"清洁护理 · 使用皮肤保护剂","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"在清洁、干燥后的骶尾部皮肤表面使用薄层保护剂。","场景":"老年病房骶尾部护理近景。","资源调用":"【模型14：保护膜】、【模型19：双手】、【模型2：患者】护理后材质状态。","初始状态":"护理区域已清洁并擦干，保护剂尚未使用。","视角":"骶尾部局部近景。","提示":"请在骶尾部薄层使用皮肤保护剂。","交互":"选择保护剂并沿骶尾部高亮区域均匀处理。程序判断覆盖范围和用量，完成后切换为红斑基本不变、表面清洁干燥并带轻微保护层光泽的材质状态。","特殊规则":"保护剂不能覆盖到未清洁区域，也不能表现为厚重敷贴。","判定规则":"正确条件：JP-PROTECT-01（皮肤保护剂：骶尾部目标区覆盖率80%～100%；非目标区覆盖≤10%）满足\n错误/阻断条件：漏涂、外溢或厚重堆积\n完成条件与反馈：显示轻微保护层光泽"},"减压摆位::放置上肢软枕":{"number":0,"title":"减压摆位 · 放置上肢软枕","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"在患者上肢下方放置软枕，保持上肢稳定并避免受压。","场景":"老年病房患者侧卧减压准备状态。","资源调用":"【模型8：软枕】、【动画13：放置软枕】。","初始状态":"患者侧卧，上肢尚无支撑。","视角":"患者上肢和胸前区域近景。","提示":"请在上肢下方放置软枕。","交互":"拖动软枕至上肢下方半透明轮廓，命中后吸附并调用【动画13：放置软枕】。程序判断上肢是否得到支撑且未压迫胸部或肩部。","特殊规则":"软枕不得直接压在肘部骨隆突或异常皮肤上。","判定规则":"正确条件：JP-SUPPORT-01（软枕/翻身垫吸附：资源中心距目标中心≤5 cm，旋转误差≤15°）满足；上肢获得支撑，软枕不直接压肩/肘骨隆突\n错误/阻断条件：位置偏差、压迫骨隆突或穿插\n完成条件与反馈：调用【动画13】"},"减压摆位::放置双膝间软枕":{"number":0,"title":"减压摆位 · 放置双膝间软枕","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"在双膝之间放置软枕，避免骨隆突直接接触。","场景":"老年病房患者下肢侧卧状态。","资源调用":"【模型8：软枕】、【动画13：放置软枕】。","初始状态":"患者双膝相互接近，膝间尚无支撑。","视角":"双膝和小腿近景。","提示":"请在双膝之间放置软枕。","交互":"拖动软枕至双膝间目标轮廓，程序判断软枕位置和双膝间距；正确后吸附并调用【动画13：放置软枕】。","特殊规则":"软枕不能只垫在单侧膝下，也不能造成髋部过度旋转。","判定规则":"正确条件：JP-SUPPORT-01（软枕/翻身垫吸附：资源中心距目标中心≤5 cm，旋转误差≤15°）满足；双膝不直接接触，髋部无过度旋转\n错误/阻断条件：只垫一侧或位置偏差\n完成条件与反馈：调用【动画13】"},"减压摆位::放置翻身垫":{"number":0,"title":"减压摆位 · 放置翻身垫","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"在患者背后放置翻身垫，维持约30°侧卧。","场景":"老年病房患者背部侧卧状态。","资源调用":"【模型7：翻身垫】、【动画19：放置三角垫】、【动画24：放置翻身垫】。","初始状态":"患者为侧卧基础位，背后尚无支撑。","视角":"患者背部与床面侧视近景。","提示":"请在背后放置翻身垫，形成约30°侧卧。","交互":"拖动翻身垫至背后目标轮廓，命中后调用【动画24：放置翻身垫】；如使用三角支撑状态，同步调用【动画19：放置三角垫】。程序实时显示体位角度。","特殊规则":"翻身垫不得直接压住肩胛部、骶尾部或红斑区域。","判定规则":"正确条件：JP-SUPPORT-01（软枕/翻身垫吸附：资源中心距目标中心≤5 cm，旋转误差≤15°）满足；翻身垫不覆盖骶尾红斑和大转子\n错误/阻断条件：直接压在异常部位、位置偏差\n完成条件与反馈：调用【动画19】【动画24】"},"减压摆位::完成足跟减压":{"number":0,"title":"减压摆位 · 完成足跟减压","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"支撑双侧小腿，使左右足跟完全离开床面。","场景":"老年病房患者双足跟区域。","资源调用":"【模型20：足跟减压垫】、【模型8：软枕】、【动画25：足跟减压】。","初始状态":"双足跟仍接触床面。","视角":"双小腿和足跟侧视近景。","提示":"请支撑小腿，使双足跟离开床面。","交互":"拖动足跟减压垫或软枕至小腿下方目标区域，程序判断左右足跟与床面的间隙；两侧均离床后调用【动画25：足跟减压】并完成任务。","特殊规则":"减压用品必须支撑小腿，不得直接垫压足跟。","判定规则":"正确条件：JP-HEEL-01（足跟减压：左右足跟均不接触床面，垂直间隙≥2 cm；支撑位于小腿下方）满足，左右独立判断\n错误/阻断条件：任一足跟仍接触床面或直接垫压足跟\n完成条件与反馈：调用【动画25】"},"减压摆位::确认约30°侧卧":{"number":0,"title":"减压摆位 · 确认约30°侧卧","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"综合确认患者约30°侧卧角度、身体对齐和所有减压用品位置。","场景":"老年病房减压完成全景。","资源调用":"复用【动画3：患者侧躺】、【动画13：放置软枕】、【动画19：放置三角垫】、【动画24：放置翻身垫】和【动画25：足跟减压】的组合状态。","初始状态":"上肢、双膝、背部和双足跟减压用品已放置。","视角":"床旁侧视全景，显示角度标识和足跟离床标识。","提示":"请确认约30°侧卧、身体对齐及足跟离床。","交互":"界面显示侧卧角度、肩部、髋部、膝部、骶尾部和双足跟状态。点击确认后程序统一校验；全部通过后完成减压摆位。","特殊规则":"角度超出目标范围或任一用品产生新压迫时不得进入护理确认。","判定规则":"正确条件：JP-OFFLOAD-01（最终减压侧卧角度：25°～35°，目标30°）、JP-ALIGN-01（身体轴线：肩、髋、膝中心线偏差≤10°）、JP-EDGE-01（身体与床缘安全距离：最近身体轮廓至床缘≥20 cm）满足\n错误/阻断条件：角度、轴线或床缘距离错误\n完成条件与反馈：形成30°减压完成状态"},"护理确认::恢复患者衣物":{"number":0,"title":"护理确认 · 恢复患者衣物","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"完成检查和护理后恢复患者上衣和裤腰，保护隐私并保持舒适。","场景":"老年病房患者侧卧减压状态。","资源调用":"反向调用【动画14：掀开上衣】和【动画15：脱下裤子】。","初始状态":"肩胛、背部和骶尾部仍处于暴露状态。","视角":"患者背部和腰部中近景。","提示":"请恢复患者衣物。","交互":"点击上衣和裤腰区域，按与暴露相反的顺序恢复衣物。两项状态均恢复后任务完成。","特殊规则":"衣物不得卷压在骶尾部或减压用品下方。","判定规则":"正确条件：上衣、裤腰恢复，骶尾部无衣物卷压；非目标暴露≤5%\n错误/阻断条件：衣物未恢复、卷压或穿插\n完成条件与反馈：反向调用【动画14】【动画15】"},"护理确认::恢复被服":{"number":0,"title":"护理确认 · 恢复被服","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"恢复被子和床上遮盖，保持患者保暖。","场景":"老年病房床单位。","资源调用":"【模型5：被子】；位置变化由程序实现。","初始状态":"被子处于翻身和护理后的移开状态。","视角":"病床全景。","提示":"请恢复被服并保证患者舒适。","交互":"拖动被子覆盖患者非操作区域，程序判断覆盖范围和是否影响减压用品；正确后吸附并完成任务。","特殊规则":"被子不得压迫足跟减压结构或遮挡需继续观察的部位。","判定规则":"正确条件：被子覆盖患者非观察区域≥90%，不压迫减压用品\n错误/阻断条件：覆盖不足或压迫足跟结构\n完成条件与反馈：标记被服恢复"},"护理确认::恢复床栏":{"number":0,"title":"护理确认 · 恢复床栏","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"护理结束后恢复床栏安全状态。","场景":"老年病房床旁。","资源调用":"床栏为场景资源；调用【动画4：拉起床栏】。","初始状态":"操作侧床栏处于放下状态。","视角":"床栏和床边区域近景。","提示":"请恢复床栏安全状态。","交互":"点击操作侧床栏并确认，程序切换床栏状态并调用【动画4：拉起床栏】。两侧床栏安全状态满足要求后完成任务。","特殊规则":"床栏升起前确认患者四肢、衣物和用品未被夹住。","判定规则":"正确条件：操作侧床栏升起，患者肢体/衣物未夹住；脚轮仍锁定\n错误/阻断条件：床栏未升、夹压风险\n完成条件与反馈：调用【动画4】"},"护理确认::检查减压用品":{"number":0,"title":"护理确认 · 检查减压用品","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"复查软枕、翻身垫和足跟减压用品是否移位或造成新的局部压迫。","场景":"老年病房约30°减压完成状态。","资源调用":"【模型7：翻身垫】、【模型8：软枕】、【模型20：足跟减压垫】。","初始状态":"减压用品已放置，尚未完成护理后复查。","视角":"依次定位上肢、双膝、背部和双足跟。","提示":"请检查所有减压用品位置和受压情况。","交互":"点击每件用品查看位置，程序显示目标轮廓和当前偏差。用户必要时重新拖动并确认；所有用品位置正确、无新压迫且足跟离床后完成任务。","特殊规则":"位置错误时只显示文字提示，不播放患者主动反馈语音。","判定规则":"正确条件：各用品中心偏差≤5 cm；30°角度、足跟间隙仍符合\n错误/阻断条件：任一用品移位或出现新压迫\n完成条件与反馈：重新调整后再次校验"},"护理确认::询问患者舒适度":{"number":0,"title":"护理确认 · 询问患者舒适度","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"确认患者当前体位是否引起疼痛、头晕、麻木或局部压迫。","场景":"老年病房护患沟通状态。","资源调用":"【模型1：护士】、【模型2：患者】；播放【语音key_25】和【语音key_26】。","初始状态":"衣物、被服、床栏和减压用品均已检查通过。","视角":"患者面部和护士床旁中景。","提示":"请询问患者当前体位的舒适度。","交互":"播放护士语音【语音key_25】（张先生，现在有没有疼痛、头晕、麻木、局部压迫或其他不舒服？这个姿势舒适吗？），随后播放患者语音【语音key_26】（现在比较舒服，没有明显不适。）。患者语音结束后完成护理确认。","特殊规则":"减压用品检查未通过前不得播放本组语音。","判定规则":"正确条件：key_25、key_26播放完成\n错误/阻断条件：未完成问答\n完成条件与反馈：`comfortConfirmed=true`"},"用物处理::处理污水":{"number":0,"title":"用物处理 · 处理污水","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"将脸盆中的护理污水按指定路径处理。","场景":"病房治疗车和污水处理区域。","资源调用":"【模型13：脸盆】；污水状态和倾倒过程由程序实现。","初始状态":"脸盆中存在护理污水。","视角":"脸盆和指定污水处理区域近景。","提示":"请将污水倒入指定处理区域。","交互":"拖动脸盆至处理点并执行倾倒操作，程序判断目标区域和倾倒完成状态；正确后脸盆切换为空盆状态。","特殊规则":"不得将污水倒入生活垃圾桶或治疗车侧边垃圾桶。","判定规则":"正确条件：脸盆移动至指定污水点，倾倒进度100%，脸盆切换空盆\n错误/阻断条件：倒入垃圾桶或未倾倒完成\n完成条件与反馈：`wasteWaterDisposed=true`"},"用物处理::处理一次性污物":{"number":0,"title":"用物处理 · 处理一次性污物","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"将污染物和一次性用品投入指定垃圾桶。","场景":"病房治疗车侧边垃圾桶区域。","资源调用":"【模型18：治疗车】侧边垃圾桶及本次使用后的物品状态。","初始状态":"污染物尚未投放。","视角":"治疗车侧边垃圾桶和污染物近景。","提示":"请将污染物投入指定垃圾桶。","交互":"逐项拖动污染物至垃圾桶，命中后隐藏对应物品并更新数量；全部污染物处理完毕后完成任务。","特殊规则":"可复用物品不得作为一次性污物丢弃。","判定规则":"正确条件：所有污染物进入指定垃圾桶；可复用物品未被丢弃\n错误/阻断条件：分类错误或漏处理\n完成条件与反馈：对应物品隐藏并计数"},"用物处理::归位可复用物品":{"number":0,"title":"用物处理 · 归位可复用物品","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"将脸盆、温水壶、软尺等可复用物品归回治疗车指定位置。","场景":"病房治疗车区域。","资源调用":"【模型18：治疗车】及本次使用的可复用模型。","初始状态":"可复用物品散放在操作区域。","视角":"稍高的治疗车观察视角。","提示":"请将可复用物品归位。","交互":"治疗车显示各物品目标插槽。用户拖动可复用物品至对应位置，命中后吸附；全部核心物品归位后完成任务。","特殊规则":"未完成污水处理的脸盆不得直接归位。","判定规则":"正确条件：每件物品目标中心误差≤5 cm，分类位置正确\n错误/阻断条件：未处理污水即归位、放错区域\n完成条件与反馈：所有可复用物品归位"},"用物处理::整理治疗车":{"number":0,"title":"用物处理 · 整理治疗车","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"确认治疗车台面整洁、物品分类正确并恢复操作结束状态。","场景":"病房治疗车整体区域。","资源调用":"【模型18：治疗车】；整理完成效果可调用【模型17：摆放的治疗车】。","初始状态":"污水和污物已处理，可复用物品已归位。","视角":"治疗车全景。","提示":"请确认治疗车整理完成。","交互":"程序展示治疗车物品清单和位置状态。点击确认后校验台面无污染物、物品归位正确；通过后可切换至【模型17：摆放的治疗车】完成效果并进入手卫生。","特殊规则":"治疗车仍存在污染物或位置错误时不得完成。","判定规则":"正确条件：台面无污物，无用品重叠＞10%，核心物品数量与清单一致\n错误/阻断条件：台面残留、分类错误\n完成条件与反馈：可切换【模型17：摆放的治疗车】"},"风险评估::感觉能力":{"number":0,"title":"风险评估 · 感觉能力","pageCode":"","annotation":"Braden 感觉能力逐项评估。","功能描述":"完成Braden“感觉能力”维度问诊和评分。","场景":"老年病房床旁风险评估状态。","资源调用":"显示感觉能力问题、患者回答及全部评分项。","初始状态":"当前激活感觉能力，该维度未评分；后续维度锁定。","视角":"床旁沟通中景，右侧显示问题、回答和评分卡。","提示":"请根据患者回答选择感觉能力对应分值。","交互":"先播放当前维度护士提问，再播放患者回答。患者回答语音结束后，隐藏底部对白，右侧弹出该维度完整评分项；选择分值并确认。评分正确后关闭面板并进入下一维度语音，评分错误时保留面板并显示解析。","评分项":"1分：完全受限——对疼痛刺激无反应，或因意识障碍不能表达不适。\n2分：非常受限——仅对疼痛刺激有反应，或大部分身体感觉受限。\n3分：轻度受限——能够表达不适，但一个或两个肢体局部感觉减退。\n4分：无受限——感觉正常，能准确感知并表达疼痛或不适。","判定规则":"正确条件：选择3分“轻度受限”。\n错误/阻断条件：回答未完成即评分、选择非3分或越级操作。\n完成条件与反馈：锁定3分，显示绿色完成状态并解锁下一维度。","特殊规则":"问诊和患者回答期间右侧评分面板保持隐藏；只有患者回答结束后才显示评分项。已完成维度只允许回看，不允许修改锁定分值。"},"风险评估::潮湿程度":{"number":0,"title":"风险评估 · 潮湿程度","pageCode":"","annotation":"Braden 潮湿程度逐项评估。","功能描述":"完成Braden“潮湿程度”维度问诊和评分。","场景":"老年病房床旁风险评估状态。","资源调用":"显示潮湿程度问题、患者回答及全部评分项。","初始状态":"当前激活潮湿程度，该维度未评分；后续维度锁定。","视角":"床旁沟通中景，右侧显示问题、回答和评分卡。","提示":"请根据患者回答选择潮湿程度对应分值。","交互":"先播放当前维度护士提问，再播放患者回答。患者回答语音结束后，隐藏底部对白，右侧弹出该维度完整评分项；选择分值并确认。评分正确后关闭面板并进入下一维度语音，评分错误时保留面板并显示解析。","评分项":"1分：持续潮湿——皮肤几乎一直被汗液、尿液等浸湿。\n2分：经常潮湿——皮肤经常潮湿，每班通常至少需要更换一次床单或衣物。\n3分：偶尔潮湿——皮肤偶尔潮湿，每日约需额外更换一次。\n4分：很少潮湿——皮肤通常保持干燥。","判定规则":"正确条件：选择2分“经常潮湿”。\n错误/阻断条件：回答未完成即评分、选择非2分或越级操作。\n完成条件与反馈：锁定2分，显示绿色完成状态并解锁下一维度。","特殊规则":"问诊和患者回答期间右侧评分面板保持隐藏；只有患者回答结束后才显示评分项。已完成维度只允许回看，不允许修改锁定分值。"},"风险评估::活动能力":{"number":0,"title":"风险评估 · 活动能力","pageCode":"","annotation":"Braden 活动能力逐项评估。","功能描述":"完成Braden“活动能力”维度问诊和评分。","场景":"老年病房床旁风险评估状态。","资源调用":"显示活动能力问题、患者回答及全部评分项。","初始状态":"当前激活活动能力，该维度未评分；后续维度锁定。","视角":"床旁沟通中景，右侧显示问题、回答和评分卡。","提示":"请根据患者回答选择活动能力对应分值。","交互":"先播放当前维度护士提问，再播放患者回答。患者回答语音结束后，隐藏底部对白，右侧弹出该维度完整评分项；选择分值并确认。评分正确后关闭面板并进入下一维度语音，评分错误时保留面板并显示解析。","评分项":"1分：卧床——活动范围仅限于床上。\n2分：坐椅——不能独立行走，需要协助坐到椅子上。\n3分：偶尔行走——白天可偶尔短距离行走。\n4分：经常行走——能够经常独立活动。","判定规则":"正确条件：选择1分“卧床”。\n错误/阻断条件：回答未完成即评分、选择非1分或越级操作。\n完成条件与反馈：锁定1分，显示绿色完成状态并解锁下一维度。","特殊规则":"问诊和患者回答期间右侧评分面板保持隐藏；只有患者回答结束后才显示评分项。已完成维度只允许回看，不允许修改锁定分值。"},"风险评估::移动能力":{"number":0,"title":"风险评估 · 移动能力","pageCode":"","annotation":"Braden 移动能力逐项评估。","功能描述":"完成Braden“移动能力”维度问诊和评分。","场景":"老年病房床旁风险评估状态。","资源调用":"显示移动能力问题、患者回答及全部评分项。","初始状态":"当前激活移动能力，该维度未评分；后续维度锁定。","视角":"床旁沟通中景，右侧显示问题、回答和评分卡。","提示":"请根据患者回答选择移动能力对应分值。","交互":"先播放当前维度护士提问，再播放患者回答。患者回答语音结束后，隐藏底部对白，右侧弹出该维度完整评分项；选择分值并确认。评分正确后关闭面板并进入下一维度语音，评分错误时保留面板并显示解析。","评分项":"1分：完全不能移动——无协助时不能改变身体或肢体位置。\n2分：非常受限——偶尔能轻微移动，但不能独立完成较大体位改变。\n3分：轻度受限——能经常独立完成小幅度体位改变。\n4分：不受限——能独立完成较大且频繁的体位改变。","判定规则":"正确条件：选择2分“非常受限”。\n错误/阻断条件：回答未完成即评分、选择非2分或越级操作。\n完成条件与反馈：锁定2分，显示绿色完成状态并解锁下一维度。","特殊规则":"问诊和患者回答期间右侧评分面板保持隐藏；只有患者回答结束后才显示评分项。已完成维度只允许回看，不允许修改锁定分值。"},"风险评估::营养状况":{"number":0,"title":"风险评估 · 营养状况","pageCode":"","annotation":"Braden 营养状况逐项评估。","功能描述":"完成Braden“营养状况”维度问诊和评分。","场景":"老年病房床旁风险评估状态。","资源调用":"显示营养状况问题、患者回答及全部评分项。","初始状态":"当前激活营养状况，该维度未评分；后续维度锁定。","视角":"床旁沟通中景，右侧显示问题、回答和评分卡。","提示":"请根据患者回答选择营养状况对应分值。","交互":"先播放当前维度护士提问，再播放患者回答。患者回答语音结束后，隐藏底部对白，右侧弹出该维度完整评分项；选择分值并确认。评分正确后关闭面板并进入下一维度语音，评分错误时保留面板并显示解析。","评分项":"1分：非常差——很少进食、长期禁食或摄入明显不足。\n2分：可能不足——通常只能吃约一半或更少。\n3分：充足——大多数时间能摄入超过一半，蛋白质摄入基本充足。\n4分：非常好——每餐正常摄入，无明显营养不足。","判定规则":"正确条件：选择2分“可能不足”。\n错误/阻断条件：回答未完成即评分、选择非2分或越级操作。\n完成条件与反馈：锁定2分，显示绿色完成状态并解锁下一维度。","特殊规则":"问诊和患者回答期间右侧评分面板保持隐藏；只有患者回答结束后才显示评分项。已完成维度只允许回看，不允许修改锁定分值。"},"风险评估::摩擦与剪切力":{"number":0,"title":"风险评估 · 摩擦与剪切力","pageCode":"","annotation":"Braden 摩擦与剪切力逐项评估。","功能描述":"完成Braden“摩擦与剪切力”维度问诊和评分。","场景":"老年病房床旁风险评估状态。","资源调用":"显示摩擦与剪切力问题、患者回答及全部评分项。","初始状态":"当前激活摩擦与剪切力，该维度未评分；后续维度锁定。","视角":"床旁沟通中景，右侧显示问题、回答和评分卡。","提示":"请根据患者回答选择摩擦与剪切力对应分值。","交互":"先播放当前维度护士提问，再播放患者回答。患者回答语音结束后，隐藏底部对白，右侧弹出该维度完整评分项；选择分值并确认。评分正确后关闭面板并进入下一维度语音，评分错误时保留面板并显示解析。","评分项":"1分：有问题——移动需要大量协助，且经常发生滑动或明显摩擦。\n2分：有潜在问题——移动需要部分协助，偶有滑动或摩擦。\n3分：无明显问题——能独立移动并维持良好体位。","判定规则":"正确条件：选择2分“有潜在问题”。\n错误/阻断条件：回答未完成即评分、选择非2分或越级操作。\n完成条件与反馈：锁定2分，显示绿色完成状态并解锁下一维度。","特殊规则":"问诊和患者回答期间右侧评分面板保持隐藏；只有患者回答结束后才显示评分项。已完成维度只允许回看，不允许修改锁定分值。"},"皮肤初检::枕部":{"number":0,"title":"皮肤初检 · 枕部","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"完成患者枕部的首次皮肤观察和初步状态记录。","场景":"老年病房患者仰卧局部检查状态。","资源调用":"【模型2：患者】、【模型19：双手】、【动画2：患者初始】。枕部检查时允许程序移动【模型6：枕头】或轻托头部。","初始状态":"患者仰卧，枕部尚未检查，默认皮肤为正常、完整状态。","视角":"切换至枕部局部近景。","提示":"请检查枕部的颜色、完整性、温度、压痕和不适。","交互":"点击枕部后切换局部视角。依次完成颜色、完整性、局部温度和压痕观察；若发现红斑则开放约3秒指压。确认结果后将枕部标记为正常或异常，并自动进入下一未完成部位。","特殊规则":"本步骤不得在仰卧位完成骶尾部详细检查。","判定规则":"正确条件：完成颜色、完整性、温度、压痕检查；结果为正常、完整、无明显红斑\n错误/阻断条件：漏任一字段；未移动枕头即判定\n完成条件与反馈：保存独立部位记录"},"皮肤初检::左肘部":{"number":0,"title":"皮肤初检 · 左肘部","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"完成患者左肘部的首次皮肤观察和初步状态记录。","场景":"老年病房患者仰卧局部检查状态。","资源调用":"【模型2：患者】、【模型19：双手】、【动画2：患者初始】。","初始状态":"患者仰卧，左肘部尚未检查，默认皮肤为正常、完整状态。","视角":"切换至左肘部局部近景。","提示":"请检查左肘部的颜色、完整性、温度、压痕和不适。","交互":"点击左肘部后切换局部视角。依次完成颜色、完整性、局部温度和压痕观察；若发现红斑则开放约3秒指压。确认结果后将左肘部标记为正常或异常，并自动进入下一未完成部位。","特殊规则":"本步骤不得在仰卧位完成骶尾部详细检查。","判定规则":"正确条件：检查字段完整；结果正常、完整\n错误/阻断条件：与右肘共用一条记录或漏检\n完成条件与反馈：保存 `leftElbow`"},"皮肤初检::右肘部":{"number":0,"title":"皮肤初检 · 右肘部","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"完成患者右肘部的首次皮肤观察和初步状态记录。","场景":"老年病房患者仰卧局部检查状态。","资源调用":"【模型2：患者】、【模型19：双手】、【动画2：患者初始】。","初始状态":"患者仰卧，右肘部尚未检查，默认皮肤为正常、完整状态。","视角":"切换至右肘部局部近景。","提示":"请检查右肘部的颜色、完整性、温度、压痕和不适。","交互":"点击右肘部后切换局部视角。依次完成颜色、完整性、局部温度和压痕观察；若发现红斑则开放约3秒指压。确认结果后将右肘部标记为正常或异常，并自动进入下一未完成部位。","特殊规则":"本步骤不得在仰卧位完成骶尾部详细检查。","判定规则":"正确条件：检查字段完整；结果正常、完整\n错误/阻断条件：与左肘共用一条记录或漏检\n完成条件与反馈：保存 `rightElbow`"},"皮肤初检::左足跟":{"number":0,"title":"皮肤初检 · 左足跟","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"完成患者左足跟的首次皮肤观察和初步状态记录。","场景":"老年病房患者仰卧局部检查状态。","资源调用":"【模型2：患者】、【模型19：双手】、【动画2：患者初始】。","初始状态":"患者仰卧，左足跟尚未检查，默认皮肤为正常、完整状态。","视角":"切换至左足跟局部近景。","提示":"请检查左足跟的颜色、完整性、温度、压痕和不适。","交互":"点击左足跟后切换局部视角。依次完成颜色、完整性、局部温度和压痕观察；若发现红斑则开放约3秒指压。确认结果后将左足跟标记为正常或异常，并自动进入下一未完成部位。","特殊规则":"本步骤不得在仰卧位完成骶尾部详细检查。","判定规则":"正确条件：检查颜色、完整性、温度、压痕；结果正常、完整\n错误/阻断条件：未单独定位或未记录\n完成条件与反馈：保存 `leftHeel`"},"皮肤初检::右足跟":{"number":0,"title":"皮肤初检 · 右足跟","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"完成患者右足跟的首次皮肤观察和初步状态记录。","场景":"老年病房患者仰卧局部检查状态。","资源调用":"【模型2：患者】、【模型19：双手】、【动画2：患者初始】。","初始状态":"患者仰卧，右足跟尚未检查，默认皮肤为正常、完整状态。","视角":"切换至右足跟局部近景。","提示":"请检查右足跟的颜色、完整性、温度、压痕和不适。","交互":"点击右足跟后切换局部视角。依次完成颜色、完整性、局部温度和压痕观察；若发现红斑则开放约3秒指压。确认结果后将右足跟标记为正常或异常，并自动进入下一未完成部位。","特殊规则":"本步骤不得在仰卧位完成骶尾部详细检查。","判定规则":"正确条件：同左足跟，独立完成\n错误/阻断条件：用左侧结果代替右侧\n完成条件与反馈：保存 `rightHeel`"},"皮肤复查::骶尾部":{"number":0,"title":"皮肤复查 · 骶尾部","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"在2小时复查时重新完成骶尾部颜色、完整性、症状、温度、软硬度、指压和尺寸检查。","场景":"老年病房骶尾部2小时复查状态。","资源调用":"【模型2：患者】2小时皮肤材质、【模型19：双手】、【模型21：软尺】、【动画14：掀开上衣】、【动画15：脱下裤子】、【动画20：3秒指压检查】、【动画21：触摸皮温】、【动画22：触诊软硬度】、【动画23：软尺测量】。","初始状态":"首次记录已保存，2小时复查皮肤状态已在后台加载。","视角":"骶尾部局部复查近景。","提示":"请重新检查骶尾部并记录与首次检查相比的客观结果。","交互":"重新完成衣物暴露、颜色和完整性观察、症状记录、触温、触诊、约3秒指压及最长径和最宽径测量。全部字段完成后保存为followup记录，不覆盖首次基线。","特殊规则":"复查结果页面不得提前显示改善、稳定或加重结论。","判定规则":"正确条件：重新完成颜色、完整性、触温、触诊、JP-PRESS-01（指压：红斑中心持续2.5～3.5 s；中心落在红斑中心50%区域内）、JP-MEASURE-01（软尺测量：先最长径，后垂直最宽径；两方向夹角80°～100°；端点距边界≤0.5 cm）及疼痛记录\n错误/阻断条件：复用首次结果、漏任一字段\n完成条件与反馈：保存独立followup骶尾记录"},"皮肤复查::左足跟":{"number":0,"title":"皮肤复查 · 左足跟","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"在2小时复查时检查左足跟是否出现新发红斑或皮肤完整性改变。","场景":"老年病房足跟局部复查状态。","资源调用":"【模型2：患者】足跟材质状态、【模型19：双手】、【动画20：3秒指压检查】；异常时可调用【动画21：触摸皮温】。","初始状态":"左足跟首次记录为正常，2小时状态已独立加载。","视角":"左足跟局部近景。","提示":"请检查左足跟的颜色、完整性和指压结果。","交互":"观察左足跟颜色和完整性；发现红斑时持续指压约3秒并记录是否褪色，必要时追加触温。确认后保存该侧足跟复查结果，左右足跟分别记录。","特殊规则":"左右足跟状态相互独立，不得以一侧结果代替另一侧。","判定规则":"正确条件：独立完成颜色、完整性、指压；有红斑时追加触温\n错误/阻断条件：用右侧结果代替或漏检\n完成条件与反馈：保存leftHeel followup"},"皮肤复查::右足跟":{"number":0,"title":"皮肤复查 · 右足跟","pageCode":"","annotation":"当前右侧任务的程序与美术实现要求。","功能描述":"在2小时复查时检查右足跟是否出现新发红斑或皮肤完整性改变。","场景":"老年病房足跟局部复查状态。","资源调用":"【模型2：患者】足跟材质状态、【模型19：双手】、【动画20：3秒指压检查】；异常时可调用【动画21：触摸皮温】。","初始状态":"右足跟首次记录为正常，2小时状态已独立加载。","视角":"右足跟局部近景。","提示":"请检查右足跟的颜色、完整性和指压结果。","交互":"观察右足跟颜色和完整性；发现红斑时持续指压约3秒并记录是否褪色，必要时追加触温。确认后保存该侧足跟复查结果，左右足跟分别记录。","特殊规则":"左右足跟状态相互独立，不得以一侧结果代替另一侧。","判定规则":"正确条件：同左足跟独立完成\n错误/阻断条件：用左侧结果代替\n完成条件与反馈：保存rightHeel followup"},"护士准备::服饰选择":{"number":0,"title":"护士准备 · 服饰选择","pageCode":"","annotation":"当前服饰选择任务的程序与美术实现要求。","功能描述":"在一个右侧面板中完成护士帽、医用口罩、护士服上衣、护士服裤子和护士鞋五类选择。","场景":"配药间或治疗室，护士站立于画面中央。","资源调用":"【模型1：护士】、【动画1：护士站姿】；五类服饰卡片和当前着装提示。","初始状态":"默认无帽、无口罩、常服上衣、普通长裤和拖鞋；五类均标记为尚未主动选择。","视角":"护士全身固定视角。","提示":"请选择护士帽、医用口罩、护士服上衣、护士服裤子和护士鞋。","交互":"点击服饰卡片后切换护士模型对应部件；同类互斥；被点击类别记录为已操作；五类均已操作后确定按钮可用；确定时统一验证五类值。","特殊规则":"确认错误后不清空全部选择；护士模型只切换部件，不制作换装动画。","判定规则":"正确条件：head=nurse_cap、face=medical_mask、top=nurse_top、bottom=nurse_pants、shoes=nurse_shoes，且 touchedCategories 包含五类。\n错误/阻断条件：任一值不正确、任一类别未操作、同类多选或模型状态与UI不同步。\n完成条件与反馈：正确时显示成功提示并进入环境评估；错误时按类别显示具体提示，允许继续修改。"},"问候核对::身份核对确认":{"number":0,"title":"问候核对 · 身份核对确认","pageCode":"","annotation":"姓名与腕带的实际核对交互。","功能描述":"核对患者口述姓名、腕带信息及病历信息是否一致。","场景":"老年病房床旁。","资源调用":"腕带热点、身份信息卡和一致性选项。","初始状态":"语音未完成时核对按钮禁用。","视角":"患者腕带近景。","提示":"请核对患者口述姓名和腕带信息。","交互":"点击核对口述姓名；点击核对腕带；选择信息一致；点击确认。","评分项":"信息一致；信息不一致。","判定规则":"正确条件：两项均已核对且选择信息一致。\n错误/阻断条件：漏核对或选择信息不一致。\n完成条件与反馈：提示患者身份核对完成，进入风险评估。","特殊规则":"正确腕带字段：张华、男、65岁、12床、住院号123456。"}}
+const practiceRequirementMap = {
+  '目的案例':'目的案例','护士准备':'护士准备','环境评估':'环境评估','问候核对':'问候核对',
+  '风险评估':'风险评估','皮肤初检':'皮肤初检','用物选择':'用物选择','翻身准备':'翻身准备',
+  '体位调整':'体位调整','重点检查':'重点检查','清洁护理':'清洁护理','减压摆位':'减压摆位',
+  '护理确认':'护理确认','用物处理':'用物处理','手卫生':'手卫生','首次记录':'首次记录',
+  '皮肤复查':'皮肤复查','对比处置':'对比处置','最终记录':'最终记录'
+};
+const knowledgeRequirementMap = {
+  goal:'knowledge:goal',stage:'knowledge:stage',risk:'knowledge:risk',
+  monitor:'knowledge:monitor',prevent:'knowledge:prevent'
+};
+const reqReviewPanel = document.getElementById('reqReviewPanel');
+const reqReviewBody = document.getElementById('reqReviewBody');
+const reqReviewTitle = document.getElementById('reqReviewTitle');
+const reqReviewToggle = document.getElementById('reqReviewToggle');
+const reqReviewClose = document.getElementById('reqReviewClose');
+const reqReviewReset = document.getElementById('reqReviewReset');
+const reqReviewCopy = document.getElementById('reqReviewCopy');
+const reqReviewDragHandle = document.getElementById('reqReviewDragHandle');
+let currentRequirementReviewKey = '';
+let currentRequirementReviewData = null;
+let requirementPanelWasClosedForKey = false;
+
+function escapeRequirementHtml(value){
+  return String(value ?? '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+function formatRequirementText(value){
+  let output = escapeRequirementHtml(value || '无。');
+  output = output.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+  output = output.replace(/【([^】]+)】/g,(m,token)=>{
+    const cls = /语音|对话|WAV|key/i.test(token) ? 'req-token voice' : 'req-token';
+    return `<span class="${cls}">【${token}】</span>`;
+  });
+  output = output.replace(/`([^`]+)`/g,'<span class="req-token voice">$1</span>');
+  output = output.replace(/\n/g,'<br>');
+  return output;
+}
+function requirementCard(label, icon, value, cls='', expanded=false){
+  if(!value && label==='特殊规则') return '';
+  const openAttr = expanded ? ' open' : '';
+  return `<details class="req-review-card ${cls}"${openAttr}>
+    <summary><span>${icon}</span><span>${label}</span></summary>
+    <div class="req-text">${formatRequirementText(value)}</div>
+  </details>`;
+}
+
+function requirementPageInfoCard(data){
+  const sections = [
+    ['场景', data['场景']],
+    ['状态', data['初始状态']],
+    ['视角', data['视角']],
+    ['提示', data['提示']],
+    ['交互', data['交互']]
+  ];
+  const sectionHtml = sections.map(([label,value]) => `
+    <section class="req-page-section">
+      <div class="req-page-section-title">${label}</div>
+      <div class="req-page-section-content">${formatRequirementText(value || '无。')}</div>
+    </section>`).join('');
+  return `<details class="req-review-card page-info" open>
+    <summary><span>▤</span><span>页面说明</span></summary>
+    <div class="req-page-sections">${sectionHtml}</div>
+  </details>`;
+}
+
+function getCurrentRequirementReviewKey(){
+  if(!moduleHome.classList.contains('hidden')) return 'module';
+  if(!knowledgeScreen.classList.contains('hidden')) return knowledgeRequirementMap[knowledgeState.active] || 'knowledge:goal';
+  if(!quizScreen.classList.contains('hidden')) return 'quiz';
+  if(!sim.classList.contains('hidden')){
+    if(!modalMask.classList.contains('hidden') && modalTitle.textContent==='本次评估结果') return 'score';
+
+    const stepConfig = stepData[activeStep];
+
+    if(activeStep==='护士准备' && requirementReviewData['护士准备::服饰选择']){
+      return '护士准备::服饰选择';
+    }
+
+    if(activeStep==='问候核对' && requirementReviewData['问候核对::身份核对确认']){
+      return '问候核对::身份核对确认';
+    }
+
+    if(stepConfig?.panel && navigationTaskConfigs[stepConfig.panel]){
+      const taskName = navigationTaskStates[stepConfig.panel]?.active;
+      const taskKey = `${activeStep}::${taskName}`;
+      if(taskName && requirementReviewData[taskKey]) return taskKey;
+    }
+
+    if(activeStep==='风险评估'){
+      const dimensionName = activeBradenDimension()?.name;
+      const dimensionKey = `风险评估::${dimensionName}`;
+      if(dimensionName && requirementReviewData[dimensionKey]) return dimensionKey;
+    }
+
+    if(bodySiteStates[activeStep]){
+      const siteName = bodySiteStates[activeStep].active;
+      const siteKey = `${activeStep}::${siteName}`;
+      if(siteName && requirementReviewData[siteKey]) return siteKey;
+    }
+
+    return practiceRequirementMap[activeStep] || '目的案例';
+  }
+  return 'module';
+}
+function renderRequirementReview(key, autoOpen=false){
+  const data = requirementReviewData[key] || requirementReviewData.module;
+  if(!data) return;
+  currentRequirementReviewData = data;
+  reqReviewTitle.textContent = `需求说明 · ${data.title}`;
+  reqReviewBody.innerHTML =
+    `<div class="req-review-scroll">` +
+    requirementCard('功能描述','◎',data['功能描述'],'primary',true) +
+    requirementCard('资源调用','▣',data['资源调用'],'resources',true) +
+    requirementPageInfoCard(data) +
+    requirementCard('评分项','①',data['评分项'],'scoring',true) +
+    requirementCard('判定规则','✓',data['判定规则'],'judgment',true) +
+    requirementCard('特殊规则','!',data['特殊规则'],'special',true) +
+    `</div>`;
+  reqReviewBody.scrollTop = 0;
+  reqReviewBody.scrollLeft = 0;
+  if(autoOpen){
+    reqReviewPanel.classList.remove('hidden');
+    reqReviewToggle.classList.add('hidden');
+    requirementPanelWasClosedForKey = false;
+  }
+}
+function syncRequirementReview(){
+  const key = getCurrentRequirementReviewKey();
+  if(key !== currentRequirementReviewKey){
+    currentRequirementReviewKey = key;
+    renderRequirementReview(key,true);
+  }
+}
+function closeRequirementReview(){
+  reqReviewPanel.classList.add('hidden');
+  reqReviewToggle.classList.remove('hidden');
+  requirementPanelWasClosedForKey = true;
+}
+function openRequirementReview(){
+  reqReviewPanel.classList.remove('hidden');
+  reqReviewToggle.classList.add('hidden');
+  renderRequirementReview(currentRequirementReviewKey || getCurrentRequirementReviewKey(),false);
+}
+function resetRequirementReviewPosition(){
+  reqReviewPanel.style.right = '';
+  reqReviewPanel.style.bottom = '';
+  reqReviewPanel.style.left = '16px';
+  reqReviewPanel.style.top = '82px';
+  reqReviewPanel.style.width = window.innerWidth <= 1280 ? '370px' : '400px';
+  reqReviewPanel.style.height = 'min(650px, calc(100vh - 174px))';
+}
+function requirementPlainText(data){
+  const fields=['功能描述','资源调用','场景','初始状态','视角','提示','交互','评分项','判定规则','特殊规则'];
+  return `${data.title}｜需求说明\n\n` +
+    fields.filter(key=>data[key]).map(key=>`${key}：\n${data[key]}`).join('\n\n');
+}
+reqReviewClose.addEventListener('click',(event)=>{event.stopPropagation();closeRequirementReview();});
+reqReviewToggle.addEventListener('click',openRequirementReview);
+reqReviewReset.addEventListener('click',(event)=>{event.stopPropagation();resetRequirementReviewPosition();});
+reqReviewCopy.addEventListener('click',async(event)=>{
+  event.stopPropagation();
+  if(!currentRequirementReviewData) return;
+  const value=requirementPlainText(currentRequirementReviewData);
+  try{
+    await navigator.clipboard.writeText(value);
+    showToast('本页需求已复制');
+  }catch(error){
+    const textarea=document.createElement('textarea');
+    textarea.value=value;document.body.appendChild(textarea);textarea.select();
+    document.execCommand('copy');textarea.remove();showToast('本页需求已复制');
+  }
+});
+
+let reqDragState=null;
+reqReviewDragHandle.addEventListener('pointerdown',(event)=>{
+  if(event.target.closest('button')) return;
+  const rect=reqReviewPanel.getBoundingClientRect();
+  reqDragState={x:event.clientX,y:event.clientY,left:rect.left,top:rect.top};
+  reqReviewPanel.style.left=rect.left+'px';
+  reqReviewPanel.style.top=rect.top+'px';
+  reqReviewPanel.style.right='auto';
+  reqReviewPanel.style.bottom='auto';
+  reqReviewDragHandle.setPointerCapture(event.pointerId);
+});
+reqReviewDragHandle.addEventListener('pointermove',(event)=>{
+  if(!reqDragState) return;
+  const rect=reqReviewPanel.getBoundingClientRect();
+  const maxLeft=Math.max(0,window.innerWidth-rect.width);
+  const maxTop=Math.max(0,window.innerHeight-58);
+  const nextLeft=Math.min(maxLeft,Math.max(0,reqDragState.left+event.clientX-reqDragState.x));
+  const nextTop=Math.min(maxTop,Math.max(0,reqDragState.top+event.clientY-reqDragState.y));
+  reqReviewPanel.style.left=nextLeft+'px';
+  reqReviewPanel.style.top=nextTop+'px';
+});
+function stopReqReviewDrag(event){
+  if(!reqDragState) return;
+  reqDragState=null;
+  try{reqReviewDragHandle.releasePointerCapture(event.pointerId);}catch(error){}
+}
+reqReviewDragHandle.addEventListener('pointerup',stopReqReviewDrag);
+reqReviewDragHandle.addEventListener('pointercancel',stopReqReviewDrag);
+window.addEventListener('resize',()=>{
+  const rect=reqReviewPanel.getBoundingClientRect();
+  if(rect.left < 0) reqReviewPanel.style.left = '0px';
+  if(rect.right > window.innerWidth) reqReviewPanel.style.left=Math.max(0,window.innerWidth-rect.width)+'px';
+  if(rect.top < 0) reqReviewPanel.style.top = '0px';
+  if(rect.bottom>window.innerHeight) reqReviewPanel.style.top=Math.max(0,window.innerHeight-rect.height)+'px';
+});
+
+setInterval(syncRequirementReview,180);
+setTimeout(()=>{
+  resetRequirementReviewPosition();
+  currentRequirementReviewKey='';
+  syncRequirementReview();
+},0);
+
+
+renderPrimary();
+renderSecondary();
+</script>
+</body>
+</html>
